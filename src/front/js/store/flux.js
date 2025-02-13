@@ -2,53 +2,26 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
-
+			exampleFunction: () => {getActions().changeColor(0, "green");},
 			getMessage: async () => {
-				try{
-					// fetching data from the backend
-					const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
-					const data = await resp.json()
-					setStore({ message: data.message })
-					// don't forget to return something, that is how the async resolves
-					return data;
-				}catch(error){
-					console.log("Error loading message from backend", error)
+				const uri = `${process.env.BACKEND_URL}/api/hello`
+				const response = await fetch(uri)
+				if (!response.ok) {
+					// Gestionamos el error
+					console.log("Error:", response.status, response.statusText)
+					return
 				}
+				const data = await response.json()
+				setStore({ message: data.message })
+				return;
 			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
-
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
-
-				//reset the global store
-				setStore({ demo: demo });
-			}
 		}
 	};
 };
 
 export default getState;
+
+// Revisar este gist para más detalles sobre la sintaxis dentro del archivo flux.js
+// https://gist.github.com/hchocobar/25a43adda3a66130dc2cb2fed8b212d0
