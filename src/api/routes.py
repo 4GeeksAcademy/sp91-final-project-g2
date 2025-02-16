@@ -66,6 +66,7 @@ def login():
     response_body['results'] = user
     return response_body, 200
 
+
 # Protect a route with jwt_required, which will kick out requests
 # without a valid JWT present.
 @api.route('/protected', methods=['GET'])
@@ -95,7 +96,6 @@ def signup():
     if user_register:
         response_body['message'] = 'User alredy exist'
         return response_body, 400
-    
     row = Users(email = data.get('email'),
                 password = data.get('password'),
                 first_name = data.get('first_name'),
@@ -104,7 +104,6 @@ def signup():
                 is_active = True,
                 is_customer= True if role == 'customer' else False,
                 is_vendor= True if role == 'vendor' else False)
-    
     db.session.add(row)
     db.session.commit()
     user = row.serialize()
@@ -122,4 +121,47 @@ def signup():
     response_body['results'] = user
     return response_body, 200    
 
-# CRUD del rol Is_admin
+
+@api.route('users/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@jwt_required()
+def user_account(id):
+    response_body = {}
+    additional_claims = get_jwt()
+    row = db.session.execute(db.select(Users).where(Users.id == id)).scalar()
+    if not row:
+        response_body['message'] = f'Usuario con id:{id} no encontrado'
+        return response_body, 400
+    if id != additional_claims['user_id']:
+        response_body['message'] = 'No tiene autorización para esta acción'
+        return response_body, 401
+    if request.method == 'GET':
+        response_body['results'] = row.serialize()
+        return response_body, 200
+    if request.method == 'PUT':
+        data = request.json
+        row.first_name = data.get('first_name')
+        row.last_name = data.get('last_name')
+        row.phone = data.get('phone')
+        row.address = data.get('address')
+        db.session.commit()
+        response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
+        response_body['results'] = row.serialize()
+        return response_body, 200
+    elif request.method == 'DELETE':
+        db.session.delete(row)
+        db.session.commit()
+        response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
+        return response_body, 200
+    
+
+# Endpoint para administrador
+@api.route('/admin/users/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@jwt_required()
+def admin_account(id):
+    response_body = {}
+    additional_claims = get_jwt()
+    if not additional_claims.get('is_admin', False):
+        response_body['message'] = 'Acceso Denegado'
+        return response_body, 403
+    rows = db.session.execute(db.select(Users)).scalars()
+    return response_body, 200    
