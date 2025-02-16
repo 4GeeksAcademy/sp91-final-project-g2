@@ -5,16 +5,18 @@ db = SQLAlchemy()
 
 
 class Users(db.Model):
+    __tablename__ = 'users' # Agregue el tablename
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     first_name = db.Column(db.String(), unique=False, nullable=True)
+    last_name = db.Column(db.String(), unique=False, nullable=True) # Incluyo el last name
     phone = db.Column(db.String(), unique=False, nullable=True)
     address = db.Column(db.String(), unique=False, nullable=True)
-    is_admin = db.Column(db.Boolean, default=False)  ## ROLES
-    is_customer = db.Column(db.Boolean, default=False)
-    is_vendor = db.Column(db.Boolean, default=False)
+    is_admin = db.Column(db.Boolean(), default=False)  ## ROLES
+    is_customer = db.Column(db.Boolean(), default=False)
+    is_vendor = db.Column(db.Boolean(), default=False)
 
     def __repr__(self):
         return f'<User {self.id} - {self.email}>'
@@ -24,6 +26,7 @@ class Users(db.Model):
                 "email": self.email,
                 "is_active": self.is_active,
                 "first_name": self.first_name,
+                "last_name": self.last_name,
                 "phone": self.phone,
                 "address": self.address,
                 "is_admin": self.is_admin,
