@@ -4,7 +4,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 from flask import Flask, request, jsonify, url_for, Blueprint
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
-from api.models import db, Users, Comments
+from api.models import db, Users, Comments, Products
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
@@ -200,10 +200,10 @@ def admin_get_comments_management(user_id):
     if not additional_claims.get('is_admin', False):
         response_body['message'] = 'Acceso Denegado'
         return response_body, 403
-    rows = db.session.execute(db.select(Comments).where(Comments.user_id == user_id)).scalars()
-    comments_list = [row.serialize() for row in rows]
+    comments = db.session.execute(db.select(Comments).where(Comments.user_id == user_id)).scalars()
+    comments_list = [comment.serialize() for comment in comments]
     response_body['message'] = f'Comentarios del usuario {user_id}'
-    request['results'] = comments_list
+    response_body['results'] = comments_list
     return response_body, 200
 
 # Permite al Administrador editar o eliminar un comentario de un usuario especifico.
@@ -234,3 +234,25 @@ def admin_user_comments_management(user_id, comment_id):
         response_body['message'] = 'Comentario eliminado'
         return response_body, 200
 
+
+# Permite al Administrador obtener los productos publicados por un usuario con rol de vendedor.
+@api.route('/admin/user-products/<int:user_id>', methods=['GET'])
+@jwt_required()
+def admin_get_products_management(user_id):
+    response_body = {}
+    additional_claims = get_jwt()
+    if not additional_claims.get('is_admin', False):
+        response_body['message'] = 'Acceso Denegado'
+        return response_body, 403
+    vendor = db.session.execute(db.select(Users).where(Users.id == user_id, Users.is_vendor == True)).scalar
+    if not vendor:
+        response_body['message'] = 'El usuario no es un vendedor'
+        return response_body, 404
+    products = db.sessión.execute(db.select(Products).where(Products.vendor_id == user_id)).scalars()
+    product_list = [product.serialize() for product in products]
+    response_body['message'] = f'Productos publicados por el vendedor {user_id}'
+    response_body['results'] = product_list
+    return response_body, 200
+
+
+# Permite al Administrador editar o eliminar un producto publicado por un usuario con rol vendor.
