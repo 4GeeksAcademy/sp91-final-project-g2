@@ -113,8 +113,7 @@ def signup():
               'phone': user['phone'],
               'address': user['address'],
               'is_customer': user['is_customer'],
-              'is_vendor': user['is_vendor']}
-    
+              'is_vendor': user['is_vendor']}    
     access_token = create_access_token(identity=email, additional_claims=claims)
     response_body['access_token'] = access_token
     response_body['message'] = 'Usuario registrado'
@@ -207,7 +206,7 @@ def admin_get_comments_management(user_id):
     return response_body, 200
 
 # Permite al Administrador editar o eliminar un comentario de un usuario especifico.
-@api.route('/admin/user-comments/<int:user_id>/<int:comment_id', methods=['PUT', 'DELETE'])
+@api.route('/admin/user-comments/<int:user_id>/<int:comment_id>', methods=['PUT', 'DELETE'])
 @jwt_required()
 def admin_user_comments_management(user_id, comment_id):
     response_body = {}
@@ -223,7 +222,7 @@ def admin_user_comments_management(user_id, comment_id):
         data = request.json
         comment.title = data.get('title', comment.title)
         comment.description = data.get('description', comment.description)
-        # Confirmar si va a llevar Media para incluirlo
+        # Media va para la versión 2.0
         db.session.commit()
         response_body['message'] = 'Comentario editado'
         response_body['results'] = comment.serialize()
@@ -248,7 +247,7 @@ def admin_get_products_management(user_id):
     if not vendor:
         response_body['message'] = 'El usuario no es un vendedor'
         return response_body, 404
-    products = db.sessión.execute(db.select(Products).where(Products.vendor_id == user_id)).scalars()
+    products = db.session.execute(db.select(Products).where(Products.vendor_id == user_id)).scalars()
     product_list = [product.serialize() for product in products]
     response_body['message'] = f'Productos publicados por el vendedor {user_id}'
     response_body['results'] = product_list
@@ -256,3 +255,32 @@ def admin_get_products_management(user_id):
 
 
 # Permite al Administrador editar o eliminar un producto publicado por un usuario con rol vendor.
+@api.route('/admin/user-products/<int:user_id>/<int:product_id>', methods=['PUT', 'DELETE'])
+@jwt_required()
+def admin_user_products_management(user_id, product_id):
+    response_body = {}
+    aditional_claims = get_jwt()
+    if not aditional_claims.get('is_admin', False):
+        response_body['message'] = 'Acceso Denegado'
+        return response_body, 403
+    product = db.session.execute(db.select(Products).where(Products.id == product_id, Products.vendor_id == user_id)).scalar()
+    if not product:
+        response_body['message'] = 'Producto no encontrado'
+        return response_body, 404
+    if request.method == 'PUT':
+        data = request.json
+        product.name = data.get('name', product.name)
+        product.category = data.get('category', product.category)
+        product.description = data.get('description', product.description)
+        product.price = data.get('price', product.price)
+        product.photo = data.get('photo', product.photo)
+        product.in_sell = data.get('in_sell', product.in_sell)
+        db.session.commit()
+        response_body['message'] = 'Producto editado'
+        response_body['results'] = product.serialize()
+        return response_body, 200
+    if request.method == 'DELETE':
+        db.session.delete(product)
+        db.session.commit()
+        response_body['message'] = 'Producto eliminado'
+        return response_body, 200
