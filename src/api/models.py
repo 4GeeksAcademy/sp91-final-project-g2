@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 
 db = SQLAlchemy()
@@ -80,17 +81,17 @@ class Orders(db.Model):
     customer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     customer_to = db.relationship('Users', backref=db.backref('order_to', lazy='select'))
     status = db.Column(db.String(50), nullable=False)
-    date = db.Column(db.Integer, nullable=False)
-    date_order = db.Column(db.Integer, nullable=False)
-    date_delivery = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     total_price = db.Column(db.Float, nullable=False)
+    address= db.Column(db.String(40), nullable=False)
 
     def serialize(self):
         return {"id": self.id,
                 "customer_id": self.customer_id,
                 "status": self.status,
                 "date": self.date,
-                "total_price": self.total_price}
+                "total_price": self.total_price,
+                "address":self.address}
 
 
 class OrderItems(db.Model):
