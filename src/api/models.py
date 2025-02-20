@@ -63,17 +63,19 @@ class Comments(db.Model):
     product_to = db.relationship('Products', foreign_keys=[product_id], backref=db.backref('comment_to', lazy='select'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user_to = db.relationship('Users', foreign_keys=[user_id], backref=db.backref('comment_to', lazy='select'))
-    title = db.Column(db.String(255))
-    description = db.Column(db.Text)
-    date = db.Column(db.Integer)
+    title = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    date = db.Column(db.DateTime, default=lambda: datetime.now(datetime.timezone.utc))
 
     def serialize(self):
-        return {"id": self.id,
+        return {
+                "id": self.id,
                 "product_id": self.product_id,
                 "user_id": self.user_id,
                 "title": self.title,
                 "description": self.description,
-                "date": self.date}
+                "date": self.date.strftime('%Y-%m-%d %H:%M:%S')
+                }
 
 
 class Orders(db.Model):
