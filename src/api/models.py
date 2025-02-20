@@ -82,6 +82,8 @@ class Orders(db.Model):
     customer_to = db.relationship('Users', backref=db.backref('order_to', lazy='select'))
     status = db.Column(db.String(50), nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_order = db.Column(db.Integer, nullable=False)
+    date_delivery = db.Column(db.Integer, nullable=False)
     total_price = db.Column(db.Float, nullable=False)
     address= db.Column(db.String(40), nullable=False)
 
