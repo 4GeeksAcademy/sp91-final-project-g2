@@ -11,11 +11,11 @@ from flask_jwt_extended import jwt_required
 from flask_jwt_extended import get_jwt
 
 
-api = Blueprint('api', __name__)
-CORS(api)  # Allow CORS requests to this API
+user = Blueprint('user', __name__)
+CORS(user)  # Allow CORS requests to this API
 
 
-@api.route('/hello', methods=['GET'])
+@user.route('/hello', methods=['GET'])
 def handle_hello():
     response_body = {}
     response_body['message'] = "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
@@ -23,7 +23,7 @@ def handle_hello():
 
 
 # Obtengo todos los usuarios, no importa el rol que tengan
-@api.route('/users', methods=['GET'])
+@user.route('/users', methods=['GET'])
 def users():
     response_body = {}
     if request.method == 'GET':
@@ -36,7 +36,7 @@ def users():
 
 # Create a route to authenticate your users and return JWTs. The
 # create_access_token() function is used to actually generate the JWT.
-@api.route('/login', methods=['POST'])
+@user.route('/login', methods=['POST'])
 def login():
     response_body = {}
     data = request.json
@@ -69,7 +69,7 @@ def login():
 
 # Protect a route with jwt_required, which will kick out requests
 # without a valid JWT present.
-@api.route('/protected', methods=['GET'])
+@user.route('/protected', methods=['GET'])
 @jwt_required()
 def protected():
     response_body = {}
@@ -80,7 +80,7 @@ def protected():
     return response_body, 200
 
    
-@api.route('/signup', methods=['POST'])
+@user.route('/signup', methods=['POST'])
 def signup():
     response_body = {}
     data = request.json
@@ -121,7 +121,7 @@ def signup():
     return response_body, 200    
 
 
-@api.route('users/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@user.route('users/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 @jwt_required()
 def user_account(id):
     response_body = {}
@@ -155,7 +155,7 @@ def user_account(id):
 
 # Endpoints para el rol de administrador
 # Permite al Administrador obtener los datos de los vendedores y clientes y a la vez editarlos y/o darlos de baja.
-@api.route('/admin/users/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@user.route('/admin/users/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 @jwt_required()
 def admin_user_management(id):
     response_body = {}
@@ -191,7 +191,7 @@ def admin_user_management(id):
 
 
 # Permite al Administrador obtener los comentarios de un usuario especifico.
-@api.route('/admin/user-comments/<int:user_id>', methods=['GET'])
+@user.route('/admin/user-comments/<int:user_id>', methods=['GET'])
 @jwt_required()
 def admin_get_comments_management(user_id):
     response_body = {}
@@ -206,7 +206,7 @@ def admin_get_comments_management(user_id):
     return response_body, 200
 
 # Permite al Administrador editar o eliminar un comentario de un usuario especifico.
-@api.route('/admin/user-comments/<int:user_id>/<int:comment_id>', methods=['PUT', 'DELETE'])
+@user.route('/admin/user-comments/<int:user_id>/<int:comment_id>', methods=['PUT', 'DELETE'])
 @jwt_required()
 def admin_user_comments_management(user_id, comment_id):
     response_body = {}
@@ -235,7 +235,7 @@ def admin_user_comments_management(user_id, comment_id):
 
 
 # Permite al Administrador obtener los productos publicados por un usuario con rol de vendedor.
-@api.route('/admin/user-products/<int:user_id>', methods=['GET'])
+@user.route('/admin/user-products/<int:user_id>', methods=['GET'])
 @jwt_required()
 def admin_get_products_management(user_id):
     response_body = {}
@@ -255,7 +255,7 @@ def admin_get_products_management(user_id):
 
 
 # Permite al Administrador editar o eliminar un producto publicado por un usuario con rol vendor.
-@api.route('/admin/user-products/<int:user_id>/<int:product_id>', methods=['PUT', 'DELETE'])
+@user.route('/admin/user-products/<int:user_id>/<int:product_id>', methods=['PUT', 'DELETE'])
 @jwt_required()
 def admin_user_products_management(user_id, product_id):
     response_body = {}
@@ -288,3 +288,4 @@ def admin_user_products_management(user_id, product_id):
 
 # Endpoints de Order y Order Items
 # Permite a un user con rol de customer el poder ver sus perdidos.
+
