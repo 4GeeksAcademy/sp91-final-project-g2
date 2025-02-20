@@ -85,13 +85,15 @@ class Orders(db.Model):
     date_order = db.Column(db.Integer, nullable=False)
     date_delivery = db.Column(db.Integer, nullable=False)
     total_price = db.Column(db.Float, nullable=False)
+    address= db.Column(db.String(40), nullable=False)
 
     def serialize(self):
         return {"id": self.id,
                 "customer_id": self.customer_id,
                 "status": self.status,
                 "date": self.date,
-                "total_price": self.total_price}
+                "total_price": self.total_price,
+                "address":self.address}
 
 
 class OrderItems(db.Model):
