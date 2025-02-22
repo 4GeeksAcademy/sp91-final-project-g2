@@ -253,7 +253,7 @@ def admin_user_products_management(user_id, product_id):
         return response_body, 200
 
 
-## CRUD para publicar y editar Productos
+## CRUD para Productos
 #Permite a un usuario con role de vendedor, el obtener todos los productos publicados con su ID
 @api.route('/vendor/<int:vendor_id>/products', methods=['GET'])
 @jwt_required()
@@ -296,7 +296,7 @@ def vendor_post_products():
 
 
 # Permite a un vendedor, buscar un producto que se encuentre asociado a su ID y modificarlo o eliminarlo
-@api.route('/vendor/products/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@api.route('/vendor/product/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 @jwt_required()
 def product(id):
     response_body = {}
@@ -337,11 +337,33 @@ def product(id):
         db.session.commit()
         response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
         return response_body, 200
-    
+
+
+# Permite a un user con rol de costumer obtener los productos publicados por un vendedor
+@api.route('/customer/products', methods=['GET'])
+@jwt_required()
+def customer_get_products():
+    response_body = {}
+    aditional_claims = get_jwt()
+    if not aditional_claims.get('is_customer', False):
+        response_body['message'] = 'Acceso Denegado'
+        return response_body, 403
+    # Permite obtener el id del vendedor que queremos consultar la lista de productos
+    vendor_id = request.args.get('vendor_id', type=int)
+    if vendor_id:
+        products = db.session.execute(db.select(Products).where(Products.vendor_id == id)).scalars()
+        response_body['message'] = f'Listado de productos del vendedor con id: {vendor_id}'
+    else:
+        products = db.session.execute(db.select(Products)).scalars()
+        response_body['message'] = 'Listado de todos los productos'
+    product_list = [product.serialize() for product in products]
+    response_body['results'] = product_list
+    return response_body, 200
+
 
 ## CRUD para Comments
 # Permite a un user crear un comments y este se asocia su ID
-@api.route('/user/comments', methods=['POST'])
+@api.route('/user/comment', methods=['POST'])
 @jwt_required()
 def user_post_comments():
     response_body = {}
@@ -421,6 +443,7 @@ def customer_get_orders():
     response_body['message'] = 'Pedidos realizados por el cliente'
     response_body['results'] = order_list
     return response_body, 200
+
 
 # Permite a un USER con el rol de customer realizar o editar un pedido
 @api.route('/customer/order', methods=['GET', 'POST'])
