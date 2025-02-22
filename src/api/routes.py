@@ -119,6 +119,7 @@ def admin_get_users():
         response_body['results'] = result
         return response_body, 200
 
+
 # Permite al Administrador obtener los datos de los vendedores y clientes y a la vez editarlos y/o darlos de baja.
 @api.route('/admin/user/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 @jwt_required()
