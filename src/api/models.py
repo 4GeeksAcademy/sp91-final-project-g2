@@ -68,12 +68,14 @@ class Comments(db.Model):
     date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
     def serialize(self):
-        return {"id": self.id,
+        return {
+                "id": self.id,
                 "product_id": self.product_id,
                 "user_id": self.user_id,
                 "title": self.title,
                 "description": self.description,
-                "date": self.date}
+                "date": self.date.strftime('%Y-%m-%d %H:%M:%S')
+                }
 
 
 class Orders(db.Model):
