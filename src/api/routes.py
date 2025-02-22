@@ -162,7 +162,7 @@ def login():
         response_body['role'] = 'Administrador'
     elif user['is_vendor']:
         response_body['role'] = 'Vendedor'
-    elif user['is_costumer']:
+    elif user['is_customer']:
         response_body['role'] = 'Cliente'
     else:
         response_body['message'] = 'Invitado'    
@@ -215,7 +215,8 @@ def signup():
                 address = data.get('address'),
                 is_active = True,
                 is_customer= True if role == 'customer' else False,
-                is_vendor= True if role == 'vendor' else False)
+                is_vendor= True if role == 'vendor' else False,
+                is_admin= True if role == 'admin' else False)
     db.session.add(row)
     #Hacemos el insert
     db.session.commit()
@@ -234,7 +235,7 @@ def signup():
     return response_body, 200    
 
 
-@api.route('users/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@api.route('user/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 @jwt_required()
 def user_account(id):
     response_body = {}
@@ -317,7 +318,7 @@ def product(id):
 
 # Endpoints para el rol de administrador
 # Permite al Administrador obtener los datos de los vendedores y clientes y a la vez editarlos y/o darlos de baja.
-@api.route('/admin/users/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@api.route('/admin/user/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 @jwt_required()
 def admin_user_management(id):
     response_body = {}
@@ -325,14 +326,14 @@ def admin_user_management(id):
     if not additional_claims.get('is_admin', False):
         response_body['message'] = 'Acceso Denegado'
         return response_body, 403
-    row = db.session.execute(db.select(Users).where(Users.id == id)).scalars()
+    row = db.session.execute(db.select(Users).where(Users.id == id)).scalar()
     if not row:
         response_body['message'] = 'Usuario no encontrado'
         return response_body, 404
     if request.method == 'GET':
         response_body['results'] = row.serialize()
         return response_body, 200
-    if response_body == 'PUT':
+    if request.method == 'PUT':
         data = request.json
         row.first_name = data.get('first_name', row.first_name)
         row.last_name = data.get('last_name', row.last_name)
@@ -351,6 +352,8 @@ def admin_user_management(id):
         db.session.commit()
         response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
         return response_body, 200
+
+
 @api.route('/orders', methods=['GET', 'POST'])
 def orders():
     response_body = {}
