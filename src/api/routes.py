@@ -343,6 +343,14 @@ def admin_user_management(id):
         row.is_active = data.get('is_active', row.is_active)
         db.session.commit()
         response_body['message'] = 'Usuario actualizado existosamente'
+        response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
+        response_body['results'] = row.serialize()
+        return response_body, 200
+    if request.method == 'DELETE':
+        db.session.delete(row)
+        db.session.commit()
+        response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
+        return response_body, 200
 @api.route('/orders', methods=['GET', 'POST'])
 def orders():
     response_body = {}
