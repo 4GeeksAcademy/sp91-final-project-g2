@@ -114,7 +114,6 @@ def signup():
                 last_name = data.get('last_name'),
                 address = data.get('address'),
                 is_active = True,
-                is_admin = True if role == 'admin' else False,
                 is_customer= True if role == 'customer' else False,
                 is_vendor= True if role == 'vendor' else False,
                 is_admin= True if role == 'admin' else False)
@@ -366,6 +365,10 @@ def vendor_post_products():
     if not additional_claims.get('is_vendor', False):
         response_body['message'] = 'Acceso Denegado'
         return response_body, 403
+    vendor_id = additional_claims.get('user_id')
+    if not vendor_id:
+        response_body['message'] = 'Error, no se encuentra el ID'
+        return response_body, 400
     data = request.json
     row = Products(name=data.get('name'),
                     category=data.get('category'),
@@ -554,32 +557,6 @@ def customer_create_orders():
         db.session.commit()
         response_body['message'] = 'La orden ha sido añadida correctamente'
         response_body['results'] = row.serialize()
-        return response_body, 200
-
-
-@api.route('/order/<int:id>', methods=['GET', 'PUT', 'DELETE'])
-def order(id):
-    response_body = {}
-    row = db.session.execute(db.select(Orders).where(Orders.id == id)).scalar()
-    if not row:
-        response_body['message'] = f'La orden id: {id} no existe en nuestros registros'
-        return response_body, 400
-    if request.method == 'GET':
-        response_body['results'] = row.serialize()
-        response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
-        return response_body, 200
-    if request.method == 'PUT':
-        data = request.json
-        row.status = data['status']
-        row.address = data['address']
-        db.session.commit()
-        response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
-        response_body['results'] = row.serialize()
-        return response_body, 200
-    if request.method == 'DELETE':
-        db.session.delete(row)
-        db.session.commit()
-        response_body['message'] = 'Usuario eliminado'
         return response_body, 200
 
 
