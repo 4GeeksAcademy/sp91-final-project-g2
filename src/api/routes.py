@@ -114,7 +114,6 @@ def signup():
                 last_name = data.get('last_name'),
                 address = data.get('address'),
                 is_active = True,
-                is_admin = True if role == 'admin' else False,
                 is_customer= True if role == 'customer' else False,
                 is_vendor= True if role == 'vendor' else False,
                 is_admin= True if role == 'admin' else False)
@@ -195,50 +194,64 @@ def admin_user_management(id):
 @jwt_required()
 def orders():
     response_body = {}
-    additional_claims = get_jwt()   
-    if not additional_claims.get('is_customer', False):
-        response_body['message'] = 'Acceso Denegado'
-        return response_body, 403
+    additional_claims = get_jwt()
     if request.method == 'GET':
-        rows = db.session.execute(db.select(Orders).where(Orders.customer_id == additional_claims.get('user_id'))).scalars()
-        return {'message': 'Listado de órdenes', 'results': [row.serialize() for row in rows]}, 200
+        rows = db.session.execute(db.select(Orders)).scalars()
+        result = [row.serialize() for row in rows]
+        response_body['message'] = 'Listado de todas las órdenes'
+        response_body['results'] = result
+        return response_body, 200
     if request.method == 'POST':
+        # Solo los clientes pueden hacer órdenes
         if not additional_claims.get('is_customer', False):
-            return {'message': 'Solo los clientes pueden crear órdenes'}, 403       
+            response_body['message'] = 'Acceso Denegado'
+            response_body['results'] = None
+            return response_body, 403
         data = request.json
         row = Orders(
             customer_id=additional_claims.get('user_id'),
             status=data.get('status'),
-            date=data.get('date'),
             address=data.get('address'),
             total_price=data.get('total_price'))
         db.session.add(row)
         db.session.commit()
-        return {'message': 'Orden añadida correctamente', 'results': row.serialize()}, 200
+        response_body['message'] = 'La orden ha sido añadida correctamente'
+        response_body['results'] = row.serialize()
+        return response_body, 200
 
 
-@api.route('/orders/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@api.route('/order/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 @jwt_required()
 def order(id):
     response_body = {}
     additional_claims = get_jwt()
-    row = db.session.execute(db.select(Orders).where(Orders.id == id)).scalar()  
+    row = db.session.execute(db.select(Orders).where(Orders.id == id)).scalar()
     if not row:
-        return {'message': f'La orden con id: {id} no existe en nuestros registros'}, 400  
+        response_body['message'] = f'La orden con id: {id} no existe en nuestros registros'
+        response_body['results'] = None
+        return response_body, 400
+    # Solo el cliente que hizo la orden puede acceder
     if additional_claims.get('user_id') != row.customer_id:
-        return {'message': 'Acceso Denegado'}, 403  
+        response_body['message'] = 'Acceso Denegado'
+        response_body['results'] = None
+        return response_body, 403
     if request.method == 'GET':
-        return {'results': row.serialize(), 'message': f'Respuesta desde el {request.method} para el id: {id}'}, 200   
+        response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
+        response_body['results'] = row.serialize()
+        return response_body, 200
     if request.method == 'PUT':
         data = request.json
         row.status = data['status']
         row.address = data['address']
         db.session.commit()
-        return {'message': f'Orden actualizada correctamente', 'results': row.serialize()}, 200   
+        response_body['message'] = 'Orden actualizada correctamente'
+        response_body['results'] = row.serialize()
+        return response_body, 200
     if request.method == 'DELETE':
         db.session.delete(row)
         db.session.commit()
-        response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
+        response_body['message'] = 'Orden eliminada correctamente'
+        response_body['results'] = None
         return response_body, 200
 
 
@@ -557,32 +570,6 @@ def customer_create_orders():
         return response_body, 200
 
 
-@api.route('/order/<int:id>', methods=['GET', 'PUT', 'DELETE'])
-def order(id):
-    response_body = {}
-    row = db.session.execute(db.select(Orders).where(Orders.id == id)).scalar()
-    if not row:
-        response_body['message'] = f'La orden id: {id} no existe en nuestros registros'
-        return response_body, 400
-    if request.method == 'GET':
-        response_body['results'] = row.serialize()
-        response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
-        return response_body, 200
-    if request.method == 'PUT':
-        data = request.json
-        row.status = data['status']
-        row.address = data['address']
-        db.session.commit()
-        response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
-        response_body['results'] = row.serialize()
-        return response_body, 200
-    if request.method == 'DELETE':
-        db.session.delete(row)
-        db.session.commit()
-        response_body['message'] = 'Usuario eliminado'
-        return response_body, 200
-
-
 ## OBTENER Y POSTEAR ORDERITEMS
 @api.route('/orderitems', methods=['GET', 'POST'])
 def orderitems():
@@ -611,22 +598,32 @@ def orderitems():
 def orderitem(id):
     response_body = {}
     additional_claims = get_jwt()
-    row = db.session.execute(db.select(OrderItems).where(OrderItems.id == id)).scalar() 
+    row = db.session.execute(db.select(OrderItems).where(OrderItems.id == id)).scalar()
     if not row:
-        return {'message': f'El item de orden con id: {id} no existe en nuestros registros'}, 400   
-    if additional_claims.get('user_id') != row.order.customer_id and additional_claims.get('user_id') != row.product.vendor_id:
-        return {'message': 'Acceso Denegado'}, 403  
+        response_body['message'] = f'El item de orden con id: {id} no existe en nuestros registros'
+        response_body['results'] = None
+        return response_body, 400
+    if additional_claims.get('user_id') != row.order_to.customer_id and additional_claims.get('user_id') != row.product_to.vendor_id:
+        response_body['message'] = 'Acceso Denegado'
+        response_body['results'] = None
+        return response_body, 403
     if request.method == 'GET':
-        return {'results': row.serialize(), 'message': f'Respuesta desde el {request.method} para el id: {id}'}, 200   
+        response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
+        response_body['results'] = row.serialize()
+        return response_body, 200
     if request.method == 'PUT':
         data = request.json
         row.order_id = data['order_id']
         row.product_id = data['product_id']
         row.price = data['price']
         db.session.commit()
-        return {'message': f'Actualizado correctamente', 'results': row.serialize()}, 200   
+        response_body['message'] = 'Actualizado correctamente'
+        response_body['results'] = row.serialize()
+        return response_body, 200
     if request.method == 'DELETE':
         db.session.delete(row)
         db.session.commit()
-        return {'message': 'Item eliminado'}, 200
-    
+        response_body['message'] = 'El item de orden ha sido eliminado correctamente'
+        response_body['results'] = None
+        return response_body, 200
+
