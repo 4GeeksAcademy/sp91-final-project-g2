@@ -145,29 +145,38 @@ def user_management(id):
         return response_body, 200
 
 
-# Permite al administrador ver una orden
-@api.route('/orders/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@api.route('/order/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 @jwt_required()
 def order(id):
     response_body = {}
     additional_claims = get_jwt()
-    row = db.session.execute(db.select(Orders).where(Orders.id == id)).scalar()  
+    row = db.session.execute(db.select(Orders).where(Orders.id == id)).scalar()
     if not row:
-        return {'message': f'La orden con id: {id} no existe en nuestros registros'}, 400  
+        response_body['message'] = f'La orden con id: {id} no existe en nuestros registros'
+        response_body['results'] = None
+        return response_body, 400
+    # Solo el cliente que hizo la orden puede acceder
     if additional_claims.get('user_id') != row.customer_id:
-        return {'message': 'Acceso Denegado'}, 403  
+        response_body['message'] = 'Acceso Denegado'
+        response_body['results'] = None
+        return response_body, 403
     if request.method == 'GET':
-        return {'results': row.serialize(), 'message': f'Respuesta desde el {request.method} para el id: {id}'}, 200   
+        response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
+        response_body['results'] = row.serialize()
+        return response_body, 200
     if request.method == 'PUT':
         data = request.json
         row.status = data['status']
         row.address = data['address']
         db.session.commit()
-        return {'message': f'Orden actualizada correctamente', 'results': row.serialize()}, 200   
+        response_body['message'] = 'Orden actualizada correctamente'
+        response_body['results'] = row.serialize()
+        return response_body, 200
     if request.method == 'DELETE':
         db.session.delete(row)
         db.session.commit()
-        response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
+        response_body['message'] = 'Orden eliminada correctamente'
+        response_body['results'] = None
         return response_body, 200
 
 
@@ -413,34 +422,7 @@ def user_post_comments():
     db.session.commit()
     response_body ['message'] = 'Comentario creado'
     response_body['comment'] = new_comment.serialize()
-    return response_body, 201
-
-
-    # COMPARAR Y COMPLETAR CON LO QUE HAGA FALTA
-    if request.method == 'POST':
-        # Obtener el cuerpo de la solicitud en formato JSON
-        request_body = request.get_json()
-        # Verificar si el producto existe
-        product = Products.query.get(request_body['product_id'])
-        if not product:
-            return jsonify({"error": "Producto no encontrado"}), 404  # Producto no existe
-        # Crear un nuevo comentario con los datos proporcionados
-        comment = Comments(
-            product_id=request_body['product_id'],
-            user_id=request_body['user_id'],
-            title=request_body['title'],
-            description=request_body['description'],
-            date=datetime.now(datetime.timezone.utc)  # Asignar la fecha actual automáticamente
-        )
-        # Agregar el nuevo comentario a la sesión de la base de datos
-        db.session.add(comment)
-        # Confirmar la transacción
-        db.session.commit()
-        # Devolver el comentario recién creado en formato JSON
-        return jsonify(comment.serialize()), 200
-     
-
-
+    return response_body, 201     
 
 
 # Permite a un User, editar o eliminar un comentario que haya creado y se encuentre vinculado a su ID
@@ -482,96 +464,101 @@ def user_edit_comment(comment_id):
 
 
 ## CRUD para ORDERS
-# Permite a un User con el rol de customer consultar sus pedidos realizados 
-@api.route('/orders', methods=['GET', 'POST'])
-@jwt_required()
-def customer_get_orders():
-    response_body = {}
-    additional_claims = get_jwt()
-    if not additional_claims.get('is_customer', False):
-        response_body['message'] = 'Acceso Denegado'
-        return response_body, 403
-    customer_id = additional_claims['user_id']
-    orders = db.session.execute(db.select(Orders).where(Orders.customer_id == customer_id)).scalars()
-    order_list = [order.serialize() for order in orders]
-    response_body['message'] = 'Pedidos realizados por el cliente'
-    response_body['results'] = order_list
-    return response_body, 200
-
-
-# Permite a un USER con el rol de customer realizar o editar un pedido
-@api.route('/customer/order', methods=['GET', 'POST'])
-@jwt_required()
-def customer_create_orders():
-    response_body = {}
-    if request.method == 'GET':
-        rows = db.session.execute(db.select(Orders)).scalars()
-        result = [ row.serialize() for row in rows ]
-        response_body['message'] = 'Listado de todas las orders'
-        response_body['results'] = result
-        return response_body, 200
-    if request.method == 'POST':
-        data = request.json
-        print(data)
-        row = Orders(customer_id=data.get('customer_id'),
-                     status=data.get('status'),
-                     date=data.get('date'),
-                     address=data.get('address'),
-                     total_price=data.get('total_price'))
-        db.session.add(row)
-        db.session.commit()
-        response_body['message'] = 'La orden ha sido añadida correctamente'
-        response_body['results'] = row.serialize()
-        return response_body, 200
     
 
 @api.route('/orders', methods=['GET', 'POST'])
 @jwt_required()
 def orders():
     response_body = {}
+    additional_claims = get_jwt()
+    if not additional_claims.get('is_customer', False):
+        response_body['message'] = 'Acceso Denegado'
+        return jsonify(response_body), 403
+    user_id = additional_claims.get('user_id')
+    if request.method == 'GET':
+        rows = db.session.execute(db.select(Orders).where(Orders.customer_id == user_id)).scalars()
+        response_body['message'] = 'Listado de órdenes'
+        response_body['results'] = [row.serialize() for row in rows]
+        return jsonify(response_body), 200
+    if request.method == 'POST':
+        data = request.json
+        new_order = Orders(
+            customer_id=user_id,
+            status=data.get('status', 'pendiente'),  # Estado por defecto "pendiente"
+            address=data.get('address'),
+            total_price=data.get('total_price', 0.0))  # Default en caso de no recibirlo
+        db.session.add(new_order)
+        db.session.commit()
+        response_body['message'] = 'Pedido creado exitosamente'
+        response_body['order_id'] = new_order.id
+        return jsonify(response_body), 201
+    
+
+@api.route('/orders/<int:order_id>', methods=['PUT'])
+@jwt_required()
+def update_order(order_id):
+    response_body = {}
     additional_claims = get_jwt()   
     if not additional_claims.get('is_customer', False):
         response_body['message'] = 'Acceso Denegado'
-        return response_body, 403
-    if request.method == 'GET':
-        rows = db.session.execute(db.select(Orders).where(Orders.customer_id == additional_claims.get('user_id'))).scalars()
-        return {'message': 'Listado de órdenes', 'results': [row.serialize() for row in rows]}, 200
-    if request.method == 'POST':
-        if not additional_claims.get('is_customer', False):
-            return {'message': 'Solo los clientes pueden crear órdenes'}, 403       
-        data = request.json
-        row = Orders(
-            customer_id=additional_claims.get('user_id'),
-            status=data.get('status'),
-            date=data.get('date'),
-            address=data.get('address'),
-            total_price=data.get('total_price'))
-        db.session.add(row)
+        return jsonify(response_body), 403
+    user_id = additional_claims.get('user_id')
+    order = db.session.get(Orders, order_id)
+    if not order:
+        response_body['message'] = 'Orden no encontrada'
+        return jsonify(response_body), 404
+    if order.customer_id != user_id:
+        response_body['message'] = 'No puedes modificar esta orden'
+        return jsonify(response_body), 403
+    data = request.json
+    if 'address' in data:
+        order.address = data['address']
         db.session.commit()
-        return {'message': 'Orden añadida correctamente', 'results': row.serialize()}, 200
+        response_body['message'] = 'Dirección de la orden actualizada correctamente'
+        response_body['order_id'] = order.id
+        return jsonify(response_body), 200
+    response_body['message'] = 'No se realizaron cambios en la orden'
+    return jsonify(response_body), 400
 
 
 ## OBTENER Y POSTEAR ORDERITEMS
 @api.route('/orderitems', methods=['GET', 'POST'])
+@jwt_required()
 def orderitems():
     response_body = {}
+    additional_claims = get_jwt()
+    if not additional_claims.get('is_customer', False):
+        response_body['message'] = 'Acceso Denegado'
+        return jsonify(response_body), 403
     if request.method == 'GET':
         rows = db.session.execute(db.select(OrderItems)).scalars()
-        result = [ row.serialize() for row in rows ]
         response_body['message'] = 'Listado de todos los items de orden'
-        response_body['results'] = result
-        return response_body, 200
+        response_body['results'] = [row.serialize() for row in rows]
+        return jsonify(response_body), 200
     if request.method == 'POST':
         data = request.json
-        print(data)
-        row = OrderItems(order_id=data.get('order_id'),
-                         product_id=data.get('product_id'),
-                         price=data.get('price'))
+        # Validaciones: Existen la orden y el producto?
+        order = db.session.get(Orders, data.get('order_id'))
+        product = db.session.get(Products, data.get('product_id'))
+        if not order:
+            response_body['message'] = 'La orden especificada no existe'
+            return jsonify(response_body), 404
+        if not product:
+            response_body['message'] = 'El producto especificado no existe'
+            return jsonify(response_body), 404
+        # Solo el cliente que creó la orden puede añadir items
+        if additional_claims.get('user_id') != order.customer_id:
+            response_body['message'] = 'Acceso denegado: No puedes modificar esta orden'
+            return jsonify(response_body), 403
+        row = OrderItems(
+            order_id=data.get('order_id'),
+            product_id=data.get('product_id'),
+            price=data.get('price'))
         db.session.add(row)
         db.session.commit()
         response_body['message'] = 'El item de orden ha sido añadido correctamente'
         response_body['results'] = row.serialize()
-        return response_body, 200
+        return jsonify(response_body), 201
     
 
 @api.route('/orderitems/<int:id>', methods=['GET', 'PUT', 'DELETE'])
@@ -579,24 +566,39 @@ def orderitems():
 def orderitem(id):
     response_body = {}
     additional_claims = get_jwt()
-    row = db.session.execute(db.select(OrderItems).where(OrderItems.id == id)).scalar() 
+    row = db.session.get(OrderItems, id)
     if not row:
-        return {'message': f'El item de orden con id: {id} no existe en nuestros registros'}, 400   
-    if additional_claims.get('user_id') != row.order.customer_id and additional_claims.get('user_id') != row.product.vendor_id:
-        return {'message': 'Acceso Denegado'}, 403  
+        response_body['message'] = f'El item de orden con id: {id} no existe'
+        return jsonify(response_body), 404
+    # Validar permisos: Solo el cliente que hizo la orden o el vendedor del producto pueden modificarlo
+    user_id = additional_claims.get('user_id')
+    if user_id != row.order_to.customer_id and user_id != row.product_to.vendor_id:
+        response_body['message'] = 'Acceso denegado: No tienes permisos para modificar este item'
+        return jsonify(response_body), 403
     if request.method == 'GET':
-        return {'results': row.serialize(), 'message': f'Respuesta desde el {request.method} para el id: {id}'}, 200   
+        response_body['message'] = f'Item de orden con id: {id} obtenido correctamente'
+        response_body['results'] = row.serialize()
+        return jsonify(response_body), 200
     if request.method == 'PUT':
         data = request.json
+        # Validar si la orden y el producto existen antes de actualizar
+        order = db.session.get(Orders, data.get('order_id'))
+        product = db.session.get(Products, data.get('product_id'))
+        if not order:
+            response_body['message'] = 'La orden especificada no existe'
+            return jsonify(response_body), 404
+        if not product:
+            response_body['message'] = 'El producto especificado no existe'
+            return jsonify(response_body), 404
         row.order_id = data['order_id']
         row.product_id = data['product_id']
         row.price = data['price']
         db.session.commit()
-        return {'message': f'Actualizado correctamente', 'results': row.serialize()}, 200   
+        response_body['message'] = 'Item de orden actualizado correctamente'
+        response_body['results'] = row.serialize()
+        return jsonify(response_body), 200
     if request.method == 'DELETE':
         db.session.delete(row)
         db.session.commit()
-        return {'message': 'Item eliminado'}, 200
-    
-
-
+        response_body['message'] = 'El item de orden ha sido eliminado correctamente'
+        return jsonify(response_body), 200
