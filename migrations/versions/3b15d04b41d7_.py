@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: f56a892a4630
+Revision ID: 3b15d04b41d7
 Revises: 
-Create Date: 2025-02-20 19:54:22.293267
+Create Date: 2025-02-22 12:03:43.597696
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f56a892a4630'
+revision = '3b15d04b41d7'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -38,8 +38,6 @@ def upgrade():
     sa.Column('customer_id', sa.Integer(), nullable=False),
     sa.Column('status', sa.String(length=50), nullable=False),
     sa.Column('date', sa.DateTime(), nullable=False),
-    sa.Column('date_order', sa.Integer(), nullable=False),
-    sa.Column('date_delivery', sa.Integer(), nullable=False),
     sa.Column('total_price', sa.Float(), nullable=False),
     sa.Column('address', sa.String(length=40), nullable=False),
     sa.ForeignKeyConstraint(['customer_id'], ['users.id'], ),
@@ -61,9 +59,9 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('product_id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('title', sa.String(length=255), nullable=False),
-    sa.Column('description', sa.Text(), nullable=False),
-    sa.Column('date', sa.DateTime(), nullable=True),
+    sa.Column('title', sa.String(length=100), nullable=False),
+    sa.Column('description', sa.String(length=250), nullable=False),
+    sa.Column('date', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
