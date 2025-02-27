@@ -178,6 +178,7 @@ def order(id):
         return response_body, 200
 
 
+# COMMENTS
 # Permite al Administrador obtener los comentarios de un usuario especifico.
 @api.route('/users/<int:user_id>/comments', methods=['GET'])
 @jwt_required()
@@ -187,40 +188,71 @@ def admin_get_comments_management(user_id):
     if not additional_claims.get('is_admin', False):
         response_body['message'] = 'Acceso Denegado'
         return response_body, 403
-    comments = db.session.execute(db.select(Comments).where(Comments.user_id == user_id)).scalars()
+    comments = db.session.execute(db.select(Comments).where(Comments.user_id == user_id).order_by(Comments.date.desc())).scalars()
     comments_list = [comment.serialize() for comment in comments]
     response_body['message'] = f'Comentarios del usuario {user_id}'
     response_body['results'] = comments_list
     return response_body, 200
 
 
-# Permite al Administrador editar o eliminar un comentario de un usuario especifico.
-@api.route('/users/<int:user_id>/comments/<int:comment_id>', methods=['PUT', 'DELETE'])
+# Permite al Administrador eliminar un comentario de un usuario especifico.
+@api.route('/users/<int:user_id>/comments/<int:comment_id>', methods=['DELETE'])
 @jwt_required()
 def admin_user_comments_management(user_id, comment_id):
     response_body = {}
-    aditional_claims = get_jwt()
-    if not aditional_claims.get('is_admin', False):
+    additional_claims = get_jwt()
+    if not additional_claims.get('is_admin', False):
         response_body['message'] = 'Acceso Denegado'
         return response_body, 403
     comment = db.session.execute(db.select(Comments).where(Comments.id == comment_id, Comments.user_id == user_id)).scalar()
     if not comment:
         response_body['message'] = 'Comentario no encontrado'
         return response_body, 404
-    if request.method == 'PUT':
-        data = request.json
-        comment.title = data.get('title', comment.title)
-        comment.description = data.get('description', comment.description)
-        # Media va para la versión 2.0
-        db.session.commit()
-        response_body['message'] = 'Comentario editado'
-        response_body['results'] = comment.serialize()
-        response_body, response_body, 200
-    if request.method == 'DELETE':
-        db.session.delente(comment)
-        db.session.commit()
-        response_body['message'] = 'Comentario eliminado'
-        return response_body, 200
+    db.session.delete(comment)
+    db.session.commit()
+    response_body['message'] = 'Comentario eliminado'
+    return response_body, 200
+
+
+# Permite a un usuario crear un comentario y este se asocia a su ID
+@api.route('/comments', methods=['POST'])
+@jwt_required()
+def user_post_comments():
+    response_body = {}
+    additional_claims = get_jwt()
+    if not (additional_claims.get('is_customer') or additional_claims.get('is_vendor')):
+        response_body['message'] = 'Debe tener una cuenta activa para poder comentar'
+        return response_body, 401
+    # Obtener el id del usuario para asociarlo
+    user_id = additional_claims.get('user_id')
+    if not user_id:
+        response_body['message'] = f'Usuario con id: {user_id} no encontrado'
+        return response_body, 401
+    data = request.json
+    # Verificar si el producto existe
+    product = db.session.execute(db.select(Products).where(Products.id == data.get('product_id'))).scalar()
+    if not product:
+        return jsonify({"error": "Producto no encontrado"}), 404  # Producto no existe
+    new_comment = Comments(
+        product_id=data.get('product_id'),
+        user_id=user_id,
+        title=data.get('title'),
+        description=data.get('description'),
+        date=datetime.utcnow()
+    )
+    db.session.add(new_comment)
+    db.session.commit()
+    response_body['message'] = 'Comentario creado'
+    response_body['comment'] = new_comment.serialize()
+    return response_body, 201
+
+
+# Permite a un usuario obtener todos los comentarios
+@api.route('/comments', methods=['GET'])
+def handle_comments():
+    comments = db.session.execute(db.select(Comments).order_by(Comments.date.desc())).scalars()
+    comments_serialized = [comment.serialize() for comment in comments]
+    return jsonify(comments_serialized), 200
 
 
 # Permite al Administrador obtener los productos publicados por un usuario con rol de vendedor.
@@ -273,7 +305,7 @@ def users_product_management(user_id, product_id):
         db.session.commit()
         response_body['message'] = 'Producto eliminado'
         return response_body, 200
-
+    
 
 # PRODUCTOS
 #Permite a un usuario con role de vendedor, el obtener todos los productos publicados con su ID
