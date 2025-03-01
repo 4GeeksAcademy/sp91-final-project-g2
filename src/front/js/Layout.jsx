@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import injectContext from "./store/appContext";
 // Custom components
@@ -6,8 +7,7 @@ import ScrollToTop from "./component/ScrollToTop.jsx";
 import { BackendURL } from "./component/BackendURL.jsx";
 import { Navbar } from "./component/Navbar.jsx";
 import { Footer } from "./component/Footer.jsx";
-import { SingUp  from "./component/SignUp.jsx";
-import  LogIn  from "./component/LogIn.jsx";
+import  SignUp  from "./component/SignUp.jsx";
 // Custom Pages or Views
 import { Home } from "./pages/Home.jsx";
 
@@ -30,7 +30,6 @@ const Layout = () => {
                         {/* <Route element={<Demo />} path="/demo" /> */}
                         {/* <Route element={<Single />} path="/single/:theid" /> */}
                         <Route element={<SignUp setToken={setToken} />} path="/signup" />
-                        <Route element={<LogIn setToken={setToken} />} path="/login" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                     <Footer />
