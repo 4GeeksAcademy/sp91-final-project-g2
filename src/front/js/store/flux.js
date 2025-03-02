@@ -23,33 +23,14 @@ const getState = ({ getStore, getActions, setStore }) => {
                     const data = await response.json();
                     localStorage.setItem('access_token', data.access_token);
                     setStore({ token: data.access_token });
+                    return { success: true, message: 'Registro exitoso' };
                 } catch (error) {
                     console.error('Error signing up', error);
+                    return { success: false, message: error.message };
                 }
             },
-            login: async (email, password) => {
-                try {
-                    const response = await fetch(process.env.BACKEND_URL + '/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ email, password }),
-                    });
-                    if (!response.ok) throw new Error('Error logging in');
-                    const data = await response.json();
-                    localStorage.setItem('access_token', data.access_token);
-                    setStore({ token: data.access_token });
-                } catch (error) {
-                    console.error('Error logging in', error);
-                }
-            },
-            logout: () => {
-                localStorage.removeItem('access_token');
-                setStore({ token: null });
-            },
-        },
-    };
+        }
+    }
 };
 
 export default getState;

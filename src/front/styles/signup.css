@@ -75,6 +75,20 @@ body {
   color: rgb(108, 59, 42) !important;
 }
 
+.log {
+  padding-top: 5px;
+  font-size: 13px;
+}
+#login-link {
+  font-size: 13px; 
+  color: rgb(191, 139, 103); 
+  text-decoration: none; 
+}
+
+#login-link:hover {
+  text-decoration: underline; /* Añadir subrayado al pasar el ratón por encima */
+}
+
 .login {
   position: absolute;
   top: calc(35% - 75px);
@@ -108,14 +122,14 @@ body {
 }
 
 .role-container {
-  width: 100%; /* Ajustar el ancho al 100% del contenedor */
-  text-align: left; /* Alinear el texto a la izquierda */
-  margin-top: 20px; /* Añadir un margen superior para separar el contenedor del campo anterior */
+  width: 100%; 
+  text-align: left; 
+  margin-top: 10px; 
 }
 
 .role-container label {
-  display: block; /* Hacer que el label ocupe toda la línea */
-  margin-bottom: 5px; /* Añadir un margen inferior para separar el label del select */
+  display: block;
+  margin-bottom: -10px; 
 }
 
 .login input[type=submit] {
@@ -191,4 +205,5 @@ body {
     width: 100%;
     padding: 20px;
   }
+
 }
