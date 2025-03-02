@@ -1,0 +1,57 @@
+.coffee-spinner-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Ocupa toda la altura de la pantalla */
+}
+
+.coffee-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bean {
+  width: 50px;
+  height: 80px;
+  background-color: #6f4e37;
+  border-radius: 50%;
+  position: relative;
+  animation: spin 1.5s linear infinite;
+}
+
+.bean::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  width: 10px;
+  height: 60%;
+  background-color: #4b3621;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.spinner-text {
+  margin-top: 20px;
+  font-size: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+.spinner-text .cafe {
+  color: #fff;
+}
+
+.spinner-text .taleros {
+  color: #533825;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
