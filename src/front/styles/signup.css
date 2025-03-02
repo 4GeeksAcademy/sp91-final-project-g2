@@ -51,7 +51,7 @@ body {
   width: 100%;
   height: 100%;
   background: rgb(191, 139, 103);
-  background: linear-gradient(to right, rgba(191, 139, 103, 0.9), rgba(191, 139, 103, 0.9));
+  background: linear-gradient(to right, rgba(191, 139, 103, 0.7), rgba(191, 139, 103, 0.7)); /* Ajusta la opacidad aquí */
   z-index: 1;
 }
 
@@ -86,7 +86,7 @@ body {
 }
 
 #login-link:hover {
-  text-decoration: underline; /* Añadir subrayado al pasar el ratón por encima */
+  text-decoration: underline;
 }
 
 .login {
@@ -97,8 +97,8 @@ body {
   width: 350px;
   padding: 10px;
   z-index: 2;
-  background: rgba(0, 0, 0, 0.5); /* Añadir un fondo semitransparente para mejorar la legibilidad */
-  border-radius: 10px; /* Añadir bordes redondeados */
+  background: rgba(0, 0, 0, 0.5); 
+  border-radius: 10px; 
   display: flex;
   flex-direction: column;
   align-items: center;

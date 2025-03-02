@@ -8,6 +8,7 @@ import { BackendURL } from "./component/BackendURL.jsx";
 import { Navbar } from "./component/Navbar.jsx";
 import { Footer } from "./component/Footer.jsx";
 import  SignUp  from "./component/SignUp.jsx";
+import ProfileForm from "./component/ProfileForm.jsx";
 // Custom Pages or Views
 import { Home } from "./pages/Home.jsx";
 
@@ -30,6 +31,7 @@ const Layout = () => {
                         {/* <Route element={<Demo />} path="/demo" /> */}
                         {/* <Route element={<Single />} path="/single/:theid" /> */}
                         <Route element={<SignUp setToken={setToken} />} path="/signup" />
+                        <Route element={<ProfileForm />} path="/profile" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                     <Footer />
