@@ -103,7 +103,7 @@ div.portfoliocard div.right_col h2.name {
 div.portfoliocard div.right_col h3.location {
   font-size: 15px;
   font-weight: 300;
-  color: rgba(170, 170, 170, 1);
+  color: rgb(116, 115, 115);
   padding: 0;
   margin: -5px 10px 10px 30px;
 }
@@ -120,7 +120,7 @@ div.portfoliocard ul.contact_information li {
   line-height: 25px;
   font-weight: 300;
   font-size: 15px;
-  color: rgba(140, 140, 140, 1);
+  color: rgb(132, 25, 34);
   text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
   padding: 5px 0px;
   background-repeat: no-repeat;
@@ -177,7 +177,7 @@ div.portfoliocard div.followers, div.portfoliocard div.following {
 div.portfoliocard div.follow_count {
   font-weight: 400;
   font-size: 25px;
-  color: rgba(140, 140, 140, 1);
+  color: rgb(132, 25, 34);
 }
 
 /* Media Queries para Responsividad */
