@@ -6,11 +6,11 @@ const LoadingSpinner = () => {
     <div className="coffee-spinner-container">
       <div className="coffee-spinner">
         <div className="bean"></div>
+        </div>
+        <div className="spinner-text">
+          <span className="cafe">Cafe</span><span className="taleros">taleros</span>
+        </div>
       </div>
-      <div className="spinner-text">
-        <span className="cafe">Cafe</span><span className="taleros">taleros</span>
-      </div>
-    </div>
   );
 };
 

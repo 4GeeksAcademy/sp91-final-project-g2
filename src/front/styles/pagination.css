@@ -1,0 +1,79 @@
+.pagination-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url('https://www.roastycoffee.com/wp-content/uploads/coffee-bean.jpg');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.pagination-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(191, 139, 103, 0.7);
+  z-index: 1;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+    z-index: 2;
+  }
+
+.pagination button {
+  background-color: rgb(219, 203, 150);
+  border: none;
+  color: rgb(85, 49, 23);
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.pagination button:disabled {
+  background-color: rgb(219, 203, 150);
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 16px;
+  margin: 0 10px;
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+  .pagination button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .pagination span {
+    font-size: 14px;
+    margin: 0 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .pagination span {
+    font-size: 12px;
+    margin: 0 6px;
+  }
+}

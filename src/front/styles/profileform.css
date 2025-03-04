@@ -180,6 +180,29 @@ div.portfoliocard div.follow_count {
   color: rgb(132, 25, 34);
 }
 
+.edit-button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.edit-button {
+  background-color: #6f4e37;
+  border: none;
+  color: #E0D8B0;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.edit-button:hover {
+  background-color: #533825;
+}
+
 /* Media Queries para Responsividad */
 @media (max-width: 768px) {
   div.portfoliocard {

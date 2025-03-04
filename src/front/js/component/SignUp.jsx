@@ -19,9 +19,9 @@ const SignUp = () => {
     e.preventDefault();
     const response = await actions.signup(firstName, lastName, address, phone, email, password, role);
     if (response.success) {
-      setMessage('Registro exitoso. Redirigiendo al inicio de sesión...');
+      setMessage('Registro exitoso. Redirigiendo al perfil...');
       setTimeout(() => {
-        navigate('/login');
+        navigate('/profile');
       }, 2000);
     } else {
       setMessage('Error en el registro: ' + response.message);
@@ -84,7 +84,7 @@ const SignUp = () => {
           <input type="submit" value="Sign Up" />
         </form>
         {message && <p>{message}</p>}
-        <p class="log" >¿Ya tienes una cuenta? <a href="/login" id="login-link" >Log In</a></p>
+        <p className="log">¿Ya tienes una cuenta? <a href="/login" id="login-link">Log In</a></p>
       </div>
     </div>
   );
