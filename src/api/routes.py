@@ -249,7 +249,7 @@ def user_post_comments():
 
 # Permite a un usuario obtener todos los comentarios
 @api.route('/comments', methods=['GET'])
-def handle_comments():
+def get_all_comments():
     comments = db.session.execute(db.select(Comments).order_by(Comments.date.desc())).scalars()
     comments_serialized = [comment.serialize() for comment in comments]
     return jsonify(comments_serialized), 200
@@ -404,11 +404,13 @@ def product(id, product_id):
 @api.route('/products', methods=['GET'])
 def products():
     response_body = {}
-    products = db.session.execute(db.select(Products)).scalars()
+    if request.method == 'GET':
+        products = db.session.execute(db.select(Products)).scalars()
+        product_list = [product.serialize() for product in products]
     response_body['message'] = 'Listado de todos los productos'
-    product_list = [product.serialize() for product in products]
     response_body['results'] = product_list
-    return response_body, 200
+    return jsonify(response_body), 200
+
 
 # Productos favoritos
 # SEPARAR EL DELETE CON UN ID - el id debe llegar en el endpoint
@@ -488,33 +490,7 @@ def handle_comments():
         # Devolver los comentarios serializados en formato JSON
         return jsonify(comments_serialized), 200
 
-
-@api.route('/comments', methods=['POST'])
-@jwt_required()
-def user_post_comments():
-    response_body = {}
-    aditional_claims = get_jwt()
-    if not (aditional_claims.get('is_customer') or aditional_claims.get('is_vendor')):
-        response_body['message'] = 'Debe tener una cuenta activa para poder comentar'
-        return response_body, 401
-    # Obtener el id del usuario para asociarlo
-    user_id = aditional_claims.get('user_id')
-    if not user_id:
-        response_body['message'] = f'Usuario con id: {id} no encontrado'
-        return response_body, 401
-    data = request.json
-    new_comment = Comments(product_id=data.get('product_id'),
-                            user_id=data.get('user_id'),
-                            title=data.get('title'),
-                            description=data.get('description'),
-                            date=int(datetime.timestamp(datetime.now())))
-    db.session.add(new_comment)
-    db.session.commit()
-    response_body ['message'] = 'Comentario creado'
-    response_body['comment'] = new_comment.serialize()
-    return response_body, 201     
-
-
+#ELIMINAR ESTA LINEA
 # Permite a un User, editar o eliminar un comentario que haya creado y se encuentre vinculado a su ID
 @api.route('/comments/<int:comment_id>', methods=['PUT', 'DELETE'])
 @jwt_required()

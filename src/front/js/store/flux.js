@@ -2,6 +2,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
+			isLogged: false,
+			users: [],
+			products: [],
+			comments: [],
+			userRole: null,
+			token: typeof localStorage !== 'undefined' ? localStorage.getItem("token") || "" : ""
 		},
 		actions: {
 			exampleFunction: () => {getActions().changeColor(0, "green");},
@@ -17,6 +23,158 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ message: data.message })
 				return;
 			},
+			setIsLogged:(value) =>{setStore({isLogged: value})},
+			login: async(dataToSend) =>{
+				const uri = `${process.env.BACKEND_URL}/api/login`;
+				const options ={
+					method: 'POST',
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body:JSON.stringify(dataToSend)
+				};
+				const response = await fetch(uri, options);
+				if(!response.ok){
+					console.log('Error', response.status, response.statusText);
+					if(response.status == 401){
+						console.log("User not found")
+					}
+					return;
+				}
+				const data = await response.json()
+				localStorage.setItem('token', data.access_token)
+				const userRole = data.results.is_admin ? 'is_admin':
+								 data.results.is_vendor ? 'is_vendor':
+								 data.results.is_customer ? 'is_customer': null;
+				setStore({
+					isLogged: true,
+					user: data.results,
+					userRole: userRole
+				})
+			},
+			getUsers: async() =>{
+				const store = getStore();
+				const uri = `${process.env.BACKEND_URL}/api/users`
+				const options = {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${store.token}`
+					}
+				};
+				const response = await fetch(uri, options);
+				if(!response.ok){
+					console.log('Error', response.status, response.statusText);
+					return
+				}
+				const data = await response.json();
+				setStore({ users: data.results });			
+			},
+			getUserById: async(id) =>{
+				const uri = `${process.env.BACKEND_URL}/api/users/${id}`
+				const options = {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization:`Bearer ${localStorage.getItem("token")}`
+					}
+				};
+				const response = await fetch(uri, options);
+				if(!response.ok){
+					console.log('Error', response.status, response.statusText);
+					return
+				}
+				const data = await response.json();
+				return data.results;
+			},
+			updateUser: async (id, updateUser)	=> {
+				const store = getStore();
+				const uri = `${process.env.BACKEND_URL}/api/users/${id}`
+				const options = {
+					method: 'PUT',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${store.token}`
+					},
+					body: JSON.stringify(updateUser)
+				};
+				try{
+					const response = await fetch(uri, options);
+					if (!response.ok){
+						console.log('Error', response.status, response.statusText);
+						return
+					};
+					const data = await response.json();
+					console.log("Usuario actualizado", data);
+					setStore({
+						users: store.users.map(user => (user.id === id ? { ...user, ...updateUser} : user))
+					});
+					alert("Usuario actualizado correctamente");
+				}catch (error){
+					console.error("Error en updateUser:", error);
+					alert("No se pudo actualizar el usuario");
+					return false;
+				}				
+			},
+			deactivateUser: async(id) =>{
+				const store = getStore();
+				const uri = `${process.env.BACKEND_URL}/api/users/${id}`;
+				const options = {
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+						Autorization: `Bearer ${store.token}`
+					},
+					body: JSON.stringify({ is_active: false })
+				};
+				try{
+					const response = await fetch(uri, options);
+					if(!response.ok) throw new Error("Error al desactivar al usuario");
+					const data = await response.json();
+					console.log("Usuario desactivado:", data);
+					setStore({
+						users: store.users.map(user => (user.id === id ? { ...user, is_active:false} : user))
+					});
+					alert("Usuario dado de baja correctamente");
+					return true;
+				}catch (error){
+					console.error("Error en desactivar usuario:", error);
+					alert("No se pudo desactivar el usuario");
+					return false;
+				}
+			},			
+			getProducts: async() =>{
+				const uri = `${process.env.BACKEND_URL}/api/products`
+				const options = {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json"
+					}
+				};
+				const response = await fetch(uri, options);
+				if(!response.ok){
+					console.log('Eror', response.status, response.statusText);
+					return
+				}
+				const data = await response.json()
+				setStore({ products: data.results });				
+			},
+			getComments: async () => {
+				const uri = `${process.env.BACKEND_URL}/api/comments`;
+				const options = {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json"
+					}
+				};
+				const response = await fetch(uri, options);
+				if(!response.ok){
+					console.log('Error', response.status, response.statusText);
+					return
+				}
+				const data = await response.json();
+				setStore({ comments: data.results});
+			}
 		}
 	};
 };

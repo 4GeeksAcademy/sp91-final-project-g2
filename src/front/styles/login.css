@@ -1,0 +1,81 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-container {
+  position: relative;
+  width: 800px;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url('https://www.infobae.com/resizer/v2/3FI2PE4OHRBCVJGUDQEZKZU3SE.jpg?auth=02e7c04b053a0671829c80caea309dc040d75c6a7e78af7cc06cf343993515d1&smart=true&width=992&height=744&quality=85') no-repeat center center;
+  background-size: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.login-content {
+  display: flex;
+  width: 90%;
+  color: white;
+  padding: 20px;
+}
+
+.left {
+  flex: 1;
+  padding: 20px;
+}
+
+.left h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.social-icons .icon {
+  display: inline-block;
+  background: white;
+  color: black;
+  margin-right: 10px;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.right {
+  flex: 1;
+  padding: 20px;
+  background-color: transparent;
+}
+
+.right h2 {
+  color: #d4af37; /* Dorado */
+}
+
+.right input {
+  border: none;
+  border-bottom: 2px solid #d4af37;
+  background: transparent;
+  color: white;
+  padding: 10px;
+}
