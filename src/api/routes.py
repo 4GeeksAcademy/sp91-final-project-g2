@@ -412,8 +412,8 @@ def products():
     return jsonify(response_body), 200
 
 
-# Permite pasar a un producto a estado inactivo - NUEVO
-@api.route('/products/<int:id>', methods=['PUT'])
+# Permite pasar a un producto a estado inactivo y obtener información de un producto especifico - NUEVO
+@api.route('/products/<int:id>', methods=['GET', 'PUT'])
 @jwt_required()
 def update_product(id):
     response_body = {}
@@ -425,17 +425,22 @@ def update_product(id):
     if not row:
         response_body['message'] = 'Producto no encontrado'
         return response_body, 404
-    data = request.json
-    row.name = data.get('name', row.name)
-    row.category = data.get('category', row.category)
-    row.description = data.get('description', row.description)
-    row.price = data.get('price', row.price)
-    row.photo = data.get('photo', row.photo)
-    row.in_sell = data.get('in_sell', row.in_sell)
-    db.session.commit()
-    response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
-    response_body['results'] = row.serialize()
-    return response_body, 200    
+    if request.method == 'GET':
+        response_body['message'] = 'Listado de todos los productos'
+        response_body['results'] = row.serialize()
+        return jsonify(response_body), 200
+    if request.method == 'PUT':   
+        data = request.json
+        row.name = data.get('name', row.name)
+        row.category = data.get('category', row.category)
+        row.description = data.get('description', row.description)
+        row.price = data.get('price', row.price)
+        row.photo = data.get('photo', row.photo)
+        row.in_sell = data.get('in_sell', row.in_sell)
+        db.session.commit()
+        response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
+        response_body['results'] = row.serialize()
+        return jsonify(response_body), 200    
 
 
 # Productos favoritos

@@ -23,8 +23,7 @@ export const ProductListPage = () => {
             <h1>Administración</h1>
             <h2>Listado de Productos</h2>
             <ProductList products={store.products} onDeactivate={handleDeactivateProduct}/>
-            <button className="btn btn-secondary" onClick={() => navigate('/adminpage')}>Regresar</button>
-                
+            <button className="btn btn-secondary" onClick={() => navigate('/adminpage')}>Regresar</button>                
         </div>
     );
 };

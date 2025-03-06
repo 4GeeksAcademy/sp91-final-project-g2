@@ -15,6 +15,7 @@ import { AdminPage } from "./pages/AdminPage.jsx";
 import { UserListPage } from "./pages/Administrador/UserListPage.jsx";
 import { UserDetailPage } from "./pages/Administrador/UserDetailPage.jsx";
 import { ProductListPage } from "./pages/Administrador/ProductListPage.jsx";
+import { ProductDetail } from "./component/Admin/ProductDetails.jsx";
 
 
 // Create your first component
@@ -39,6 +40,7 @@ const Layout = () => {
                         <Route element={<UserListPage />} path="/user-list"/>
                         <Route element={<UserDetailPage/>} path="/user-details/:id"/>
                         <Route element={<ProductListPage />} path="product-list"/>
+                        <Route element={<ProductDetail />} path="product-detail/:id"/>
                         <Route element={<PruebaCustomer />} path="/pruebacustomer" />
                         <Route element={<PruebaVendor />} path="/pruebavendor" />
                         <Route element={<h1>Not found!</h1>} />

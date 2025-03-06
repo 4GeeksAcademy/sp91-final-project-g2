@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../../store/appContext";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { UserDetail } from "../../component/Admin/UserDetails.jsx";
 
 export const UserDetailPage = () => {
@@ -8,7 +8,6 @@ export const UserDetailPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [userData, setUserData] = useState(null);
-
 
     useEffect(() => {
         if (!store.isLogged || store.userRole !== "is_admin") {

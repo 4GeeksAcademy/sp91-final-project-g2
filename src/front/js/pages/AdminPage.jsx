@@ -16,11 +16,11 @@ export const AdminPage = () => {
 
     useEffect(() => {
         if (!store.isLogged || store.userRole !== "is_admin") {
-          alert("Acceso denegado");
-          navigate("/login");
+            alert("Acceso denegado");
+            navigate("/login");
         }
-      }, [store.isLogged, store.userRole, navigate]);
-    
+    }, [store.isLogged, store.userRole, navigate]);
+
     useEffect(() => {
         actions.getUsers();
         actions.getProducts();
@@ -29,9 +29,9 @@ export const AdminPage = () => {
 
     const handleUserSearch = () => {
         const userFound = store.users.find(user => user.email.toLowerCase().includes(searchUser.toLowerCase()));
-        if (userFound){
+        if (userFound) {
             navigate(`/user-details/${userFound.id}`)
-        }else{
+        } else {
             alert("Usuario no encontrado");
         }
     }
@@ -72,10 +72,10 @@ export const AdminPage = () => {
                         <div className="card-body">
                             <h5 className="card-title">Productos en Venta</h5>
                             <p>Total Publicados: {totalProducts}</p>
-                            <p>Total Vendidos: {totalSold}</p>                           
+                            <p>Total Vendidos: {totalSold}</p>
                             <div className="input-group">
                                 <input type="text" className="form-control" placeholder="Buscar producto..." value={searchProduct} onChange={(e) => setSearchProduct(e.target.value)} />
-                                <button className="btn btn-primary" onClick={() => navigate(`/productdetail?search=${searchProduct}`)}>
+                                <button className="btn btn-primary" onClick={() => navigate(`/product-detail?search=${searchProduct}`)}>
                                     <FaSearch /></button>
                             </div>
                         </div>
@@ -89,7 +89,7 @@ export const AdminPage = () => {
                             <p>Total de Comentarios: {totalComments}</p>
                         </div>
                     </div>
-                </div>                
+                </div>
             </div>
             <div className="d-flex gap-3">
                 <button className="btn btn-primary" onClick={() => navigate("/user-list")}>Listado de usuarios</button>

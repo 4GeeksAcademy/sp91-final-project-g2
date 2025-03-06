@@ -160,21 +160,67 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const data = await response.json()
 				setStore({ products: data.results });				
 			},
+			getProductById: async (id) =>{
+				const store = getStore();
+				const uri = `${process.env.BACKEND_URL}/api/products/${id}`;
+				const options = {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization:`Bearer ${store.token}`
+					}
+				};
+				const response = await fetch(uri, options);
+				if(!response.ok){
+					console.log('Error', response.status, response.statusText);
+					return;
+				}
+				const data = await response.json();
+				return data.results
+			},
+			updateProduct: async(id, updateProduct) => {
+				const store = getStore();
+				const uri = `${process.env.BACKEND_URL}/api/products/${id}`;
+				const options = {
+					headers: {
+						method: 'PUT',
+						Authorization: `Bearer ${store.token}`
+					},
+					body: JSON.stringify(updateProduct)
+				}
+				try{
+					const response = await fetch(uri, options);
+					if(!response.ok){
+						console.log('Error', response.status, response.statusText);
+						return false;
+					}
+					const data = await response.json();
+					console.log("Producto actualizado", data);
+					setStore({ products: store.products.map(product => product.id === id ?  {...product, ...productData} : product )});
+					alert ("Producto actualizado correctamente")
+					return true;
+				}catch(error){
+					console.error("Error en actualizar el producto:", error);
+					alert("No se pudo actualizar el producto");
+					return false;
+				}
+			},
+			
 			deactivateProduct: async(id) => {
 				const store = getStore();
-				const uri = `${process.env.BACKEND_URL}/api/products`;
+				const uri = `${process.env.BACKEND_URL}/api/products/${id}`;
 				const options = {
 					method: 'PUT',
 					headers: {
 						"Content-Type": "application/json",
-						Autorization: `Bearer ${store.tokern}`
+						Authorization: `Bearer ${store.token}`
 					},
 					body:JSON.stringify({ in_sell: false })
 				};
 				try{
 					const response = await fetch(uri, options);
 					if(!response.ok){
-						throw new Error('Error al desactivar el producto: ${response.status')
+						throw new Error(`Error al desactivar el producto: ${response.status}`)
 					}
 					const data = await response.json();
 					console.log("Producto desactivado", data);
