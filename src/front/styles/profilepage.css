@@ -26,7 +26,7 @@ body {
   top: 53%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 300px; 
+  width: 400px; 
   padding: 15px; 
   z-index: 2;
   background: rgba(0, 0, 0, 0.5);
