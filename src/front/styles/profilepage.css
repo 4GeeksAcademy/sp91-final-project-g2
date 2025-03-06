@@ -1,87 +1,120 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: rgb(191, 139, 103);
+  color: #fff;
+  font-family: 'Nixie One', sans-serif;
+  font-size: 12px;
+}
+
+.body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://www.roastycoffee.com/wp-content/uploads/coffee-bean.jpg');
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}
+
 .profile-page {
-  padding: 20px;
-}
-
-.profile-header {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.profile-details {
-  margin: 0 auto;
-  max-width: 600px;
-  background-color: #f9f9f9;
-  padding: 20px;
+  position: absolute;
+  top: 53%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px; 
+  padding: 15px; 
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.profile-details p {
-  margin: 10px 0;
-}
-
-.edit-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  margin-top: 20px;
 }
 
-.edit-button {
-  background-color: #6f4e37;
-  border: none;
-  color: #E0D8B0;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 10px 2px;
-  cursor: pointer;
+.profile-page h2 {
+  color: rgb(219, 203, 150);
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.profile-picture {
+  width: 80px; 
+  height: 80px; 
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 15px; 
+}
+
+.profile-picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.form-group {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: rgb(219, 203, 150);
+  font-size: 15px; 
+}
+
+.form-group input {
+  width: 100%;
+  padding: 6px; 
+  border: none; 
   border-radius: 5px;
+  background: transparent;
+  color: rgb(191, 139, 103);
+  font-family: 'Exo', sans-serif;
+  font-size: 14px; 
+  font-weight: 400;
+  margin-top: 5px; 
 }
 
-.edit-button:hover {
-  background-color: #533825;
-}.profile-page {
-  padding: 20px;
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+  .profile-page {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    padding: 15px;
+  }
+
+  .form-group input {
+    padding: 6px;
+  }
+
+  .profile-page input[type=submit] {
+    padding: 8px;
+    font-size: 14px;
+  }
 }
 
-.profile-header {
-  text-align: center;
-  margin-bottom: 20px;
-}
+@media (max-width: 480px) {
+  .profile-page {
+    width: 100%;
+    padding: 10px;
+  }
 
-.profile-details {
-  margin: 0 auto;
-  max-width: 600px;
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+  .form-group input {
+    padding: 4px;
+  }
 
-.profile-details p {
-  margin: 10px 0;
-}
-
-.edit-button-container {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.edit-button {
-  background-color: #6f4e37;
-  border: none;
-  color: #E0D8B0;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 10px 2px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.edit-button:hover {
-  background-color: #533825;
+  .profile-page input[type=submit] {
+    padding: 6px;
+    font-size: 12px;
+  }
 }

@@ -19,9 +19,9 @@ const SignUp = () => {
     e.preventDefault();
     const response = await actions.signup(firstName, lastName, address, phone, email, password, role);
     if (response.success) {
-      setMessage('Registro exitoso. Redirigiendo al perfil...');
+      setMessage('Registro exitoso. Redirigiendo a la página de inicio...');
       setTimeout(() => {
-        navigate('/profile');
+        navigate('/home');
       }, 2000);
     } else {
       setMessage('Error en el registro: ' + response.message);

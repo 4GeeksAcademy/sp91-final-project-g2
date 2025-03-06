@@ -247,14 +247,6 @@ def user_post_comments():
     return response_body, 201
 
 
-# Permite a un usuario obtener todos los comentarios
-@api.route('/comments', methods=['GET'])
-def handle_comments():
-    comments = db.session.execute(db.select(Comments).order_by(Comments.date.desc())).scalars()
-    comments_serialized = [comment.serialize() for comment in comments]
-    return jsonify(comments_serialized), 200
-
-
 # Permite al Administrador obtener los productos publicados por un usuario con rol de vendedor.
 @api.route('/users/<int:user_id>/products', methods=['GET'])
 @jwt_required()
@@ -488,6 +480,7 @@ def handle_comments():
         # Devolver los comentarios serializados en formato JSON
         return jsonify(comments_serialized), 200
 
+"""
 
 @api.route('/comments', methods=['POST'])
 @jwt_required()
@@ -513,7 +506,7 @@ def user_post_comments():
     response_body ['message'] = 'Comentario creado'
     response_body['comment'] = new_comment.serialize()
     return response_body, 201     
-
+"""
 
 # Permite a un User, editar o eliminar un comentario que haya creado y se encuentre vinculado a su ID
 @api.route('/comments/<int:comment_id>', methods=['PUT', 'DELETE'])
