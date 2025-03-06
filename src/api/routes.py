@@ -412,6 +412,32 @@ def products():
     return jsonify(response_body), 200
 
 
+# Permite pasar a un producto a estado inactivo - NUEVO
+@api.route('/products/<int:id>', methods=['PUT'])
+@jwt_required()
+def update_product(id):
+    response_body = {}
+    additional_claims = get_jwt()
+    if not additional_claims.get('is_admin', False):
+        response_body['message'] = 'Acceso Denegado'
+        return jsonify(response_body), 403
+    row = db.session.execute(db.select(Products).where(Products.id == id)).scalar()
+    if not row:
+        response_body['message'] = 'Producto no encontrado'
+        return response_body, 404
+    data = request.json
+    row.name = data.get('name', row.name)
+    row.category = data.get('category', row.category)
+    row.description = data.get('description', row.description)
+    row.price = data.get('price', row.price)
+    row.photo = data.get('photo', row.photo)
+    row.in_sell = data.get('in_sell', row.in_sell)
+    db.session.commit()
+    response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
+    response_body['results'] = row.serialize()
+    return response_body, 200    
+
+
 # Productos favoritos
 # SEPARAR EL DELETE CON UN ID - el id debe llegar en el endpoint
 @api.route('/favorites', methods=['GET', 'POST'])
@@ -490,7 +516,7 @@ def handle_comments():
         # Devolver los comentarios serializados en formato JSON
         return jsonify(comments_serialized), 200
 
-#ELIMINAR ESTA LINEA
+
 # Permite a un User, editar o eliminar un comentario que haya creado y se encuentre vinculado a su ID
 @api.route('/comments/<int:comment_id>', methods=['PUT', 'DELETE'])
 @jwt_required()
@@ -530,8 +556,6 @@ def user_edit_comment(comment_id):
 
 
 ## CRUD para ORDERS
-    
-
 @api.route('/orders', methods=['GET', 'POST'])
 @jwt_required()
 def orders():

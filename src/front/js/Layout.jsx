@@ -12,9 +12,9 @@ import { PruebaCustomer } from "./pages/PruebaCustomer.jsx";
 import { PruebaVendor } from "./pages/PruebaVendor.jsx";
 import { Login } from "./pages/Login.jsx";
 import { AdminPage } from "./pages/AdminPage.jsx";
-import { UserList } from "./component/Admin/UserList.jsx";
-import { UserDetail } from "./component/Admin/UserDetails.jsx";
-
+import { UserListPage } from "./pages/Administrador/UserListPage.jsx";
+import { UserDetailPage } from "./pages/Administrador/UserDetailPage.jsx";
+import { ProductListPage } from "./pages/Administrador/ProductListPage.jsx";
 
 
 // Create your first component
@@ -36,8 +36,9 @@ const Layout = () => {
                         {/* <Route element={<Single />} path="/single/:theid" /> */}
                         <Route element={<Login />} path="/login" />
                         <Route element={<AdminPage />} path="/adminpage" />
-                        <Route element={<UserList />} path="/userlist" />
-                        <Route element={<UserDetail />} path="/user-details/:id" />
+                        <Route element={<UserListPage />} path="/user-list"/>
+                        <Route element={<UserDetailPage/>} path="/user-details/:id"/>
+                        <Route element={<ProductListPage />} path="product-list"/>
                         <Route element={<PruebaCustomer />} path="/pruebacustomer" />
                         <Route element={<PruebaVendor />} path="/pruebavendor" />
                         <Route element={<h1>Not found!</h1>} />

@@ -19,10 +19,22 @@ export const AdminPage = () => {
           alert("Acceso denegado");
           navigate("/login");
         }
+      }, [store.isLogged, store.userRole, navigate]);
+    
+    useEffect(() => {
         actions.getUsers();
         actions.getProducts();
         actions.getComments();
-      }, [store.isLogged, store.userRole, navigate]);
+    }, [actions]);
+
+    const handleUserSearch = () => {
+        const userFound = store.users.find(user => user.email.toLowerCase().includes(searchUser.toLowerCase()));
+        if (userFound){
+            navigate(`/user-details/${userFound.id}`)
+        }else{
+            alert("Usuario no encontrado");
+        }
+    }
 
     const totalUsers = store.users?.filter(user => user.is_customer && user.is_vendor).length || 0;
     const totalVendors = store.users?.filter(user => user.is_vendor).length || 0;
@@ -47,8 +59,8 @@ export const AdminPage = () => {
                             <p>Total de Usuarios Activos: {activeUsers}</p>
                             <p>Total de Usuarios Inactivos: {inactiveUsers}</p>
                             <div className="input-group">
-                                <input type="text" className="form-control" placeholder="Buscar usuario..." value={searchUser} onChange={(e) => setSearchUser(e.target.value)} />
-                                <button className="btn btn-primary" onClick={() => navigate(`/user-details/${id}?search=${searchUser}`)}>
+                                <input type="text" className="form-control" placeholder="Buscar usuario por email..." value={searchUser} onChange={(e) => setSearchUser(e.target.value)} />
+                                <button className="btn btn-primary" onClick={handleUserSearch}>
                                     <FaSearch /></button>
                             </div>
                         </div>
@@ -80,8 +92,8 @@ export const AdminPage = () => {
                 </div>                
             </div>
             <div className="d-flex gap-3">
-                <button className="btn btn-primary" onClick={() => navigate("/userlist")}>Listado de usuarios</button>
-                <button className="btn btn-primary" onClick={() => navigate("/")}>Listado de productos</button>
+                <button className="btn btn-primary" onClick={() => navigate("/user-list")}>Listado de usuarios</button>
+                <button className="btn btn-primary" onClick={() => navigate("/product-list")}>Listado de productos</button>
                 <button className="btn btn-primary" onClick={() => navigate("/")}>Listado de Comentarios</button>
                 <button className="btn btn-danger" onClick={handleLogout}>Cerrar Sesión</button>
             </div>

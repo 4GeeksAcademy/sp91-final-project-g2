@@ -70,13 +70,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const data = await response.json();
 				setStore({ users: data.results });			
 			},
-			getUserById: async(id) =>{
-				const uri = `${process.env.BACKEND_URL}/api/users/${id}`
+			getUserById: async(id) => {
+				const store = getStore();
+				const uri = `${process.env.BACKEND_URL}/api/users/${id}`;
 				const options = {
 					method: 'GET',
 					headers: {
 						"Content-Type": "application/json",
-						Authorization:`Bearer ${localStorage.getItem("token")}`
+						Authorization:`Bearer ${store.token}`
 					}
 				};
 				const response = await fetch(uri, options);
@@ -158,6 +159,35 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 				const data = await response.json()
 				setStore({ products: data.results });				
+			},
+			deactivateProduct: async(id) => {
+				const store = getStore();
+				const uri = `${process.env.BACKEND_URL}/api/products`;
+				const options = {
+					method: 'PUT',
+					headers: {
+						"Content-Type": "application/json",
+						Autorization: `Bearer ${store.tokern}`
+					},
+					body:JSON.stringify({ in_sell: false })
+				};
+				try{
+					const response = await fetch(uri, options);
+					if(!response.ok){
+						throw new Error('Error al desactivar el producto: ${response.status')
+					}
+					const data = await response.json();
+					console.log("Producto desactivado", data);
+					setStore({ products: store.products.map(product => product.id === id ? { ...product, in_sell:false } : product)
+				});
+				alert("Producto dado de baja correctamente");
+				return true;
+				}catch(error){
+					console.error("Error en desactivar producto:", error);
+					alert("No se pudo desactivar el producto");
+					return false;
+				}
+
 			},
 			getComments: async () => {
 				const uri = `${process.env.BACKEND_URL}/api/comments`;
