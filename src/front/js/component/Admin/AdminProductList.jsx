@@ -2,7 +2,7 @@ import React from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-export const ProductList = ({ products, onDeactivate }) => {
+export const AdminProductList = ({ products, onDeactivate }) => {
     const navigate = useNavigate();
 
 

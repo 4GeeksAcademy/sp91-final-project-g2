@@ -1,7 +1,7 @@
 import React from "react";
 import { FaEdit, FaCamera } from "react-icons/fa";
 
-export const ProductDetail = ({ product, editMode, toggleEditMode, onChange, onSubmit, onDeactivate, onPhotoAction }) => {
+export const AdminProductDetail = ({ product, editMode, toggleEditMode, onChange, onSubmit, onDeactivate, onPhotoAction }) => {
   
   if (!product || Object.keys(product).length === 0) return <p>Cargando producto...</p>;
 
