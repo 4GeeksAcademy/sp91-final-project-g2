@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ProductDetail } from "../../component/Admin/ProductDetails.jsx";
 import { Context } from "../../store/appContext";
 import { useNavigate, useParams } from "react-router-dom";
+import { AdminProductDetail } from "../../component/Admin/AdminProductsDetails.jsx";
 
 export const ProductDetailPage = () => {
   const { store, actions } = useContext(Context);
@@ -78,7 +78,7 @@ export const ProductDetailPage = () => {
     <div className="container mt-4">
       <h2>Detalle del Producto</h2>
       {Object.keys(productData).length > 0 ? (
-        <ProductDetail 
+        <AdminProductDetail 
           product={productData}
           editMode={editMode}
           toggleEditMode={toggleEditMode}

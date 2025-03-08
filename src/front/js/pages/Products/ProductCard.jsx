@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import PropTypes from "prop-types";
+/* import PropTypes from "prop-types"; */
 import { Context } from "../../store/appContext";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -33,7 +33,7 @@ export const ProductCard = ({ product }) => {
 };
 
 // Validación de props
-ProductCard.propTypes = {
+/* ProductCard.propTypes = {
   product: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
@@ -41,6 +41,5 @@ ProductCard.propTypes = {
     price: PropTypes.number.isRequired,
     photo: PropTypes.string,
   }).isRequired,
-};
+}; */
 
-export default ProductCard;
