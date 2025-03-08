@@ -397,10 +397,42 @@ def product(id, product_id):
 def products():
     response_body = {}
     products = db.session.execute(db.select(Products)).scalars()
-    response_body['message'] = 'Listado de todos los productos'
     product_list = [product.serialize() for product in products]
+    response_body['message'] = 'Listado de todos los productos'
     response_body['results'] = product_list
-    return response_body, 200
+    return jsonify(response_body), 200
+
+
+# Permite pasar a un producto a estado inactivo y obtener información de un producto especifico - NUEVO
+@api.route('/products/<int:id>', methods=['GET', 'PUT'])
+@jwt_required()
+def update_product(id):
+    response_body = {}
+    additional_claims = get_jwt()
+    if not additional_claims.get('is_admin', False):
+        response_body['message'] = 'Acceso Denegado'
+        return jsonify(response_body), 403
+    row = db.session.execute(db.select(Products).where(Products.id == id)).scalar()
+    if not row:
+        response_body['message'] = 'Producto no encontrado'
+        return response_body, 404
+    if request.method == 'GET':
+        response_body['message'] = 'Detalle del producto'
+        response_body['results'] = row.serialize()
+        return jsonify(response_body), 200
+    if request.method == 'PUT':   
+        data = request.json
+        row.name = data.get('name', row.name)
+        row.category = data.get('category', row.category)
+        row.description = data.get('description', row.description)
+        row.price = data.get('price', row.price)
+        row.photo = data.get('photo', row.photo)
+        row.in_sell = data.get('in_sell', row.in_sell)
+        db.session.commit()
+        response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
+        response_body['results'] = row.serialize()
+        return jsonify(response_body), 200    
+
 
 # Productos favoritos
 # SEPARAR EL DELETE CON UN ID - el id debe llegar en el endpoint
@@ -480,33 +512,6 @@ def handle_comments():
         # Devolver los comentarios serializados en formato JSON
         return jsonify(comments_serialized), 200
 
-"""
-
-@api.route('/comments', methods=['POST'])
-@jwt_required()
-def user_post_comments():
-    response_body = {}
-    aditional_claims = get_jwt()
-    if not (aditional_claims.get('is_customer') or aditional_claims.get('is_vendor')):
-        response_body['message'] = 'Debe tener una cuenta activa para poder comentar'
-        return response_body, 401
-    # Obtener el id del usuario para asociarlo
-    user_id = aditional_claims.get('user_id')
-    if not user_id:
-        response_body['message'] = f'Usuario con id: {id} no encontrado'
-        return response_body, 401
-    data = request.json
-    new_comment = Comments(product_id=data.get('product_id'),
-                            user_id=data.get('user_id'),
-                            title=data.get('title'),
-                            description=data.get('description'),
-                            date=int(datetime.timestamp(datetime.now())))
-    db.session.add(new_comment)
-    db.session.commit()
-    response_body ['message'] = 'Comentario creado'
-    response_body['comment'] = new_comment.serialize()
-    return response_body, 201     
-"""
 
 # Permite a un User, editar o eliminar un comentario que haya creado y se encuentre vinculado a su ID
 @api.route('/comments/<int:comment_id>', methods=['PUT', 'DELETE'])
@@ -547,8 +552,6 @@ def user_edit_comment(comment_id):
 
 
 ## CRUD para ORDERS
-    
-
 @api.route('/orders', methods=['GET', 'POST'])
 @jwt_required()
 def orders():

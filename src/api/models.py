@@ -41,10 +41,10 @@ class Products(db.Model):
     category = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text)
     price = db.Column(db.Float, nullable=False)
-    photo = db.Column(db.String(255))
+    photo = db.Column(db.String(255), nullable=True)
     in_sell = db.Column(db.Boolean, default=True)
     vendor_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    vendor_to = db.relationship('Users', backref=db.backref('product_to', lazy='select'))
+    vendor_to = db.relationship('Users', backref=db.backref('product_to', lazy='select'))    
 
     def serialize(self):
         return {"id": self.id,
@@ -54,7 +54,7 @@ class Products(db.Model):
                 "price": self.price,
                 "photo": self.photo,
                 "in_sell": self.in_sell,
-                "vendor_id": self.vendor_id}
+                "vendor_id": self.vendor_id}    
 
 
 class Comments(db.Model):
