@@ -41,7 +41,7 @@ class Products(db.Model):
     category = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text)
     price = db.Column(db.Float, nullable=False)
-    photo = db.Column(db.String(255))
+    photo = db.Column(db.String(255), nullable=True)
     in_sell = db.Column(db.Boolean, default=True)
     vendor_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     vendor_to = db.relationship('Users', backref=db.backref('product_to', lazy='select'))    

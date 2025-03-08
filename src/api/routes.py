@@ -404,9 +404,8 @@ def product(id, product_id):
 @api.route('/products', methods=['GET'])
 def products():
     response_body = {}
-    if request.method == 'GET':
-        products = db.session.execute(db.select(Products)).scalars()
-        product_list = [product.serialize() for product in products]
+    products = db.session.execute(db.select(Products)).scalars()
+    product_list = [product.serialize() for product in products]
     response_body['message'] = 'Listado de todos los productos'
     response_body['results'] = product_list
     return jsonify(response_body), 200
@@ -426,7 +425,7 @@ def update_product(id):
         response_body['message'] = 'Producto no encontrado'
         return response_body, 404
     if request.method == 'GET':
-        response_body['message'] = 'Listado de todos los productos'
+        response_body['message'] = 'Detalle del producto'
         response_body['results'] = row.serialize()
         return jsonify(response_body), 200
     if request.method == 'PUT':   

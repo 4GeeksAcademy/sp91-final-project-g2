@@ -6,6 +6,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			users: [],
 			products: [],
 			comments: [],
+			currentProduct: {},
 			userRole: null,
 			token: typeof localStorage !== 'undefined' ? localStorage.getItem("token") || "" : ""
 		},
@@ -24,33 +25,42 @@ const getState = ({ getStore, getActions, setStore }) => {
 				return;
 			},
 			setIsLogged:(value) =>{setStore({isLogged: value})},
-			login: async(dataToSend) =>{
+			login: async (dataToSend) => {
 				const uri = `${process.env.BACKEND_URL}/api/login`;
-				const options ={
+				const options = {
 					method: 'POST',
-					headers: {
-						"Content-Type": "application/json"
-					},
-					body:JSON.stringify(dataToSend)
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(dataToSend)
 				};
-				const response = await fetch(uri, options);
-				if(!response.ok){
-					console.log('Error', response.status, response.statusText);
-					if(response.status == 401){
-						console.log("User not found")
+			
+				try {
+					const response = await fetch(uri, options);
+					if (!response.ok) {
+						console.log('Error', response.status, response.statusText);
+						return;
 					}
-					return;
+			
+					const data = await response.json();
+					
+					if (data.access_token) {
+						localStorage.setItem('token', data.access_token);
+					} else {
+						console.error("No se recibió un token en la respuesta del servidor.");
+					}
+			
+					const userRole = data.results.is_admin ? 'is_admin' :
+									data.results.is_vendor ? 'is_vendor' :
+									data.results.is_customer ? 'is_customer' : null;
+			
+					setStore({
+						isLogged: true,
+						user: data.results,
+						userRole: userRole
+					});
+			
+				} catch (error) {
+					console.error("Error en el login:", error);
 				}
-				const data = await response.json()
-				localStorage.setItem('token', data.access_token)
-				const userRole = data.results.is_admin ? 'is_admin':
-								 data.results.is_vendor ? 'is_vendor':
-								 data.results.is_customer ? 'is_customer': null;
-				setStore({
-					isLogged: true,
-					user: data.results,
-					userRole: userRole
-				})
 			},
 			getUsers: async() =>{
 				const store = getStore();
@@ -145,11 +155,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},			
 			getProducts: async() =>{
+				const store = getStore();
 				const uri = `${process.env.BACKEND_URL}/api/products`
 				const options = {
 					method: 'GET',
 					headers: {
-						"Content-Type": "application/json"
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${store.token}`
 					}
 				};
 				const response = await fetch(uri, options);
@@ -161,45 +173,65 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ products: data.results });				
 			},
 			getProductById: async (id) =>{
-				const store = getStore();
+				const token = localStorage.getItem("token");
 				const uri = `${process.env.BACKEND_URL}/api/products/${id}`;
 				const options = {
 					method: 'GET',
 					headers: {
 						"Content-Type": "application/json",
-						Authorization:`Bearer ${store.token}`
+						Authorization:`Bearer ${token}`
 					}
 				};
-				const response = await fetch(uri, options);
-				if(!response.ok){
-					console.log('Error', response.status, response.statusText);
-					return;
-				}
-				const data = await response.json();
-				return data.results
-			},
-			updateProduct: async(id, updateProduct) => {
-				const store = getStore();
-				const uri = `${process.env.BACKEND_URL}/api/products/${id}`;
-				const options = {
-					headers: {
-						method: 'PUT',
-						Authorization: `Bearer ${store.token}`
-					},
-					body: JSON.stringify(updateProduct)
-				}
 				try{
 					const response = await fetch(uri, options);
 					if(!response.ok){
 						console.log('Error', response.status, response.statusText);
-						return false;
+						return null;
 					}
 					const data = await response.json();
-					console.log("Producto actualizado", data);
-					setStore({ products: store.products.map(product => product.id === id ?  {...product, ...productData} : product )});
-					alert ("Producto actualizado correctamente")
-					return true;
+					setStore({currentProduct: data.results });
+					return data;
 				}catch(error){
+					console.error("Error al obtener el producto:", error);
+					return null;
+				}
+			},
+			updateProduct: async(id, updateProduct) => {
+				const store = getStore();
+				const uri = `${process.env.BACKEND_URL}/api/products/${id}`;
+				const token = store.token;
+			
+				// Verificación del token
+				if (!token) {
+					alert("No se pudo obtener el token. Por favor, inicia sesión nuevamente.");
+					return false;
+				}
+			
+				const options = {
+					method: 'PUT',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`
+					},
+					body: JSON.stringify(updateProduct)
+				};
+			
+				try {
+					const response = await fetch(uri, options);
+					if (!response.ok) {
+						const errorResponse = await response.text();
+						console.log('Error', response.status, response.statusText, errorResponse);
+						return false;
+					}
+			
+					const data = await response.json();
+					console.log("Producto actualizado", data);
+			
+					// Actualización de estado en el store con el producto actualizado
+					setStore({ products: store.products.map(product => product.id === id ? {...product, ...data} : product )});
+					alert("Producto actualizado correctamente");
+					return true;
+				} catch (error) {
 					console.error("Error en actualizar el producto:", error);
 					alert("No se pudo actualizar el producto");
 					return false;

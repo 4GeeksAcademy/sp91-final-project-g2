@@ -9,13 +9,19 @@ export const LoginForm = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (store.isLogged){
-            if(store.userRole === 'is_admin'){
-                navigate('/adminpage');
-            } else if (store.userRole === 'is_vendor'){
-                navigate('/pruebavendor');
-            } else if (store.userRole === 'is_customer'){
-                navigate('/pruebacustomer')
+        if (store.isLogged) {
+            switch (store.userRole) {
+                case 'is_admin':
+                    navigate('/adminpage');
+                    break;
+                case 'is_vendor':
+                    navigate('/pruebavendor');
+                    break;
+                case 'is_customer':
+                    navigate('/pruebacustomer');
+                    break;
+                default:
+                    console.error("Rol de usuario no reconocido.");
             }
         }
     }, [store.isLogged, store.userRole, navigate]);

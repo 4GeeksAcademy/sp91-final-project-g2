@@ -94,7 +94,7 @@ export const AdminPage = () => {
             <div className="d-flex gap-3">
                 <button className="btn btn-primary" onClick={() => navigate("/user-list")}>Listado de usuarios</button>
                 <button className="btn btn-primary" onClick={() => navigate("/product-list")}>Listado de productos</button>
-                <button className="btn btn-primary" onClick={() => navigate("/")}>Listado de Comentarios</button>
+                <button className="btn btn-primary" onClick={() => navigate("/comment-list")}>Listado de Comentarios</button>
                 <button className="btn btn-danger" onClick={handleLogout}>Cerrar Sesión</button>
             </div>
         </div>

@@ -8,14 +8,13 @@ import { Navbar } from "./component/Navbar.jsx";
 import { Footer } from "./component/Footer.jsx";
 // Custom Pages or Views
 import { Home } from "./pages/Home.jsx";
-import { PruebaCustomer } from "./pages/PruebaCustomer.jsx";
-import { PruebaVendor } from "./pages/PruebaVendor.jsx";
 import { Login } from "./pages/Login.jsx";
 import { AdminPage } from "./pages/AdminPage.jsx";
 import { UserListPage } from "./pages/Administrador/UserListPage.jsx";
 import { UserDetailPage } from "./pages/Administrador/UserDetailPage.jsx";
 import { ProductListPage } from "./pages/Administrador/ProductListPage.jsx";
-import { ProductDetail } from "./component/Admin/ProductDetails.jsx";
+import { ProductDetailPage } from "./pages/Administrador/ProductDetailPage.jsx";
+import { CommentsListPage } from "./pages/Administrador/CommentListPage.jsx";
 
 
 // Create your first component
@@ -40,9 +39,8 @@ const Layout = () => {
                         <Route element={<UserListPage />} path="/user-list"/>
                         <Route element={<UserDetailPage/>} path="/user-details/:id"/>
                         <Route element={<ProductListPage />} path="product-list"/>
-                        <Route element={<ProductDetail />} path="product-detail/:id"/>
-                        <Route element={<PruebaCustomer />} path="/pruebacustomer" />
-                        <Route element={<PruebaVendor />} path="/pruebavendor" />
+                        <Route element={<ProductDetailPage />} path="product-detail/:id"/>
+                        <Route element={<CommentsListPage />} path="comment-list"/>                        
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                     <Footer />

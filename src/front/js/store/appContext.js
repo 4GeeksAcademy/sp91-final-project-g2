@@ -31,7 +31,6 @@ const injectContext = PassedComponent => {
 		*/
 		useEffect(() => {
 			state.actions.getMessage();  // Calling this function from the flux.js actions
-			state.actions.getUsers(); // Obtiene a todos los usuarios
 			state.actions.getProducts(); // Obtiene todos los productos
 			state.actions.getComments(); // Obtiene todos los comentarios
 			
