@@ -20,17 +20,17 @@ import { ProductDetailPage } from "./pages/Administrador/ProductDetailPage.jsx";
 import { CommentsListPage } from "./pages/Administrador/CommentListPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 // Productos
-import ProductCards from "./pages/Products/ProductCards.jsx";
-import ProductCard from "./pages/Products/ProductCard.jsx";
+import {ProductCards} from "./pages/Products/ProductCards.jsx";
+import {ProductCard} from "./pages/Products/ProductCard.jsx";
 import ProductForm from "./pages/Products/ProductForm.jsx";
 import ProductDetail from "./pages/Products/ProductDetail.jsx";
-import ProductList from "./pages/Products/ProductList.jsx";
+import {ProductList} from "./pages/Products/ProductList.jsx";
 // Órdenes
 import Orders from "./pages/Orders/Orders.jsx";
 import OrderItems from "./pages/Orders/OrderItems.jsx";
 
 const Layout = () => {
-    //const [token, setToken] = useState(localStorage.getItem("access_token"));
+    const [token, setToken] = useState(localStorage.getItem("access_token"));
     const basename = process.env.BASENAME || "";
 
     if (!process.env.BACKEND_URL || process.env.BACKEND_URL === "") return <BackendURL />;
@@ -50,7 +50,7 @@ const Layout = () => {
                         <Route element={<Pagination />} path="/pagination" />
                         <Route element={<ProfilePage />} path="/profilepage" />
                         <Route element={<SignUp setToken={setToken} />} path="/signup" />
-                        <Route element={<LogIn setToken={setToken} />} path="/login" />
+                        
                         <Route path="/product-cards" element={<ProductCards />} />
                         <Route path="/product-card/:productId" element={<ProductCard />} />
                         <Route path="/product-form" element={<ProductForm />} />

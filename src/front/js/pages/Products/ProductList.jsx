@@ -1,8 +1,8 @@
 import React, { useEffect, useContext } from "react";
 import { Context } from "../../store/appContext";
-import ProductCard from "./ProductCards.jsx";
+import {ProductCards} from "./ProductCards.jsx";
 
-const ProductList = () => {
+export const ProductList = () => {
     const { store, actions } = useContext(Context);
 
     useEffect(() => {
@@ -15,7 +15,7 @@ const ProductList = () => {
             <div className="product-list">
                 {store.products.length > 0 ? (
                     store.products.map((product) => (
-                        <ProductCard key={product.id} product={product} />
+                        <ProductCards key={product.id} product={product} />
                     ))
                 ) : (
                     <p>No hay productos disponibles.</p>
@@ -25,4 +25,4 @@ const ProductList = () => {
     );
 };
 
-export default ProductList;
+
