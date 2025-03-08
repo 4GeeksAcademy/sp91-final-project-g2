@@ -7,7 +7,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             products: [],
             comments: [],
             userRole: null,
-            token: typeof localStorage !== "undefined" ? localStorage.getItem("token") || "" : "",
+            token: "",
             profile: null,
             loading: false
         },
@@ -35,7 +35,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                         data.results.is_customer ? "is_customer" : null;
                 setStore({ isLogged: true, user: data.results, userRole });
             },
-
+          
             signup: async (firstName, lastName, address, phone, email, password, role) => {
                 setStore({ loading: true });
                 try {
@@ -53,6 +53,26 @@ const getState = ({ getStore, getActions, setStore }) => {
                     console.error("Error en el registro", error);
                     setStore({ loading: false });
                     return { success: false, message: error.message };
+                }
+            },
+
+
+            getProfile: async () => {
+                try {
+                    const response = await fetch(process.env.BACKEND_URL + '/profile', {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${localStorage.getItem('access_token')}`
+                        }
+                    });
+                    if (!response.ok) throw new Error('Error al obtener el perfil');
+                    const data = await response.json();
+                    setStore({ profile: data });
+                    return data;
+                } catch (error) {
+                    console.error('Error al obtener el perfil', error);
+                    return null;
                 }
             },
 
@@ -85,7 +105,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 if (!response.ok) return console.log("Error", response.status, response.statusText);
                 return (await response.json()).results;
             },
-
+            
             updateUser: async (id, updateUser) => {
                 const store = getStore();
                 const uri = `${process.env.BACKEND_URL}/api/users/${id}`;
@@ -107,7 +127,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     alert("No se pudo actualizar el usuario");
                 }
             },
-
+            
             getProducts: async () => {
                 const uri = `${process.env.BACKEND_URL}/api/products`;
                 const response = await fetch(uri, { method: "GET", headers: { "Content-Type": "application/json" } });

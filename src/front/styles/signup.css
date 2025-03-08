@@ -1,0 +1,209 @@
+@import url('https://fonts.googleapis.com/css2?family=Nixie+One&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Exo:100,200,400');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:700,400,300');
+
+body {
+  margin: 0;
+  padding: 0;
+  background: rgb(191, 139, 103);
+  color: #fff;
+  font-family: 'Nixie One', sans-serif;
+  font-size: 12px;
+}
+
+.body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://www.roastycoffee.com/wp-content/uploads/coffee-bean.jpg');
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}
+
+.signup-title {
+  position: absolute;
+  top: -8%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 392px;
+  padding: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  color: rgb(219, 203, 150);
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.grad {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(191, 139, 103);
+  background: linear-gradient(to right, rgba(191, 139, 103, 0.7), rgba(191, 139, 103, 0.7)); /* Ajusta la opacidad aquí */
+  z-index: 1;
+}
+
+.header {
+  position: absolute;
+  top: calc(50% - 35px);
+  left: calc(50% - 255px);
+  z-index: 2;
+  text-align: center;
+}
+
+.header div {
+  float: left;
+  color: #fff;
+  font-family: 'Exo', sans-serif;
+  font-size: 35px;
+  font-weight: 200;
+}
+
+.header div span {
+  color: rgb(108, 59, 42) !important;
+}
+
+.log {
+  padding-top: 5px;
+  font-size: 13px;
+}
+#login-link {
+  font-size: 13px; 
+  color: rgb(191, 139, 103); 
+  text-decoration: none; 
+}
+
+#login-link:hover {
+  text-decoration: underline;
+}
+
+.login {
+  position: absolute;
+  top: calc(35% - 75px);
+  left: calc(50% - 50px);
+  height: auto;
+  width: 350px;
+  padding: 10px;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.5); 
+  border-radius: 10px; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login input[type=text],
+.login input[type=email],
+.login input[type=password],
+.login select {
+  width: 100%; /* Ajustar el ancho al 100% del contenedor */
+  height: 30px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 2px;
+  color: rgb(191, 139, 103);
+  font-family: 'Exo', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 4px;
+  margin-top: 10px;
+}
+
+.role-container {
+  width: 100%; 
+  text-align: left; 
+  margin-top: 10px; 
+}
+
+.role-container label {
+  display: block;
+  margin-bottom: -10px; 
+}
+
+.login input[type=submit] {
+  width: 100%; /* Ajustar el ancho al 100% del contenedor */
+  height: 35px;
+  background: rgb(219, 203, 150);
+  border: 1px solid #fff;
+  cursor: pointer;
+  border-radius: 2px;
+  color: rgb(108, 59, 42);
+  font-family: 'Exo', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 6px;
+  margin-top: 10px;
+}
+
+.login input[type=submit]:hover {
+  opacity: 0.8;
+}
+
+.login input[type=submit]:active {
+  opacity: 0.6;
+}
+
+.login input[type=text]:focus,
+.login input[type=email]:focus,
+.login input[type=password]:focus,
+.login select:focus {
+  outline: none;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+::-moz-input-placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+  .header {
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .login {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    padding: 20px;
+  }
+
+  .login input[type=text],
+  .login input[type=email],
+  .login input[type=password],
+  .login select,
+  .login input[type=submit] {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .header div {
+    font-size: 24px;
+  }
+
+  .login {
+    width: 100%;
+    padding: 20px;
+  }
+
+}

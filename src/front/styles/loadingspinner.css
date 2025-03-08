@@ -1,0 +1,112 @@
+.coffee-spinner-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url('https://www.roastycoffee.com/wp-content/uploads/coffee-bean.jpg');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.coffee-spinner-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(191, 139, 103, 0.7);
+  z-index: 1;
+}
+
+.coffee-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+.bean {
+  width: 10vw;
+  height: 16vw;
+  max-width: 50px;
+  max-height: 80px;
+  background-color: #6f4e37;
+  border-radius: 50%;
+  position: relative;
+  animation: spin 1.5s linear infinite;
+}
+
+.bean::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  width: 2vw; 
+  height: 60%;
+  max-width: 10px; 
+  background-color: #4b3621;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.spinner-text {
+  margin-top: 2vh;
+  font-size: 2vw;
+  max-font-size: 12px; 
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  z-index: 2;
+}
+
+.spinner-text .cafe {
+  color: #fff;
+}
+
+.spinner-text .taleros {
+  color: #533825;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
+  .bean {
+    width: 15vw; /* Ajustar el ancho relativo al viewport */
+    height: 24vw; /* Ajustar la altura relativa al viewport */
+  }
+
+  .bean::before {
+    width: 3vw; /* Ajustar el ancho relativo al viewport */
+  }
+
+  .spinner-text {
+    font-size: 3vw; /* Ajustar el tamaño de fuente relativo al viewport */
+    max-font-size: 10px; /* Tamaño máximo */
+  }
+}
+
+@media (max-width: 480px) {
+  .bean {
+    width: 20vw; /* Ajustar el ancho relativo al viewport */
+    height: 32vw; /* Ajustar la altura relativa al viewport */
+  }
+
+  .bean::before {
+    width: 4vw; /* Ajustar el ancho relativo al viewport */
+  }
+
+  .spinner-text {
+    font-size: 4vw; /* Ajustar el tamaño de fuente relativo al viewport */
+    max-font-size: 8px; /* Tamaño máximo */
+  }
+}

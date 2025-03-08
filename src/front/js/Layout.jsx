@@ -1,11 +1,25 @@
+<<<<<<< HEAD
+import React from "react";
+import { useState } from "react";
+=======
 import React, { useState } from "react";
+>>>>>>> 5a30ee97bb40765e3a98b6313e6ee6d9bb5615bc
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import injectContext from "./store/appContext";
 import ScrollToTop from "./component/ScrollToTop.jsx";
 import { BackendURL } from "./component/BackendURL.jsx";
 import Navbar from "./component/Navbar.jsx";
 import { Footer } from "./component/Footer.jsx";
+<<<<<<< HEAD
+import  SignUp  from "./component/SignUp.jsx";
+import ProfileForm from "./component/ProfileForm.jsx";
+import LoadingSpinner from "./component/LoadingSpinner.jsx";
+import Pagination from "./component/Pagination.jsx";
+// Custom Pages or Views
+=======
+>>>>>>> 5a30ee97bb40765e3a98b6313e6ee6d9bb5615bc
 import { Home } from "./pages/Home.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
 
 // Productos
 import ProductCards from "./pages/Products/ProductCards.jsx";
@@ -22,6 +36,29 @@ const Layout = () => {
   const [token, setToken] = useState(localStorage.getItem("access_token"));
   const basename = process.env.BASENAME || "";
 
+<<<<<<< HEAD
+    return (
+        <div>
+            <BrowserRouter basename={basename}>
+                <ScrollToTop>
+                    <Navbar />
+                    <Routes>
+                        <Route element={<Home />} path="/" />
+                        {/* <Route element={<Demo />} path="/demo" /> */}
+                        {/* <Route element={<Single />} path="/single/:theid" /> */}
+                        <Route element={<SignUp setToken={setToken} />} path="/signup" />
+                        <Route element={<ProfileForm />} path="/profile" />
+                        <Route element={<LoadingSpinner />} path="/loading" />
+                        <Route element={<Pagination />} path="/pagination" />
+                        <Route element={<ProfilePage />} path="/profilepage" />
+                        <Route element={<h1>Not found!</h1>} />
+                    </Routes>
+                    <Footer />
+                </ScrollToTop>
+            </BrowserRouter>
+        </div>
+    );
+=======
   if (!process.env.BACKEND_URL || process.env.BACKEND_URL === "") return <BackendURL />;
 
   return (
@@ -54,6 +91,7 @@ const Layout = () => {
       </div>
     </div>
   );
+>>>>>>> 5a30ee97bb40765e3a98b6313e6ee6d9bb5615bc
 };
 
 export default injectContext(Layout);
