@@ -4,6 +4,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			message: null,
 			isLogged: false,
 			users: [],
+			user: {},
 			products: [],
 			comments: [],
 			currentProduct: {},
@@ -59,7 +60,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return
 				}
 				const data = await response.json();
-				setStore({ users: data.results });
+				setStore({ users: data.results });				
 			},
 			getUserById: async (id) => {
 				const uri = `${process.env.BACKEND_URL}/api/users/${id}`;
@@ -208,7 +209,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("Producto actualizado", data);
 
 					// Actualización de estado en el store con el producto actualizado
-					setStore({ products: store.products.map(product => product.id === id ? { ...product, ...data } : product) });
+					setStore({ products: store.products.map(product => product.id === id ? { ...product, ...data.results } : product) });
 					alert("Producto actualizado correctamente");
 					return true;
 				} catch (error) {
@@ -262,7 +263,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return
 				}
 				const data = await response.json();
-				setStore({ comments: data.results });
+				setStore({ comments: data });
 			},
 			syncTokenFromLocalStorage: () => {
 				const token = localStorage.getItem("token");

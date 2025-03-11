@@ -1,36 +1,25 @@
 import React from "react";
-import { FaEdit, FaCamera } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
-export const AdminProductDetail = ({ product, editMode, toggleEditMode, onChange, onSubmit, onDeactivate, onPhotoAction }) => {
-  
+export const AdminProductDetail = ({ product, editMode, toggleEditMode, editValues, onChange, onSubmit, onDeactivate }) => {
+  const navigate = useNavigate();
+
   if (!product || Object.keys(product).length === 0) return <p>Cargando producto...</p>;
 
   return (
     <div className="card mb-3" style={{ maxWidth: "1000px", position: "relative" }}>
-      <div
-        style={{
-          position: "absolute",
-          top: "10px",
-          right: "10px",
-          cursor: "pointer",
-          zIndex: 10,
-        }}gi
-        onClick={toggleEditMode}
-        title="Editar"
-      >
+      <div style={{ position: "absolute", top: "10px", right: "10px", cursor: "pointer", zIndex: 10 }} onClick={toggleEditMode} title="Editar">
         <FaEdit size={24} color="blue" />
       </div>
       <div className="row g-0">
         <div className="col-md-4 d-flex flex-column align-items-center justify-content-center">
           <img
-            src={product.photo || "https://detallesorballo.com/wp-content/uploads/2020/09/imagen-de-prueba-320x240-1.jpg"}
+            src={product.photo || "https://www.fundaciomaresme.cat/wp-content/uploads/2019/11/imagen-de-prueba-320x240.jpg"}
             className="img-fluid rounded-start"
             alt={product.name || "Producto sin nombre"}
             style={{ maxHeight: "250px", objectFit: "cover" }}
           />
-          <div style={{ marginTop: "5px", cursor: "pointer" }} onClick={onPhotoAction} title="Editar/Eliminar Foto">
-            <FaCamera size={20} color="gray" />
-          </div>
         </div>
         <div className="col-md-8">
           <div className="card-body">
@@ -41,10 +30,10 @@ export const AdminProductDetail = ({ product, editMode, toggleEditMode, onChange
                   <input
                     type="text"
                     name="name"
-                    value={product.name || ""}
+                    value={editValues.name}
                     onChange={onChange}
                     className="form-control"
-                    placeholder="Nombre del producto"
+                    placeholder={product.name || "Nombre del producto"}
                     required
                   />
                 </div>
@@ -53,10 +42,10 @@ export const AdminProductDetail = ({ product, editMode, toggleEditMode, onChange
                   <input
                     type="text"
                     name="category"
-                    value={product.category || ""}
+                    value={editValues.category}
                     onChange={onChange}
                     className="form-control"
-                    placeholder="Categoría"
+                    placeholder={product.category || "Categoría"}
                     required
                   />
                 </div>
@@ -65,10 +54,10 @@ export const AdminProductDetail = ({ product, editMode, toggleEditMode, onChange
                   <input
                     type="text"
                     name="description"
-                    value={product.description || ""}
+                    value={editValues.description}
                     onChange={onChange}
                     className="form-control"
-                    placeholder="Descripción del producto"
+                    placeholder={product.description || "Descripción del producto"}
                     required
                   />
                 </div>
@@ -77,10 +66,10 @@ export const AdminProductDetail = ({ product, editMode, toggleEditMode, onChange
                   <input
                     type="number"
                     name="price"
-                    value={product.price || ""}
+                    value={editValues.price}
                     onChange={onChange}
                     className="form-control"
-                    placeholder="Precio"
+                    placeholder={product.price || "Precio"}
                     required
                   />
                 </div>
@@ -89,15 +78,19 @@ export const AdminProductDetail = ({ product, editMode, toggleEditMode, onChange
                   <input
                     type="text"
                     name="in_sell"
-                    value={product.in_sell ? "Producto en venta" : "Producto no está en venta"}
+                    value={editValues.in_sell}
                     onChange={onChange}
                     className="form-control"
-                    placeholder="Estado"
+                    placeholder={product.in_sell ? "Producto en venta" : "Producto no está en venta"}
                     required
                   />
                 </div>
-                <button type="submit" className="btn btn-primary me-2">Guardar Cambios</button>
-                <button type="button" className="btn btn-danger" onClick={onDeactivate}>Desactivar Producto</button>
+                <button type="submit" className="btn btn-primary me-2">
+                  Guardar Cambios
+                </button>
+                <button type="button" className="btn btn-danger" onClick={onDeactivate}>
+                  Desactivar Producto
+                </button>
               </form>
             ) : (
               <div>

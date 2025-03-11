@@ -5,7 +5,7 @@ import { Context } from "../store/appContext";
 export const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const {store, actions} = useContext(Context)
+    const { store, actions } = useContext(Context)
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,23 +26,25 @@ export const LoginForm = () => {
         }
     }, [store.isLogged, store.userRole, navigate]);
 
-    const handleSubmit = async (event) =>{
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const dataToSend = {
             email: email,
             password: password,
         };
-        await actions.login(dataToSend);
-        if(store.userRole === 'is_admin'){
-            navigate('/pruebaadmin');
-        } else if(store.userRole === 'is_vendor'){
-            navigate('/pruebavendor');
-        } else if(store.userRole === 'is_customer'){
-            navigate('/pruebacustomer')
+        const success = await actions.login(dataToSend);
+        if (success) {
+            if (store.userRole === 'is_admin') {
+                navigate('/pruebaadmin');
+            } else if (store.userRole === 'is_vendor') {
+                navigate('/product-form');
+            } else if (store.userRole === 'is_customer') {
+                navigate('/product-cards')
+            }
         }
     };
 
-    return(
+    return (
         <form onSubmit={handleSubmit}>
             <input type="text" placeholder="Correo electrónico" value={email} onChange={(event) => setEmail(event.target.value)} required />
             <input type="password" placeholder="Contraseña" value={password} onChange={(event) => setPassword(event.target.value)} required />
