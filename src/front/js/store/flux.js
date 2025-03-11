@@ -14,6 +14,30 @@ const getState = ({ getStore, getActions, setStore }) => {
 			loading: false
 		},
 		actions: {
+		signup: async (firstName, lastName, address, phone, email, password, role) => {
+			setStore({ loading: true });
+				const store = getStore();
+				const uri = `${process.env.BACKEND_URL}/api/signup`;
+				const options = {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ firstName, lastName, address, phone, email, password, role }),
+				};
+				try {
+					const response = await fetch(uri, options);
+				    if (!response.ok) throw new Error('Error in signup');
+				    const data = await response.json();
+				    localStorage.setItem('access_token', data.access_token);
+				    setStore({ token: data.access_token, loading: false });
+				    return { success: true, message: 'Register success' };
+			    } catch (error) {
+				    console.error('Error en el registro', error);
+				    setStore({ loading: false });
+				    return { success: false, message: error.message };
+			    }
+	},
 			exampleFunction: () => { getActions().changeColor(0, "green"); },
 			getMessage: async () => {
 				const uri = `${process.env.BACKEND_URL}/api/hello`
@@ -269,75 +293,54 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const token = localStorage.getItem("token");
 				if (token) setStore({ token });
 			},
-			signup: async (firstName, lastName, address, phone, email, password, role) => {
-                setStore({ loading: true });
-                try {
-                    const response = await fetch(`${process.env.BACKEND_URL}/signup`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ firstName, lastName, address, phone, email, password, role })
-                    });
-                    if (!response.ok) throw new Error("Error en el registro");
-                    const data = await response.json();
-                    localStorage.setItem("token", data.access_token);
-                    setStore({ token: data.access_token, loading: false });
-                    return { success: true, message: "Registro exitoso" };
-                } catch (error) {
-                    console.error("Error en el registro", error);
-                    setStore({ loading: false });
-                    return { success: false, message: error.message };
-                }
-            },
-			getProfile: async () => {
-                try {
-                    const response = await fetch(process.env.BACKEND_URL + '/profile', {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            Authorization: `Bearer ${localStorage.getItem('access_token')}`
-                        }
-                    });
-                    if (!response.ok) throw new Error('Error al obtener el perfil');
-                    const data = await response.json();
-                    setStore({ profile: data });
-                    return data;
-                } catch (error) {
-                    console.error('Error al obtener el perfil', error);
-                    return null;
-                }
-            },
+			},
 			addToCart: (product) => {
-                const store = getStore();
-                setStore({ products: [...store.products, product] });
-                console.log("Producto añadido al carrito:", product);
-            },
+				const store = getStore();
+				setStore({ products: [...store.products, product] });
+				console.log("Producto añadido al carrito:", product);
+			},
 			createProduct: async (productData) => {
-                try {
-                    const store = getStore();
+				try {
+					const store = getStore();
 					// enviar el archivo a cloudinary y que cloudinary me devuelva una url
 					// envio productData.photo
 					// con lo que me devuelve el back reemplaazo el productData.photo por el string de la url
-                    const uri = `${process.env.BACKEND_URL}/api/vendors/${store.user.id}/products`;
-                    const options = {
-                        method: "POST",
-                        headers: { 
+					const uri = `${process.env.BACKEND_URL}/api/vendors/${store.user.id}/products`;
+					const options = {
+						method: "POST",
+						headers: { 
 							"Content-Type": "application/json",
 							Authorization: `Bearer ${store.token}`
 						 },
-                        body: JSON.stringify(productData)
-                    };
-                    const response = await fetch(uri, options);
-                    if (!response.ok) throw new Error("Error al crear el producto");
-                    setStore({ products: [...store.products, (await response.json()).results] });
-                    alert("Producto creado con éxito");
-                } catch (error) {
-                    console.error("Error en createProduct:", error);
-                    alert("No se pudo crear el producto");
-                }
-            }
+						body: JSON.stringify(productData)
+					};
+					const response = await fetch(uri, options);
+					if (!response.ok) throw new Error("Error al crear el producto");
+					setStore({ products: [...store.products, (await response.json()).results] });
+					alert("Producto creado con éxito");
+				} catch (error) {
+					console.error("Error en createProduct:", error);
+					alert("No se pudo crear el producto");
+				}
+			},
+			getProfile: async () => {
+				try {
+					const response = await fetch(`${process.env.BACKEND_URL}/api/profile`, {
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+							Authorization: `Bearer ${localStorage.getItem('access_token')}`
+						}
+					});
+					if (!response.ok) throw new Error('Error al obtener el perfil');
+					const data = await response.json();
+					setStore({ profile: data });
+					return data;
+				} catch (error) {
+					console.error('Error al obtener el perfil', error);
+					return null;
+				}
+			}
 		}
 	};
-
-};
-
 export default getState;

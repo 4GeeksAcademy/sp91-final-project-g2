@@ -13,7 +13,7 @@ export const NavbarCafetaleros = () => {
   // Función para hacer scroll al footer
   const handleScrollToFooter = (e) => {
     e.preventDefault(); // Evita la navegación predeterminada
-    const footer = document.getElementById("footer")
+    const footer = document.getElementById("footer");
     if (footer) {
       footer.scrollIntoView({ behavior: "smooth" });
     }
