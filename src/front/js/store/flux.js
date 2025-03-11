@@ -314,11 +314,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 			createProduct: async (productData) => {
                 try {
                     const store = getStore();
-                    const uri = `${process.env.BACKEND_URL}/api/products`;
+					// enviar el archivo a cloudinary y que cloudinary me devuelva una url
+					// envio productData.photo
+					// con lo que me devuelve el back reemplaazo el productData.photo por el string de la url
+                    const uri = `${process.env.BACKEND_URL}/api/vendors/${store.user.id}/products`;
                     const options = {
                         method: "POST",
-                        headers: { Authorization: `Bearer ${store.token}` },
-                        body: productData
+                        headers: { 
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${store.token}`
+						 },
+                        body: JSON.stringify(productData)
                     };
                     const response = await fetch(uri, options);
                     if (!response.ok) throw new Error("Error al crear el producto");

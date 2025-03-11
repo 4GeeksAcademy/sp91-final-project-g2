@@ -15,10 +15,10 @@ export const LoginForm = () => {
                     navigate('/adminpage');
                     break;
                 case 'is_vendor':
-                    navigate('/pruebavendor');
+                    navigate('/product-form');
                     break;
                 case 'is_customer':
-                    navigate('/pruebacustomer');
+                    navigate('/product-cards');
                     break;
                 default:
                     console.error("Rol de usuario no reconocido.");

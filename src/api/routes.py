@@ -330,7 +330,9 @@ def vendor_post_products(id):
     if vendor_id != id:
         response_body['message'] = f'Usuario con id: {id} no coincide, Acceso Denegado'
         return response_body, 403
+    print("hgajkshdjkahsjkdj")
     data = request.json
+    print(data)
     if not data:
         response_body['message'] = 'Datos de entrada inválidos'
         return response_body, 400
@@ -339,7 +341,6 @@ def vendor_post_products(id):
                     description=data.get('description'),
                     price=float(data.get('price')),
                     photo=data.get('photo'),
-                    in_sell=bool(data.get('in_sell')),
                     vendor_id=(vendor_id))
     db.session.add(row)
     db.session.commit()
