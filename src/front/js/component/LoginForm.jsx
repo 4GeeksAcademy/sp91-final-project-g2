@@ -36,9 +36,9 @@ export const LoginForm = () => {
         if(store.userRole === 'is_admin'){
             navigate('/pruebaadmin');
         } else if(store.userRole === 'is_vendor'){
-            navigate('/pruebavendor');
+            navigate('/product-form');
         } else if(store.userRole === 'is_customer'){
-            navigate('/pruebacustomer')
+            navigate('/product-cards')
         }
     };
 

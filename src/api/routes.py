@@ -55,7 +55,7 @@ def signup():
         return response_body, 400
     user_register = db.session.execute(db.select(Users).where(Users.email == email)).scalar()
     if user_register:
-        response_body['message'] = 'User alredy exist'
+        response_body['message'] = 'User already exist'
         return response_body, 400
     row = Users(email = data.get('email'),
                 password = data.get('password'),
@@ -79,7 +79,7 @@ def signup():
               'is_vendor': user['is_vendor']}    
     access_token = create_access_token(identity=email, additional_claims=claims)
     response_body['access_token'] = access_token
-    response_body['message'] = 'Usuario registrado'
+    response_body['message'] = 'Register success'
     response_body['results'] = user
     return response_body, 200    
 
