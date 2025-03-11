@@ -23,15 +23,16 @@ const ProductForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        const data = new FormData();
-        data.append("name", formData.name);
-        data.append("category", formData.category);
+        const data = formData;
+        data.photo = "url de la foto"
+        console.log(data);
+/*         data.append("name", formData.name);
+/*         data.append("category", formData.category);
         data.append("description", formData.description);
         data.append("price", formData.price);
         if (formData.photo) {
             data.append("photo", formData.photo);
-        }
-
+        } */
         await actions.createProduct(data);
     };
 

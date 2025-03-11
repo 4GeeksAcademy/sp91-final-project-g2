@@ -8,10 +8,11 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 export const ProductCards = ({ product }) => {
   const { actions } = useContext(Context);
   const [isHovered, setIsHovered] = useState(false);
+  
 
   return (
     <div
-      className="col-lg-3 col-md-4 col-sm-6 mb-4 mt-2"
+      className="col mb-4 mt-2"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
