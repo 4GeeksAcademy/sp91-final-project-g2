@@ -1,18 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
+import { AdminProductDetail } from "../../component/Admin/AdminProductsDetails.jsx";
 import { Context } from "../../store/appContext";
 import { useNavigate, useParams } from "react-router-dom";
-import { AdminProductDetail } from "../../component/Admin/AdminProductsDetails.jsx";
 
 export const ProductDetailPage = () => {
   const { store, actions } = useContext(Context);
   const { id } = useParams();
   const navigate = useNavigate();
-  
-  // Estado local para el producto y el modo de edición
-  const [productData, setProductData] = useState({});
+
+  const [productOriginal, setProductOriginal] = useState({});
+  const [productEdit, setProductEdit] = useState({ name: "", category: "", description: "", price: "", in_sell: ""});
   const [editMode, setEditMode] = useState(false);
 
-  // Verificar acceso (token, login y rol)
   useEffect(() => {
     const token = store.token;
     if (!token || !store.isLogged || store.userRole !== "is_admin") {
@@ -21,19 +20,19 @@ export const ProductDetailPage = () => {
     }
   }, [store.isLogged, store.userRole, store.token, navigate]);
 
-  // Obtener el producto desde la API y actualizar el estado local
   useEffect(() => {
     const fetchProduct = async () => {
       const data = await actions.getProductById(id);
-      // Si la API devuelve un objeto envuelto en results, extraemos el objeto real
       const actualProduct = data && data.results ? data.results : data;
       if (actualProduct) {
-        setProductData(actualProduct);
+        setProductOriginal(actualProduct);
+        setProductEdit({name: "", category: "", description: "", price: "", in_sell: ""});
       } else {
         alert("Producto no encontrado");
         navigate("/product-list");
       }
     };
+
     if (id) {
       fetchProduct();
     } else {
@@ -41,27 +40,32 @@ export const ProductDetailPage = () => {
     }
   }, [id, actions, navigate]);
 
-  // Handler para alternar el modo edición
   const toggleEditMode = () => {
     setEditMode(prev => !prev);
   };
 
-  // Handler para actualizar los inputs en modo edición
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setProductData(prev => ({ ...prev, [name]: value }));
+    setProductEdit(prev => ({ ...prev, [name]: value }));
   };
 
-  // Handler para enviar la actualización al backend
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const success = await actions.updateProduct(id, productData);
+    const updatedProduct = {
+      name: productEdit.name !== "" ? productEdit.name : productOriginal.name,
+      category: productEdit.category !== "" ? productEdit.category : productOriginal.category,
+      description: productEdit.description !== "" ? productEdit.description : productOriginal.description,
+      price: productEdit.price !== "" ? productEdit.price : productOriginal.price,
+      in_sell: productEdit.in_sell !== ""
+        ? (productEdit.in_sell.toLowerCase() === "producto en venta" ? true : false)
+        : productOriginal.in_sell
+    };
+    const success = await actions.updateProduct(id, updatedProduct);
     if (success) {
       navigate("/product-list");
     }
   };
 
-  // Handler para desactivar el producto
   const handleDeactivate = async () => {
     const success = await actions.deactivateProduct(id);
     if (success) {
@@ -69,23 +73,18 @@ export const ProductDetailPage = () => {
     }
   };
 
-  // Handler para la acción sobre la foto
-  const handlePhotoAction = () => {
-    alert("Acción para editar/eliminar la foto. Implementar según la lógica deseada.");
-  };
-
   return (
     <div className="container mt-4">
       <h2>Detalle del Producto</h2>
-      {Object.keys(productData).length > 0 ? (
+      {Object.keys(productOriginal).length > 0 ? (
         <AdminProductDetail 
-          product={productData}
+          product={productOriginal}
           editMode={editMode}
           toggleEditMode={toggleEditMode}
+          editValues={productEdit}
           onChange={handleChange}
           onSubmit={handleSubmit}
           onDeactivate={handleDeactivate}
-          onPhotoAction={handlePhotoAction}
         />
       ) : (
         <p>Cargando detalles del producto...</p>

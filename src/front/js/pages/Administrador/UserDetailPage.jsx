@@ -7,7 +7,7 @@ export const UserDetailPage = () => {
     const { store, actions } = useContext(Context);
     const { id } = useParams();
     const navigate = useNavigate();
-    const [userData, setUserData] = useState(null);
+    const [userData, setUserData] = useState({});
 
     useEffect(() => {
         if (!store.isLogged || store.userRole !== "is_admin") {
@@ -24,7 +24,7 @@ export const UserDetailPage = () => {
 
     const handleChange = async (event) => {
         const { name, value, type, checked } = event.target;
-        setUser({
+        setUserData({
             ...userData,
             [name]: type === "checkbox" ? checked : value
         });
@@ -50,7 +50,7 @@ export const UserDetailPage = () => {
             <h1>Administración</h1>
             <h2>Detalles del Usuario</h2>
             <UserDetail user={userData} onChange={handleChange} onSubmit={handleSubmit} onDeactivate={handleDeactivate}/>
-            <button className="btn btn-secondary" onClick={() => navigate('/adminpage')}>Regresar</button>
+            <button className="btn btn-secondary" onClick={() => navigate('/user-list')}>Regresar</button>
         </div>
     )
 }
