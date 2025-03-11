@@ -4,6 +4,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			message: null,
 			isLogged: false,
 			users: [],
+			user: {},
 			products: [],
 			comments: [],
 			currentProduct: {},
@@ -83,7 +84,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return
 				}
 				const data = await response.json();
-				setStore({ users: data.results });
+				setStore({ users: data.results });				
 			},
 			getUserById: async (id) => {
 				const uri = `${process.env.BACKEND_URL}/api/users/${id}`;
@@ -232,7 +233,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("Producto actualizado", data);
 
 					// Actualización de estado en el store con el producto actualizado
-					setStore({ products: store.products.map(product => product.id === id ? { ...product, ...data } : product) });
+					setStore({ products: store.products.map(product => product.id === id ? { ...product, ...data.results } : product) });
 					alert("Producto actualizado correctamente");
 					return true;
 				} catch (error) {
@@ -286,7 +287,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return
 				}
 				const data = await response.json();
-				setStore({ comments: data.results });
+				setStore({ comments: data });
 			},
 			syncTokenFromLocalStorage: () => {
 				const token = localStorage.getItem("token");
@@ -301,11 +302,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 			createProduct: async (productData) => {
 				try {
 					const store = getStore();
-					const uri = `${process.env.BACKEND_URL}/api/products`;
+					// enviar el archivo a cloudinary y que cloudinary me devuelva una url
+					// envio productData.photo
+					// con lo que me devuelve el back reemplaazo el productData.photo por el string de la url
+					const uri = `${process.env.BACKEND_URL}/api/vendors/${store.user.id}/products`;
 					const options = {
 						method: "POST",
-						headers: { Authorization: `Bearer ${store.token}` },
-						body: productData
+						headers: { 
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${store.token}`
+						 },
+						body: JSON.stringify(productData)
 					};
 					const response = await fetch(uri, options);
 					if (!response.ok) throw new Error("Error al crear el producto");

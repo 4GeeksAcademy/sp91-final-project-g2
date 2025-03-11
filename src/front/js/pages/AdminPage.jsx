@@ -9,38 +9,37 @@ export const AdminPage = () => {
     const [searchUser, setSearchUser] = useState("");
     const [searchProduct, setSearchProduct] = useState("");
 
+    useEffect(() => {
+        if (!store.isLogged || store.userRole !== "is_admin") {
+            alert("Acceso denegado");
+            navigate("/login");
+            return;
+        }else { actions.getUsers();
+                actions.getProducts();
+                actions.getComments();
+        }
+    }, [store.isLogged, store.userRole, navigate]);
+
     const handleLogout = () => {
         localStorage.removeItem("token");
         navigate("/");
     };
 
-    useEffect(() => {
-        if (!store.isLogged || store.userRole !== "is_admin") {
-            alert("Acceso denegado");
-            navigate("/login");
-        }
-    }, [store.isLogged, store.userRole, navigate]);
-
-    useEffect(() => {
-        actions.getUsers();
-        actions.getProducts();
-        actions.getComments();
-    }, [actions]);
-
     const handleUserSearch = () => {
         const userFound = store.users.find(user => user.email.toLowerCase().includes(searchUser.toLowerCase()));
         if (userFound) {
-            navigate(`/user-details/${userFound.id}`)
+            navigate(`/user-details/${userFound.id}`);
         } else {
             alert("Usuario no encontrado");
         }
     }
 
-    const totalUsers = store.users?.filter(user => user.is_customer && user.is_vendor).length || 0;
-    const totalVendors = store.users?.filter(user => user.is_vendor).length || 0;
-    const totalCustomers = store.users?.filter(user => user.is_customer).length || 0;
-    const activeUsers = store.users?.filter(user => user.is_active).length || 0;
-    const inactiveUsers = store.users?.filter(user => user.is_active === false).length || 0;
+    const users = store.users || [];
+    const totalVendors = users.filter(user => user.is_vendor).length;
+    const totalCustomers = users.filter(user => user.is_customer).length;
+    const activeUsers = users.filter(user => user.is_active).length;
+    const inactiveUsers = users.filter(user => user.is_active === false).length;
+
     const totalProducts = store.products?.length || 0;
     const totalSold = store.products?.filter(product => !product.in_sell).length || 0;
     const totalComments = store.comments?.length || 0;
@@ -49,24 +48,29 @@ export const AdminPage = () => {
         <div className="container my-4">
             <h1 className="text-center">Zona de Administrador</h1>
             <div className="row my-4">
-                {/* Usuarios */}
                 <div className="col-md-4">
                     <div className="card">
                         <div className="card-body">
-                            <h5 className="card-title">Usuarios</h5>
+                            <h4 className="card-title">Usuarios</h4>
                             <h5>Total de vendedores: {totalVendors}</h5>
                             <h5>Total de clientes: {totalCustomers}</h5>
                             <p>Total de Usuarios Activos: {activeUsers}</p>
                             <p>Total de Usuarios Inactivos: {inactiveUsers}</p>
                             <div className="input-group">
-                                <input type="text" className="form-control" placeholder="Buscar usuario por email..." value={searchUser} onChange={(e) => setSearchUser(e.target.value)} />
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Buscar usuario por email..."
+                                    value={searchUser}
+                                    onChange={(e) => setSearchUser(e.target.value)}
+                                />
                                 <button className="btn btn-primary" onClick={handleUserSearch}>
-                                    <FaSearch /></button>
+                                    <FaSearch />
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                {/* Productos */}
                 <div className="col-md-4">
                     <div className="card">
                         <div className="card-body">
@@ -74,14 +78,20 @@ export const AdminPage = () => {
                             <p>Total Publicados: {totalProducts}</p>
                             <p>Total Vendidos: {totalSold}</p>
                             <div className="input-group">
-                                <input type="text" className="form-control" placeholder="Buscar producto..." value={searchProduct} onChange={(e) => setSearchProduct(e.target.value)} />
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Buscar producto..."
+                                    value={searchProduct}
+                                    onChange={(e) => setSearchProduct(e.target.value)}
+                                />
                                 <button className="btn btn-primary" onClick={() => navigate(`/product-detail?search=${searchProduct}`)}>
-                                    <FaSearch /></button>
+                                    <FaSearch />
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                {/* Comentarios */}
                 <div className="col-md-4">
                     <div className="card">
                         <div className="card-body">
@@ -92,11 +102,11 @@ export const AdminPage = () => {
                 </div>
             </div>
             <div className="d-flex gap-3">
-                <button className="btn btn-primary" onClick={() => navigate("/user-list")}>Listado de usuarios</button>
-                <button className="btn btn-primary" onClick={() => navigate("/product-list")}>Listado de productos</button>
-                <button className="btn btn-primary" onClick={() => navigate("/comment-list")}>Listado de Comentarios</button>
+                <button className="btn btn-primary" onClick={() => navigate("/user-list-page")}>Listado de usuarios</button>
+                <button className="btn btn-primary" onClick={() => navigate("/product-list-page")}>Listado de productos</button>
+                <button className="btn btn-primary" onClick={() => navigate("/comment-list-page")}>Listado de Comentarios</button>
                 <button className="btn btn-danger" onClick={handleLogout}>Cerrar Sesión</button>
             </div>
         </div>
-    )
-}
+    );
+};
