@@ -38,6 +38,26 @@ const getState = ({ getStore, getActions, setStore }) => {
 				    return { success: false, message: error.message };
 			    }
 	},
+	getProfile: async () => {
+		setStore({ loading: true });
+		try {
+			const response = await fetch(`${process.env.BACKEND_URL}/api/profile`, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("access_token")}`
+				}
+			});
+			if (!response.ok) throw new Error("Error al obtener el perfil");
+			const data = await response.json();
+			setStore({ profile: data, loading: false });
+			return data;
+		} catch (error) {
+			console.error("Error al obtener el perfil", error);
+			setStore({ loading: false });
+			return null;
+		}
+	},
 			exampleFunction: () => { getActions().changeColor(0, "green"); },
 			getMessage: async () => {
 				const uri = `${process.env.BACKEND_URL}/api/hello`
@@ -321,24 +341,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} catch (error) {
 					console.error("Error en createProduct:", error);
 					alert("No se pudo crear el producto");
-				}
-			},
-			getProfile: async () => {
-				try {
-					const response = await fetch(`${process.env.BACKEND_URL}/api/profile`, {
-						method: 'GET',
-						headers: {
-							'Content-Type': 'application/json',
-							Authorization: `Bearer ${localStorage.getItem('access_token')}`
-						}
-					});
-					if (!response.ok) throw new Error('Error al obtener el perfil');
-					const data = await response.json();
-					setStore({ profile: data });
-					return data;
-				} catch (error) {
-					console.error('Error al obtener el perfil', error);
-					return null;
 				}
 			}
 		}
