@@ -144,7 +144,7 @@ const Home = () => {
               <div className="swiper">
                 <div className="swiper-wrapper">
                   <div className="swiper-slide">
-                    <img src="../../img/luis.jpg" alt="Luis Borjas" />
+                    <img src="https://img.freepik.com/vector-premium/hombre-africano-joven-feliz-guinando-ojo-mostrando-gestos-signo-mano-bien_535862-1041.jpg" alt="Luis Borjas" />
                     <div className="title">
                       <h2>Luis Borjas</h2>
                       <p>Nuestro experimentado</p>
@@ -152,15 +152,15 @@ const Home = () => {
                   </div>
 
                   <div className="swiper-slide">
-                    <img src="../../img/karoll.jpg" alt="Karoll Guzmán" />
+                    <img src="https://i.pinimg.com/originals/d7/5d/6e/d75d6e7aeaf88e46be834b860cdba418.jpg" alt="Karoll Guzmán" />
                     <div className="title">
-                      <h2>Cristian Chacón</h2>
+                      <h2>Karoll Guzmán</h2>
                       <p>Nuestra entusiasta</p>
                     </div>
                   </div>
 
                   <div className="swiper-slide">
-                    <img src="../../img/cristian.jpg" alt="Cristian Chacón" />
+                    <img src="https://i.pinimg.com/originals/ff/83/0f/ff830fec5e2f9896e5e0c7d5a7cb26f5.jpg" alt="Cristian Chacón" />
                     <div className="title">
                       <h2>Cristian Chacón</h2>
                       <p>Nuestro prometedor</p>
