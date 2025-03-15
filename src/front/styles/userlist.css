@@ -49,9 +49,24 @@
   color: #5f4b2d; /* Texto marrón oscuro */
 }
 
+/* Contenedor del email */
+.email-container {
+  flex: 1; /* Ocupa todo el espacio disponible a la izquierda */
+  font-size: 1rem;
+  font-weight: bold;
+  color: #8b5e3c; /* Marrón medio */
+}
+
 /* Iconos */
+
+.icon-container {
+  display: flex; /* Asegura que los iconos estén alineados horizontalmente */
+  gap: 10px; /* Espaciado entre los iconos */
+  align-items: center; /* Alinea los iconos verticalmente */
+}
+
 .text-primary {
-  color: #8b5e3c !important; /* Marrón medio para iconos de edición */
+  color: #6491bb !important; 
 }
 
 .text-danger {

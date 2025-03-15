@@ -4,9 +4,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-image: url('https://www.roastycoffee.com/wp-content/uploads/coffee-bean.jpg');
-  background-size: cover;
-  background-position: center;
+  background-color: transparent;
   position: relative;
 }
 
@@ -17,7 +15,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(191, 139, 103, 0.7);
+  background: none;
   z-index: 1;
 }
 
@@ -25,14 +23,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 10px;
+  background-color: transparent;
+  border: none; 
   margin-top: 20px;
     z-index: 2;
   }
 
 .pagination button {
-  background-color: rgb(219, 203, 150);
-  border: none;
-  color: rgb(85, 49, 23);
+  background-color: rgb(158, 119, 92);
+  border: 1px solid #ddd;
+  color: rgb(231, 229, 192);
   padding: 10px 20px;
   text-align: center;
   text-decoration: none;
@@ -44,7 +45,7 @@
 }
 
 .pagination button:disabled {
-  background-color: rgb(219, 203, 150);
+  background-color: rgb(158, 119, 92);
   cursor: not-allowed;
 }
 
