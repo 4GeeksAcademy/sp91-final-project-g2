@@ -1,0 +1,143 @@
+/* Contenedor principal */
+.admin-container {
+  max-width: 1200px;
+  margin: 50px auto; /* Centrado horizontal y espacio superior */
+  padding: 20px;
+  background-color: #fff; /* Fondo blanco */
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: "Open Sans", sans-serif;
+  color: #5f4b2d; /* Texto marrón oscuro */
+}
+
+/* Título principal */
+.text-center {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #8b5e3c; /* Marrón medio */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Tarjetas */
+.card {
+  margin-top: 220px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #f9f4ef; /* Fondo claro */
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #8b5e3c; /* Marrón medio */
+  margin-bottom: 15px;
+}
+
+.card h5, .card p {
+  color: #5f4b2d; /* Texto marrón oscuro */
+  margin-bottom: 10px;
+}
+
+/* Botones */
+
+/* Espaciado y centrado de los botones */
+.d-flex.gap-3 {
+    display: flex;
+    justify-content: center; /* Centra los botones horizontalmente */
+    align-items: center; /* Alinea los botones verticalmente */
+    gap: 15px; /* Espaciado entre los botones */
+    flex-wrap: wrap; /* Permite que los botones se ajusten en varias líneas si es necesario */
+  }
+
+.btn {
+  background-color: #8b5e3c; /* Marrón medio */
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #a67c52; /* Marrón más claro */
+}
+
+.btn-danger {
+  background-color: #b33a3a; /* Rojo oscuro */
+}
+
+.btn-danger:hover {
+  background-color: #d9534f; /* Rojo más claro */
+}
+
+/* Input de búsqueda */
+.input-group {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.form-control {
+  border: 1px solid #ddd;
+  border-radius: 5px 0 0 5px;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #8b5e3c; /* Marrón medio */
+  box-shadow: 0 0 5px rgba(139, 94, 60, 0.5);
+}
+
+.input-group .btn {
+  border-radius: 0 5px 5px 0;
+}
+
+/* Diseño responsivo */
+@media (max-width: 768px) {
+  .text-center {
+    font-size: 1.5rem;
+  }
+
+  .card-title {
+    font-size: 1.2rem;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
+
+  .form-control {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+
+  .input-group {
+    flex-direction: column;
+  }
+
+  .input-group .btn {
+    margin-top: 10px;
+    border-radius: 5px;
+  }
+
+  .admin-container {
+    margin: 20px auto; /* Reduce el margen superior en pantallas pequeñas */
+  }
+}
+
+/* Espaciado entre botones */
+.d-flex.gap-3 {
+  gap: 15px;
+  flex-wrap: wrap;
+}

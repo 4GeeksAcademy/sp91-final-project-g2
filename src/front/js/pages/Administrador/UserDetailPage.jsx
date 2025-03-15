@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../../store/appContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { UserDetail } from "../../component/Admin/UserDetails.jsx";
+import '../../../styles/userdetailpage.css';
 
 export const UserDetailPage = () => {
     const { store, actions } = useContext(Context);

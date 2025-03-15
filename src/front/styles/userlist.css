@@ -1,0 +1,86 @@
+/* Contenedor principal */
+.list-group {
+  max-width: 1200px;
+  margin: 50px auto; /* Centrado horizontal y espacio superior */
+  padding: 20px;
+  background-color: #fff; 
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: "Open Sans", sans-serif;
+  color: #5f4b2d; /* Texto marrón oscuro */
+}
+
+/* Elementos de la lista */
+.list-group-item {
+  background-color: #f9f4ef; /* Fondo claro */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.list-group-item:hover {
+  background-color: #f1e7db; /* Fondo más claro al pasar el cursor */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Detalles del usuario */
+.mt-2.p-2.border.rounded.bg-light {
+  background-color: #fff; /* Fondo blanco */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-top: 10px;
+  color: #5f4b2d; /* Texto marrón oscuro */
+}
+
+/* Títulos y texto */
+.list-group-item span {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #8b5e3c; /* Marrón medio */
+}
+
+.list-group-item p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+  color: #5f4b2d; /* Texto marrón oscuro */
+}
+
+/* Iconos */
+.text-primary {
+  color: #8b5e3c !important; /* Marrón medio para iconos de edición */
+}
+
+.text-danger {
+  color: #b33a3a !important; /* Rojo oscuro para iconos de eliminación */
+}
+
+.text-primary:hover, .text-danger:hover {
+  opacity: 0.8; /* Efecto de opacidad al pasar el cursor */
+}
+
+/* Diseño responsivo */
+@media (max-width: 768px) {
+  .list-group {
+    padding: 15px;
+  }
+
+  .list-group-item {
+    padding: 10px;
+  }
+
+  .list-group-item span {
+    font-size: 0.9rem;
+  }
+
+  .list-group-item p {
+    font-size: 0.8rem;
+  }
+
+  .mt-2.p-2.border.rounded.bg-light {
+    padding: 10px;
+  }
+}

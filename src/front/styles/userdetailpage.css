@@ -1,0 +1,128 @@
+/* Contenedor principal */
+.user-detail-container {
+  max-width: 800px;
+  margin: 50px auto; /* Centrado horizontal y espacio superior */
+  padding: 20px;
+  background-color: #fff; /* Fondo blanco */
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: "Open Sans", sans-serif;
+  color: #5f4b2d; /* Texto marrón oscuro */
+}
+
+/* Títulos */
+.user-detail-container h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #8b5e3c; /* Marrón medio */
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Campos de formulario */
+.user-detail-container input,
+.user-detail-container select,
+.user-detail-container textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: #5f4b2d; /* Texto marrón oscuro */
+  background-color: rgba(255, 255, 255, 0); /* Fondo transparente */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.user-detail-container h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #8b5e3c; /* Marrón medio */
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Formulario */
+.user-detail-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.user-detail-form label {
+  font-weight: bold;
+  color: #5f4b2d; /* Texto marrón oscuro */
+}
+
+.user-detail-form input,
+.user-detail-form select,
+.user-detail-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: #5f4b2d; /* Texto marrón oscuro */
+  background-color: #f9f4ef; /* Fondo claro */
+}
+
+.user-detail-form input:focus,
+.user-detail-form select:focus,
+.user-detail-form textarea:focus {
+  outline: none;
+  border-color: #8b5e3c; /* Marrón medio */
+  box-shadow: 0 0 5px rgba(139, 94, 60, 0.5);
+}
+
+/* Botones */
+.user-detail-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.user-detail-buttons .btn {
+  background-color: #8b5e3c; /* Marrón medio */
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.user-detail-buttons .btn:hover {
+  background-color: #a67c52; /* Marrón más claro */
+}
+
+.user-detail-buttons .btn-secondary {
+  background-color: #b3b3b3; /* Gris claro */
+}
+
+.user-detail-buttons .btn-secondary:hover {
+  background-color: #d6d6d6; /* Gris más claro */
+}
+
+/* Diseño responsivo */
+@media (max-width: 768px) {
+  .user-detail-container {
+    padding: 15px;
+  }
+
+  .user-detail-container h1 {
+    font-size: 1.8rem;
+  }
+
+  .user-detail-container h2 {
+    font-size: 1.3rem;
+  }
+
+  .user-detail-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .user-detail-buttons .btn {
+    width: 100%;
+  }
+}

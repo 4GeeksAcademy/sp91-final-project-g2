@@ -1,6 +1,7 @@
 import React from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import '../../../styles/userlist.css';
 
 export const UserList = ({ users, onEdit, onDeactivate, onToggleExpand, expandedUserId }) => {
     const navigate = useNavigate();

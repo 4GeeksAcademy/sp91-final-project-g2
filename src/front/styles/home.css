@@ -108,7 +108,7 @@ section .bg {
 
 .scroll {
   position: absolute;
-  top: 22%;
+  top: 25%;
   left: 50%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);

@@ -1,4 +1,5 @@
 .coffee-spinner-container {
+  position: fixed;
   display: flex;
   flex-direction: column;
   justify-content: center;
