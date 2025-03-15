@@ -8,6 +8,10 @@
   box-sizing: border-box;
 }
 
+.welcome-text {
+  margin-bottom: -600px !important;
+}
+
 .navbar {
   position: fixed;
   top: 0;
@@ -85,11 +89,11 @@ section .bg {
 
 .home-content > h1 {
   font-family: inherit;
-  font-size: 3rem;
+  font-size: 40px;
   font-weight: 700;
   margin-bottom: 20px;
   margin-top: -100px;
-  margin-left: 180px;
+  margin-left: 207px;
   color: rgb(136, 117, 101);
 }
 
@@ -130,12 +134,12 @@ section .bg {
 
 .scroll p:nth-child(1) {
   animation: scrolling-rtl 25s infinite linear;
-  margin-bottom: 210px;
+  margin-bottom: 10px;
 }
 
-.scroll p:nth-child(2) {
+.scroll p:nth-of-type(2) {
   animation: scrolling-ltr 25s infinite linear;
-  margin-top: -150px !important;
+  margin-top: 730px;
 }
 
 @keyframes scrolling-rtl {
@@ -167,6 +171,7 @@ section .bg {
   justify-content: center;
   gap: 10px;
   margin-top: -25px;
+  margin-left: -25px;
 }
 
 .links li {
