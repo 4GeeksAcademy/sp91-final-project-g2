@@ -144,7 +144,7 @@ const Home = () => {
               <div className="swiper">
                 <div className="swiper-wrapper">
                   <div className="swiper-slide">
-                    <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/fc8d0277-064e-459e-ac97-1a0d3c6c54ae" alt="Luis Borjas" />
+                    <img src="../../img/luis.jpg" alt="Luis Borjas" />
                     <div className="title">
                       <h2>Luis Borjas</h2>
                       <p>Nuestro experimentado</p>
@@ -152,7 +152,7 @@ const Home = () => {
                   </div>
 
                   <div className="swiper-slide">
-                    <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/31730ad0-acea-4cbf-97e3-e3462eb6b387" alt="Karoll Guzmán" />
+                    <img src="../../img/karoll.jpg" alt="Karoll Guzmán" />
                     <div className="title">
                       <h2>Cristian Chacón</h2>
                       <p>Nuestra entusiasta</p>
@@ -160,7 +160,7 @@ const Home = () => {
                   </div>
 
                   <div className="swiper-slide">
-                    <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/84fad863-e9d1-4035-9009-3f54e7bdfbf1" alt="Cristian Chacón" />
+                    <img src="../../img/cristian.jpg" alt="Cristian Chacón" />
                     <div className="title">
                       <h2>Cristian Chacón</h2>
                       <p>Nuestro prometedor</p>
