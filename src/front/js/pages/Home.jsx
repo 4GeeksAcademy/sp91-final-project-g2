@@ -110,7 +110,6 @@ const Home = () => {
               <div className="home-content">
                 <h1>
                   CAFETALEROS
-                  <ion-icon className="music-note-icon" name="musical-note-outline"></ion-icon>
                 </h1>
                 <p>
                 Dive into the world of great coffee, where every cup tells a story of flavor and tradition. From the freshest beans to the most careful brewing process, we celebrate the magic that only a perfect cup of coffee can offer.
