@@ -11,11 +11,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 			userRole: null,
 			token: "",
 			profile: null,
-			loading: false
+			loading: false,
+			favorites: [],
+			userComments: [],
 		},
 		actions: {
-		signup: async (firstName, lastName, address, phone, email, password, role) => {
-			setStore({ loading: true });
+			signup: async (firstName, lastName, address, phone, email, password, role) => {
+				setStore({ loading: true });
 				const store = getStore();
 				const uri = `${process.env.BACKEND_URL}/api/signup`;
 				const options = {
@@ -27,17 +29,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 				};
 				try {
 					const response = await fetch(uri, options);
-				    if (!response.ok) throw new Error('Error in signup');
-				    const data = await response.json();
-				    localStorage.setItem('access_token', data.access_token);
-				    setStore({ token: data.access_token, loading: false });
-				    return { success: true, message: 'Register success' };
-			    } catch (error) {
-				    console.error('Error en el registro', error);
-				    setStore({ loading: false });
-				    return { success: false, message: error.message };
-			    }
-	},
+					if (!response.ok) throw new Error('Error in signup');
+					const data = await response.json();
+					localStorage.setItem('access_token', data.access_token);
+					setStore({ token: data.access_token, loading: false });
+					return { success: true, message: 'Register success' };
+				} catch (error) {
+					console.error('Error en el registro', error);
+					setStore({ loading: false });
+					return { success: false, message: error.message };
+				}
+			},
 			exampleFunction: () => { getActions().changeColor(0, "green"); },
 			getMessage: async () => {
 				const uri = `${process.env.BACKEND_URL}/api/hello`
@@ -64,8 +66,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const data = await response.json();
 				localStorage.setItem("token", data.access_token);
 				const userRole = data.results.is_admin ? "is_admin" :
-								data.results.is_vendor ? "is_vendor" :
-								data.results.is_customer ? "is_customer" : null;
+					data.results.is_vendor ? "is_vendor" :
+						data.results.is_customer ? "is_customer" : null;
 				setStore({ isLogged: true, user: data.results, userRole });
 			},
 			getUsers: async () => {
@@ -84,7 +86,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return
 				}
 				const data = await response.json();
-				setStore({ users: data.results });				
+				setStore({ users: data.results });
 			},
 			getUserById: async (id) => {
 				const uri = `${process.env.BACKEND_URL}/api/users/${id}`;
@@ -102,7 +104,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 				const data = await response.json();
 				return data.results;
-			},			
+			},
 			updateUser: async (id, updateUser) => {
 				const store = getStore();
 				const uri = `${process.env.BACKEND_URL}/api/users/${id}`
@@ -131,7 +133,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					alert("No se pudo actualizar el usuario");
 					return false;
 				}
-			},			
+			},
 			deactivateUser: async (id) => {
 				const store = getStore();
 				const uri = `${process.env.BACKEND_URL}/api/users/${id}`;
@@ -200,7 +202,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error al obtener el producto:", error);
 					return null;
 				}
-			},			
+			},
 			updateProduct: async (id, updateProduct) => {
 				const store = getStore();
 				const uri = `${process.env.BACKEND_URL}/api/products/${id}`;
@@ -242,7 +244,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return false;
 				}
 			},
-
 			deactivateProduct: async (id) => {
 				const store = getStore();
 				const uri = `${process.env.BACKEND_URL}/api/products/${id}`;
@@ -293,7 +294,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const token = localStorage.getItem("token");
 				if (token) setStore({ token });
 			},
-			},
 			addToCart: (product) => {
 				const store = getStore();
 				setStore({ products: [...store.products, product] });
@@ -308,10 +308,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const uri = `${process.env.BACKEND_URL}/api/vendors/${store.user.id}/products`;
 					const options = {
 						method: "POST",
-						headers: { 
+						headers: {
 							"Content-Type": "application/json",
 							Authorization: `Bearer ${store.token}`
-						 },
+						},
 						body: JSON.stringify(productData)
 					};
 					const response = await fetch(uri, options);
@@ -340,7 +340,131 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error('Error al obtener el perfil', error);
 					return null;
 				}
-			}
+			},
+			getFavorites: async () => {
+				const token = localStorage.getItem("token");
+				const uri = `${process.env.BACKEND_URL}/api/favorites`;
+				const options = {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`
+					}
+				};
+				const response = await fetch(uri, options);
+				if (!response.ok) {
+					console.log("Error al obtener los favoritos:", response.status, response.statusText);
+					return;
+				}
+				const data = await response.json();
+				console.log("Datos recibidos en getFavorites:", data);
+				setStore({ favorites: data.results });
+			},
+			addFavorite: async (productId) => {
+				const token = localStorage.getItem("token");
+				if (!token) {
+					console.log("No hay token disponible");
+					return;
+				}
+				const uri = `${process.env.BACKEND_URL}/api/favorites`;
+				const options = {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`
+					},
+					body: JSON.stringify({ product_id: productId })
+				};
+				const response = await fetch(uri, options);
+				if (!response.ok) {
+					console.log("Error al agregar favorito:", response.status, response.statusText);
+					return;
+				}
+				const data = await response.json();
+				const currentFavorites = getStore().favorites;
+				setStore({ favorites: [...currentFavorites, data.results ? data.results : data] });
+				alert("Producto añadido a favoritos");
+			},
+			deleteFavorite: async (favoriteId) => {
+				const token = localStorage.getItem("token");
+				if (!token) {
+					console.log("No hay token disponible");
+					return false;
+				}
+				const uri = `${process.env.BACKEND_URL}/api/favorites/${favoriteId}`;
+				const options = {
+					method: "DELETE",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`
+					}
+				};
+				const response = await fetch(uri, options);
+				if (!response.ok) {
+					console.log("Error al eliminar favorito:", response.status, response.statusText);
+					return false;
+				}
+				const currentFavorites = getStore().favorites;
+				setStore({ favorites: currentFavorites.filter(fav => fav.favorite_id !== favoriteId) });
+				alert("Favorito eliminado");
+				return true;
+			},
+			getUserComments: async (user_id) => {
+				const token = localStorage.getItem("token")
+				if (!token) {
+					console.log("No hay token disponible");
+					return false;
+				}
+				const uri = `${process.env.BACKEND_URL}/api/users/${user_id}/comments`;
+				const options = {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`
+					}
+				};
+				const response = await fetch(uri, options);
+				if (!response.ok) {
+					console.log("Error:", response.status, response.statusText);
+					return false;
+				}
+				const data = await response.json();
+				const comments = data.results ? data.results : data;
+				setStore({ userComments: comments });
+			},
+			deleteComment: async (userId, commentId) => {
+				const token = localStorage.getItem("token");
+				const uri = `${process.env.BACKEND_URL}/users/${userId}/comments/${commentId}`;
+				const options = {
+					method: "DELETE",
+					headers: {
+						"Authorization": `Bearer ${token}`
+					}
+				};
+				const response = await fetch(uri, options);
+				const data = await response.json();
+				if (!response.ok) {
+					console.log("Error al eliminar comentario:", data.message);
+					return false;
+				}
+				const updatedComments = getStore().userComments.filter(comment => comment.id !== commentId);
+				setStore({ userComments: updatedComments });
+
+				console.log("Comentario eliminado correctamente");
+				return true;
+			},
+			addAllFavoritesToCart: async () =>{
+				const store = getStore();
+				if(store.favorites.length === 0){
+					alert("No hay productos favoritos para añadir al carrito")
+					return;
+				}
+				const udpdateCart = [ ...store.products, ...store.favorites.map(fav => fav.product)];
+				setStore({ products: udpdateCart});
+				alert("Todos los productos favoritos han sido incluidos al carrito")
+			},
+			clearUserComments: () => setStore({ userComments: [] })			
 		}
-	};
+	}
+};
 export default getState;

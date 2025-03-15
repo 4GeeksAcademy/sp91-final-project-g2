@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Context } from "../../store/appContext";
 import { useNavigate } from "react-router-dom";
-import { CommentsList } from "../../component/Admin/CommentList.jsx";
+import { CommentList } from "../../component/Admin/CommentList.jsx";
 
 export const CommentsListPage = () => {
   const { store, actions } = useContext(Context);
@@ -30,7 +30,7 @@ export const CommentsListPage = () => {
   return (
     <div className="container mt-4">
       <h1>Listado de Comentarios</h1>
-      <CommentsList comments={store.comments || []} onEdit={handleEdit} onDelete={handleDelete} />
+      <CommentList comments={store.comments || []} onEdit={handleEdit} onDelete={handleDelete} />
       <button className="btn btn-secondary mt-3" onClick={() => navigate("/adminpage")}> Regresar </button>
     </div>
   );

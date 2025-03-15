@@ -1,6 +1,6 @@
 import React from "react";
 
-export const CommentsList = ({ comments, onEdit, onDelete }) => {
+export const CommentList = ({ comments, onEdit, onDelete }) => {
   return (
     <div className="container mt-4">
       {comments.length === 0 ? (<p>No hay comentarios disponibles.</p>) 

@@ -18,7 +18,7 @@ export const AdminPage = () => {
                 actions.getProducts();
                 actions.getComments();
         }
-    }, [store.isLogged, store.userRole, navigate]);
+    }, [store.isLogged, store.userRole, actions, navigate]);
 
     const handleLogout = () => {
         localStorage.removeItem("token");

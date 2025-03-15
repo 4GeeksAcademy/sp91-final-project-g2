@@ -15,7 +15,7 @@ export const UserListPage = () => {
         } else {
             actions.getUsers();
         }
-    }, [store.isLogged, store.userRole, navigate]);
+    }, [store.isLogged, store.userRole, actions, navigate]);
 
     const handleEdit = (id) => {
         navigate(`/user-details/${id}`);
@@ -23,6 +23,7 @@ export const UserListPage = () => {
 
     const handleDeactivate = async (id) => {
         await actions.deactivateUser(id);
+        if (success) actions.getUsers();
     };
 
     const handleToggleExpand = (id) => {

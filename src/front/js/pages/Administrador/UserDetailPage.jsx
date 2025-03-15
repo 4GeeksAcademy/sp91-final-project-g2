@@ -34,14 +34,14 @@ export const UserDetailPage = () => {
         event.preventDefault();
         const success = await actions.updateUser(id, userData);
         if (success) {
-            navigate('/user-list');
+            navigate('/user-list-page');
         }
     };
     
     const handleDeactivate = async () => {
         const success = await actions.deactivateUser(id);
         if (success) {
-            navigate('/user-list');
+            navigate('/user-list-page');
         }
     };
 
@@ -50,7 +50,7 @@ export const UserDetailPage = () => {
             <h1>Administración</h1>
             <h2>Detalles del Usuario</h2>
             <UserDetail user={userData} onChange={handleChange} onSubmit={handleSubmit} onDeactivate={handleDeactivate}/>
-            <button className="btn btn-secondary" onClick={() => navigate('/user-list')}>Regresar</button>
+            <button className="btn btn-secondary" onClick={() => navigate('/user-list-page')}>Regresar</button>
         </div>
     )
 }

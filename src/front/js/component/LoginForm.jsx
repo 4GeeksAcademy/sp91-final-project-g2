@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Context } from "../store/appContext";
 
 export const LoginForm = () => {
@@ -15,10 +15,10 @@ export const LoginForm = () => {
                     navigate('/adminpage');
                     break;
                 case 'is_vendor':
-                    navigate('/product-form');
+                    navigate('/profilepage');
                     break;
                 case 'is_customer':
-                    navigate('/product-cards');
+                    navigate('/profilepage');
                     break;
                 default:
                     console.error("Rol de usuario no reconocido.");
@@ -35,7 +35,7 @@ export const LoginForm = () => {
         const success = await actions.login(dataToSend);
         if (success) {
             if (store.userRole === 'is_admin') {
-                navigate('/pruebaadmin');
+                navigate('/adminPage');
             } else if (store.userRole === 'is_vendor') {
                 navigate('/product-form');
             } else if (store.userRole === 'is_customer') {
@@ -52,13 +52,7 @@ export const LoginForm = () => {
                 <input type="checkbox" id="remember" />
                 <label htmlFor="remember">Recordarme</label>
             </div>
-            <button type="submit">Iniciar sesión</button>
-            <a href="/">¿Has olvidado tu contraseña?</a>
-            <p>
-                Al hacer clic en "Iniciar sesión", estás de acuerdo con los {" "}
-                <a href="/">Términos de servicios</a> y la {" "}
-                <a href="/">Política de privacidad</a>
-            </p>
+            <button type="submit">Iniciar sesión</button>                       
         </form>
     );
 };
