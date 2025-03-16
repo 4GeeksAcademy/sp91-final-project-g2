@@ -182,11 +182,8 @@ const Home = () => {
               <div className="info-content">
                 <h1>Why Choose Cafetaleros?</h1>
                 <p>
-                At Cafetaleros, we’re passionate about delivering a unique coffee experience. Our beans are carefully handpicked from the finest farms, ensuring each cup is full of rich, aromatic flavor. We combine traditional brewing methods with modern expertise to craft a smooth, bold taste that stands out.
-
-Sustainability and fair trade are at the heart of what we do, supporting the farmers who share our commitment to quality. Whether you prefer a strong dark roast or a smoother blend, our coffee is crafted to satisfy every taste.
-
-Join us at Cafetaleros and discover why our coffee is the perfect start to your day. Taste the difference – great moments begin with the perfect cup.
+                Cafetaleros offers a unique coffee experience with handpicked beans from top farms, blending traditional methods and modern expertise for a rich, bold flavor. We prioritize sustainability and fair trade, supporting farmers committed to quality. 
+                <p><strong>Enjoy the perfect cup to start your day! </strong></p>
                 </p>
               </div>
             </div>

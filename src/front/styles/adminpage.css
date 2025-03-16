@@ -3,18 +3,18 @@
   max-width: 1200px;
   margin: 50px auto; /* Centrado horizontal y espacio superior */
   padding: 20px;
-  background-color: #fff; /* Fondo blanco */
+  background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   font-family: "Open Sans", sans-serif;
-  color: #5f4b2d; /* Texto marrón oscuro */
+  color: #5f4b2d;
 }
 
 /* Título principal */
 .text-center {
   font-size: 2rem;
   font-weight: bold;
-  color: #8b5e3c; /* Marrón medio */
+  color: #8b5e3c;
   margin-bottom: 20px;
   text-align: center;
 }
@@ -25,7 +25,7 @@
   border: none;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  background-color: #f9f4ef; /* Fondo claro */
+  background-color: #f9f4ef; 
 }
 
 .card-body {
@@ -35,12 +35,12 @@
 .card-title {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #8b5e3c; /* Marrón medio */
+  color: #8b5e3c;
   margin-bottom: 15px;
 }
 
 .card h5, .card p {
-  color: #5f4b2d; /* Texto marrón oscuro */
+  color: #5f4b2d; 
   margin-bottom: 10px;
 }
 
@@ -49,14 +49,14 @@
 /* Espaciado y centrado de los botones */
 .d-flex.gap-3 {
     display: flex;
-    justify-content: center; /* Centra los botones horizontalmente */
-    align-items: center; /* Alinea los botones verticalmente */
-    gap: 15px; /* Espaciado entre los botones */
-    flex-wrap: wrap; /* Permite que los botones se ajusten en varias líneas si es necesario */
+    justify-content: center; 
+    align-items: center; 
+    gap: 15px; 
+    flex-wrap: wrap; 
   }
 
 .btn {
-  background-color: #8b5e3c; /* Marrón medio */
+  background-color: #8b5e3c; 
   color: #fff;
   border: none;
   padding: 10px 15px;
@@ -67,15 +67,15 @@
 }
 
 .btn:hover {
-  background-color: #a67c52; /* Marrón más claro */
+  background-color: #a67c52;
 }
 
 .btn-danger {
-  background-color: #b33a3a; /* Rojo oscuro */
+  background-color: #b33a3a;
 }
 
 .btn-danger:hover {
-  background-color: #d9534f; /* Rojo más claro */
+  background-color: #d9534f;
 }
 
 /* Input de búsqueda */
@@ -94,7 +94,7 @@
 
 .form-control:focus {
   outline: none;
-  border-color: #8b5e3c; /* Marrón medio */
+  border-color: #8b5e3c;
   box-shadow: 0 0 5px rgba(139, 94, 60, 0.5);
 }
 
