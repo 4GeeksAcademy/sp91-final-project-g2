@@ -432,7 +432,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const comments = data.results ? data.results : data;
 				setStore({ userComments: comments });
 			},
-			deleteComment: async (userId, commentId) => {
+			deleteCommentAsAdmin: async (userId, commentId) => {
 				const token = localStorage.getItem("token");
 				const uri = `${process.env.BACKEND_URL}/users/${userId}/comments/${commentId}`;
 				const options = {

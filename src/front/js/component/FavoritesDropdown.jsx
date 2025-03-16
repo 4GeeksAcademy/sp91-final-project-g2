@@ -9,6 +9,12 @@ export const FavoritesDropdown = () => {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false)
 
+    useEffect(() => {
+        if (store.isLogged && store.userRole === "is_customer") {
+          actions.getFavorites();
+        }
+      }, [store.isLogged, store.userRole]);
+
     const handleDelete = async (favoriteId) => {
         const success = await actions.deleteFavorite(favoriteId);
         if (!success) {

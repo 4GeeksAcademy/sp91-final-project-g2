@@ -39,7 +39,7 @@ export const ProfilePage = () => {
         { title: "Compras realizadas", description: "Historial de tus pedidos", onClick: () => navigate("/") },
         { title: "Comentarios", description: "Tus comentarios en productos", onClick: () => navigate("/") },
         { title: "Carrito de compra", description: "Revisar tus artículos", onClick: () => navigate("/") },
-        { title: "Favoritos", description: "Lista de productos favoritos", onClick: () => navigate("/") },
+        { title: "Favoritos", description: "Lista de productos favoritos", onClick: () => navigate("/favorite-page") },
     ];
 
     const handleEditProfile = () => {
