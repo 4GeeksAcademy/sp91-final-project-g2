@@ -18,7 +18,7 @@ export const LoginForm = () => {
                     navigate('/product-form');
                     break;
                 case 'is_customer':
-                    navigate('/product-cards');
+                    navigate('/product-list');
                     break;
                 default:
                     console.error("Rol de usuario no reconocido.");
