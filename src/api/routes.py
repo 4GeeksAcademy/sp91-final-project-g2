@@ -30,6 +30,9 @@ def login():
         response_body['role'] = 'User not found'
         return response_body, 401
     user = row.serialize()
+    ##  aca buscamos el order id del usuario en caso de tenerla, si no lo tiene, devolvemos order id con none
+    row_order = db.session.execute(db.select(Orders).where(Orders.customer_id == user['id'])).scalar()
+    user['order_id'] = row_order.serialize()['id'] if row_order else None
     claims = {'user_id': user['id'],
               'is_active': user['is_active'],
               'is_admin': user['is_admin'],
@@ -625,25 +628,35 @@ def orderitems():
     if request.method == 'POST':
         data = request.json
         # Validaciones: Existen la orden y el producto?
-        order = db.session.get(Orders, data.get('order_id'))
         product = db.session.get(Products, data.get('product_id'))
-        if not order:
-            response_body['message'] = 'La orden especificada no existe'
-            return jsonify(response_body), 404
         if not product:
             response_body['message'] = 'El producto especificado no existe'
             return jsonify(response_body), 404
-        # Solo el cliente que creó la orden puede añadir items
-        if additional_claims.get('user_id') != order.customer_id:
-            response_body['message'] = 'Acceso denegado: No puedes modificar esta orden'
-            return jsonify(response_body), 403
-        row = OrderItems(
-            order_id=data.get('order_id'),
-            product_id=data.get('product_id'),
-            price=data.get('price'))
+        product_id = product.serialize()['id']
+        price = product.serialize()['price']
+        # verificamos si el order_id tiene un numero o viene nulo. Si es nulo tiene que crear una order. Si tiene un numero tengo que vverificar que laa orden exista
+        order_id = data.get('order_id', None)
+        if order_id: 
+            # determinamos si la orden existe
+            row_order = db.session.execute(db.select(Orders).where(Orders.id == order_id, Orders.customer_id == additional_claims['user_id'])).scalar()
+            if not row_order:
+                response_body['message'] = 'No autorizado'
+                return response_body, 404
+        else: 
+            # creamos la orden
+            row_order = Orders(customer_id = additional_claims['user_id'], 
+                               status= "pendiente",
+                               total_price= 0,
+                               address= data.get('address', ''))
+            db.session.add(row_order)
+            db.session.commit()
+            order_id = row_order.serialize()['id']
+        row = OrderItems(order_id=order_id,
+                         product_id=product_id,
+                         price=price)
         db.session.add(row)
         db.session.commit()
-        response_body['message'] = 'El item de orden ha sido añadido correctamente'
+        response_body['message'] = f'El producto {product_id} de la orden {order_id} ha sido añadido correctamente'
         response_body['results'] = row.serialize()
         return jsonify(response_body), 201
     
@@ -689,3 +702,49 @@ def orderitem(id):
         db.session.commit()
         response_body['message'] = 'El item de orden ha sido eliminado correctamente'
         return jsonify(response_body), 200
+
+
+@api.route('/pendingorders', methods=['GET', 'POST'])
+@jwt_required()
+def pendingorders():
+    response_body = {}
+    additional_claims = get_jwt() 
+    user_id = additional_claims.get('user_id')
+    print(user_id)
+    row = db.session.execute(db.select(Orders).where(Users.id == user_id, Orders.status == 'pendiente')).scalar()
+    if not row : 
+        row = Orders(
+            customer_id=user_id,
+            status= 'pendiente',  # Estado por defecto "pendiente"
+            address= "",
+            total_price= 0)
+        db.session.add(row)
+        db.session.commit()
+    order = row.serialize()
+    if request.method == 'GET':
+        print(order)
+        rows = db.session.execute(db.select(OrderItems).where(OrderItems.order_id == order.id)).scalars()
+        if not rows : 
+            response_body['message'] = 'order sin articulos'   
+            response_body['results'] = []
+            return jsonify(response_body), 200  
+        response_body['message'] = 'Listado de todos los items de orden'
+        print(rows)
+        response_body['results'] = [row.serialize() for row in rows]
+        return jsonify(response_body), 200
+    if request.method == 'POST':
+        data = request.json
+        row = db.session.execute(db.select(Products).where(Products.id == data.get('product_id'))).scalar()
+        ## verificar que el producto exista
+        product = row.serialize()
+        order_item = OrderItems(
+            order_id= order.get('id'),
+            product_id= product.get('id'),
+            price= product.get('price')) 
+        db.session.add(order_item)
+        db.session.commit()
+        response_body['message'] = 'El item de orden ha sido añadido correctamente'
+        response_body['results'] = order_item.serialize()
+        return response_body, 200
+
+
