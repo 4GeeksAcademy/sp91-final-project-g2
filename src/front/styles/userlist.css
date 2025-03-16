@@ -10,6 +10,56 @@
   color: #5f4b2d; 
 }
 
+/* Sección de usuarios */
+.user-section {
+  margin-bottom: 30px; /* Espaciado entre secciones */
+  padding: 15px;
+  border: 1px solid #ddd; /* Borde para separar secciones */
+  border-radius: 5px;
+  background-color: #f9f9f9; /* Fondo claro */
+}
+
+/* Títulos de las secciones */
+.text-center {
+  margin-top: 40px;
+  font-size: 2rem;
+  color:#ac9a7d;
+}
+
+.user-section h4 {
+  margin-bottom: 15px; /* Espaciado debajo del título */
+  font-size: 1.5rem;
+  color: #333;
+}
+
+/* Lista de usuarios */
+.list-group {
+  max-width: 100%;
+  margin: 0 auto; /* Centrado horizontal */
+}
+
+/* Paginación */
+.pagination {
+  margin-top: 10px; /* Espaciado entre la lista y la paginación */
+  text-align: center; /* Centra la paginación */
+}
+
+.pagination button {
+  padding: 5px 10px;
+  margin: 0 5px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
 /* Elementos de la lista */
 .list-group-item {
   background-color: #f9f4ef; 

@@ -56,9 +56,10 @@ export const UserListPage = () => {
 
     return (
         <div className="container mt-5">
-            <h1>Administración</h1>
-            <h2>Listado de Usuarios</h2>
+            <h1 className="text-center">Administración</h1>
+            <h2 className="text-center">Listado de Usuarios</h2>
 
+            <div classNme="user-section">
             <h4>Administradores</h4>
             <UserList
                 users={currentAdmins}
@@ -74,7 +75,9 @@ export const UserListPage = () => {
                     onPageChange={(page) => setCurrentPageAdmins(page)}
                 />
             )}
+            </div>
 
+            <div className="user-section">
             <h4>Vendedores</h4>
             <UserList
                 users={currentVendors}
@@ -90,7 +93,9 @@ export const UserListPage = () => {
                     onPageChange={(page) => setCurrentPageVendors(page)}
                 />
             )}
+            </div>
 
+            <div className="user-section">
             <h4>Clientes</h4>
             <UserList
                 users={currentCustomers}
@@ -106,6 +111,7 @@ export const UserListPage = () => {
                     onPageChange={(page) => setCurrentPageCustomers(page)}
                 />
             )}
+            </div>
 
             <button className="btn btn-secondary mt-3" onClick={() => navigate('/adminpage')}>
                 Regresar
