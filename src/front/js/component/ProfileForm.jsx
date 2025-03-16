@@ -17,24 +17,6 @@ const ProfileForm = () => {
     }
   }, [store.token]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProfile({
-      ...profile,
-      [name]: value
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const response = await actions.updateProfile(profile);
-    if (response.success) {
-      console.log('Perfil actualizado:', profile);
-    } else {
-      console.error('Error al actualizar el perfil:', response.message);
-    }
-  };
-
   if (store.loading) {
     return <LoadingSpinner />;
   }
