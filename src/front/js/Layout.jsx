@@ -62,7 +62,7 @@ const Layout = () => {
                         <Route element={<Pagination />} path="/pagination" />  
                         {/* Rutas de órdenes */}
                         <Route path="/orders" element={<Orders />} />
-                        <Route path="/order-items/:orderId" element={<OrderItems />} />
+                        <Route path="/orderitems" element={<OrderItems />} />
                         {/* Rutas de administrador */}
                         <Route element={<AdminPage/>} path="/adminPage"/>
                         <Route element={<UserListPage/>} path="/user-list"/>
