@@ -6,13 +6,13 @@ import { BackendURL } from "./component/BackendURL.jsx";
 import Navbar from "./component/Navbar.jsx";
 import { Footer } from "./component/Footer.jsx";
 import SignUp from "./component/SignUp.jsx";
-import ProfileForm from "./component/ProfileForm.jsx";
+import {ProfileForm} from "./component/ProfileForm.jsx";
 import LoadingSpinner from "./component/LoadingSpinner.jsx";
 import Pagination from "./component/Pagination.jsx";
 // Custom Pages or Views
 import  Home from "./pages/Home.jsx";
 import { Login } from "./pages/Login.jsx";
-import ProfilePage from "./pages/ProfilePage.jsx";
+import {ProfilePage} from "./pages/ProfilePage.jsx";
 // Productos
 import {ProductCards} from "./pages/Products/ProductCards.jsx";
 import {ProductCard} from "./pages/Products/ProductCard.jsx";
@@ -29,6 +29,9 @@ import { ProductDetailPage } from "./pages/Administrador/ProductDetailPage.jsx";
 import { CommentsListPage } from "./pages/Administrador/CommentListPage.jsx";
 import { UserDetailPage } from "./pages/Administrador/UserDetailPage.jsx";
 import { UserListPage } from "./pages/Administrador/UserListPage.jsx";
+import { FavoritesPage } from "./pages/FavoritesPage.jsx";
+import { UserCommentsPage } from "./pages/Administrador/UserCommentsPage.jsx";
+import { Error404 } from "./pages/Error404.jsx";
 
 
 const Layout = () => {
@@ -50,7 +53,7 @@ const Layout = () => {
                         <Route element={<SignUp setToken={setToken} />} path="/signup" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<ProfilePage />} path="/profilepage" />
-                        <Route element={<ProfileForm />} path="/profile" />
+                        <Route element={<ProfileForm />} path="/profileform" />
                         {/* Rutas de productos */}
                         <Route path="/product-cards" element={<ProductCards />} />
                         <Route path="/product-card/:productId" element={<ProductCard />} />
@@ -59,20 +62,21 @@ const Layout = () => {
                         <Route path="/product-list" element={<ProductList />} />
                         {/* Rutas de otros componentes */}
                         <Route element={<LoadingSpinner />} path="/loading" />
-                        <Route element={<Pagination />} path="/pagination" />  
+                        <Route element={<Pagination />} path="/pagination" />
                         {/* Rutas de órdenes */}
                         <Route path="/orders" element={<Orders />} />
                         <Route path="/orderitems" element={<OrderItems />} />
                         {/* Rutas de administrador */}
                         <Route element={<AdminPage/>} path="/adminPage"/>
-                        <Route element={<UserListPage/>} path="/user-list"/>
+                        <Route element={<UserListPage/>} path="/user-list-page"/>
                         <Route element={<UserDetailPage/>} path="/user-details/:id"/>
                         <Route element={<ProductListPage/>} path="/product-list-page"/>
                         <Route element={<ProductDetailPage/>} path="/product-details-page/:id"/>
                         <Route element={<CommentsListPage/>} path="/comment-list-page"/>
+                        <Route element={<UserCommentsPage/>} path="/user/:user_id/comments"/>
                         {/* Rutas de favoritos */}
-                        
-                        <Route element={<h1>Not found!</h1>} />
+                        <Route element={<FavoritesPage/>} path="/favorite-page"/>                        
+                        <Route element={<Error404/>} path="*" />
                     </Routes>
                     <Footer />
                 </ScrollToTop>

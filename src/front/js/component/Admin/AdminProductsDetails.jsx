@@ -1,10 +1,8 @@
 import React from "react";
 import { FaEdit } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 
 export const AdminProductDetail = ({ product, editMode, toggleEditMode, editValues, onChange, onSubmit, onDeactivate }) => {
-  const navigate = useNavigate();
-
+  
   if (!product || Object.keys(product).length === 0) return <p>Cargando producto...</p>;
 
   return (
@@ -27,67 +25,25 @@ export const AdminProductDetail = ({ product, editMode, toggleEditMode, editValu
               <form onSubmit={onSubmit}>
                 <div className="mb-3">
                   <h5>Nombre:</h5>
-                  <input
-                    type="text"
-                    name="name"
-                    value={editValues.name}
-                    onChange={onChange}
-                    className="form-control"
-                    placeholder={product.name || "Nombre del producto"}
-                    required
-                  />
+                  <input type="text" name="name" value={editValues.name || ""} onChange={onChange} className="form-control" placeholder={product.name || "Nombre del producto"} />
                 </div>
                 <div className="mb-3">
                   <h5>Categoría:</h5>
-                  <input
-                    type="text"
-                    name="category"
-                    value={editValues.category}
-                    onChange={onChange}
-                    className="form-control"
-                    placeholder={product.category || "Categoría"}
-                    required
-                  />
+                  <input type="text" name="category" value={editValues.category || ""} onChange={onChange} className="form-control" placeholder={product.category || "Categoría"} />
                 </div>
                 <div className="mb-3">
                   <h5>Descripción:</h5>
-                  <input
-                    type="text"
-                    name="description"
-                    value={editValues.description}
-                    onChange={onChange}
-                    className="form-control"
-                    placeholder={product.description || "Descripción del producto"}
-                    required
-                  />
+                  <input type="text" name="description" value={editValues.description || ""} onChange={onChange} className="form-control" placeholder={product.description || "Descripción del producto"} />
                 </div>
                 <div className="mb-3">
                   <h5>Precio:</h5>
-                  <input
-                    type="number"
-                    name="price"
-                    value={editValues.price}
-                    onChange={onChange}
-                    className="form-control"
-                    placeholder={product.price || "Precio"}
-                    required
-                  />
+                  <input type="number" name="price" value={editValues.price || ""} onChange={onChange} className="form-control" placeholder={product.price || "Precio"} />
                 </div>
                 <div className="mb-3">
                   <h5>Estado:</h5>
-                  <input
-                    type="text"
-                    name="in_sell"
-                    value={editValues.in_sell}
-                    onChange={onChange}
-                    className="form-control"
-                    placeholder={product.in_sell ? "Producto en venta" : "Producto no está en venta"}
-                    required
-                  />
+                  <input type="text" name="in_sell" value={editValues.in_sell || ""} onChange={onChange} className="form-control" placeholder={product.in_sell ? "Producto en venta" : "Producto no está en venta"} />
                 </div>
-                <button type="submit" className="btn btn-primary me-2">
-                  Guardar Cambios
-                </button>
+                <button type="submit" className="btn btn-primary me-2">Guardar Cambios</button>
                 <button type="button" className="btn btn-danger" onClick={onDeactivate}>
                   Desactivar Producto
                 </button>

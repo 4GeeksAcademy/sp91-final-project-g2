@@ -112,16 +112,19 @@ def users():
 def user_management(id):
     response_body = {}
     additional_claims = get_jwt()
-    if not additional_claims.get('is_admin', False):
-        # Preguntar el ID del usuario que desea modificar
+    user_id = additional_claims.get('user_id', None)
+    is_admin = additional_claims.get('is_admin', False)
+    if not (is_admin or user_id == id):
         response_body['message'] = 'Acceso Denegado'
-        return response_body, 403
+        return response_body, 403   
     row = db.session.execute(db.select(Users).where(Users.id == id)).scalar()
     if not row:
         response_body['message'] = 'Usuario no encontrado'
         return response_body, 404
     if request.method == 'GET':
-        # Incluir logica para mostrar solo los que esten activos
+        if not row.is_active and not is_admin:
+            response_body['message'] = 'Usuario no activo'
+            return response_body, 404
         response_body['results'] = row.serialize()
         return response_body, 200
     if request.method == 'PUT':
@@ -130,19 +133,23 @@ def user_management(id):
         row.last_name = data.get('last_name', row.last_name)
         row.phone = data.get('phone', row.phone)
         row.address = data.get('address', row.address)
-        row.is_customer = data.get('is_customer', row.is_customer)
-        row.is_vendor = data.get('is_vendor', row.is_vendor)
         row.is_active = data.get('is_active', row.is_active)
+        if is_admin:
+            row.is_customer = data.get('is_customer', row.is_customer)
+            row.is_vendor = data.get('is_vendor', row.is_vendor)
+            row.is_active = data.get('is_active', row.is_active)
         db.session.commit()
         response_body['message'] = 'Usuario actualizado existosamente'
-        response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
         response_body['results'] = row.serialize()
         return response_body, 200
     if request.method == 'DELETE':
         # Pasar a estado inactivo
+        if not is_admin:
+            response_body['message'] = 'Solo administrador puede eliminar usuarios'
+            return response_body, 403
         db.session.delete(row)
         db.session.commit()
-        response_body['message'] = f'Respuesta desde el {request.method} para el id: {id}'
+        response_body['message'] = f'Usuario {id} eliminado'
         return response_body, 200
 
 
@@ -748,3 +755,20 @@ def pendingorders():
         return response_body, 200
 
 
+
+
+@api.route('/createfirstadmin', methods=['POST'])
+def createfirstadmin():
+    response_body = {}
+    data = request.json
+    row = Users(email = 'admin@cafetaleros.com',
+                password = 'cafe1234',
+                is_admin = True,
+                is_active = True,
+                is_customer = False,
+                is_vendor = False)
+    db.session.add(row)
+    db.session.commit()
+    response_body['message'] = "Admin create"
+    response_body['results'] = row.serialize()
+    return response_body, 200

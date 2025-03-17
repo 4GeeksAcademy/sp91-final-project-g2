@@ -2,80 +2,74 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../store/appContext';
 import LoadingSpinner from './LoadingSpinner.jsx';
-import Pages from './Pages.jsx';
 import '../../styles/profileform.css';
 
-const ProfileForm = () => {
-  const { store, actions } = useContext(Context);
-  const navigate = useNavigate();
+export const ProfileForm = () => {
+    const { store, actions } = useContext(Context);
+    const navigate = useNavigate();
+    const [profile, setProfile] = useState({});
 
-  useEffect(() => {
-    if (!store.token) {
-      navigate('/login');
-    } else {
-      actions.getProfile();
+    useEffect(() => {
+        if (!store.user || !store.user.id) {
+            navigate('/login');
+        } else {
+            (async () => {
+                const data = await actions.getUserById(store.user.id);
+                if (data) setProfile(data);
+            })();
+        }
+    }, [store.user, actions, navigate]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setProfile((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const success = await actions.updateUser(store.user.id, {
+            first_name: profile.first_name,
+            last_name: profile.last_name,
+            address: profile.address,
+            phone: profile.phone,
+            is_active: profile.is_active
+        });;
+        if (success !== false) {
+            console.log("Perfil actualizado correctamente");
+            navigate("/profilepage");
+        } else {
+            console.error('Error al actualizar el perfil');
+        }
+    };
+    if (store.loading) {
+        return <LoadingSpinner />;
     }
-  }, [store.token]);
 
-  if (store.loading) {
-    return <LoadingSpinner />;
-  }
-
-  if (!store.profile) {
-    return null;
-  }
-
-  // URL de una imagen aleatoria de Lorem Picsum
-  const randomImageUrl = 'https://picsum.photos/100';
-
-  const isVendor = store.profile.role === 'vendor';
-
-  return (
-    <div className="portfoliocard">
-      <div className="coverphoto"></div>
-      <div className="profile_picture">
-        <img src={randomImageUrl} alt="Profile" />
-      </div>
-      <div className="left_col">
-        {isVendor ? (
-          <>
-            <div className="followers">
-              <div className="follow_count">{store.profile.productsOnSale}</div>
-              Products on sale
-            </div>
-            <div className="following">
-              <div className="follow_count">{store.profile.sales}</div>
-              Sales
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="followers">
-              <div className="follow_count">{store.profile.orders}</div>
-              Orders
-            </div>
-            <div className="following">
-              <div className="follow_count">{store.profile.purchases}</div>
-              Purchases
-            </div>
-          </>
-        )}
-      </div>
-      <div className="right_col">
-        <h2 className="name">{store.profile.firstName} {store.profile.lastName}</h2>
-        <h3 className="location">{store.profile.address}</h3>
-        <ul className="contact_information">
-          <li className="role">{isVendor ? 'Vendor' : 'Customer'}</li>
-          <li className="mail">{store.profile.email}</li>
-          <li className="phone">{store.profile.phone}</li>
-        </ul>
-        <div className="edit-button-container">
-          <button className="edit-button" onClick={() => navigate('/edit-profile')}>Editar</button>
+    
+    return (
+        <div className="container my-4">
+            <h2>Editar Perfil</h2>
+            <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                    <label>First Name</label>
+                    <input className="form-control" name="first_name" value={profile.first_name || ""} onChange={handleChange}/>
+                </div>
+                <div className="mb-3">
+                    <label>Last Name</label>
+                    <input className="form-control" name="last_name" value={profile.last_name || ""} onChange={handleChange}/>
+                </div>
+                <div className="mb-3">
+                    <label>Address</label>
+                    <input className="form-control" name="address" value={profile.address || ""} onChange={handleChange}/>
+                </div>
+                <div className="mb-3">
+                    <label>Phone</label>
+                    <input className="form-control" name="phone" value={profile.phone || ""} onChange={handleChange}/>
+                </div>
+                <button type="submit" className="btn btn-primary">Guardar</button>
+                <button type="button" className="btn btn-secondary ms-2" onClick={() => navigate("/profilepage")}>Cancelar</button>
+            </form>
         </div>
-      </div>
-      <Pages items={store.profile.products} itemsPerPage={store.itemsPerPage} />
-    </div>
-  );
+    );
 };
 
-export default ProfileForm;
