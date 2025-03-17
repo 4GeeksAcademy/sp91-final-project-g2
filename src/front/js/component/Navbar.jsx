@@ -93,6 +93,7 @@ export const NavbarCafetaleros = () => {
             <button className="btn btn-secondary ms-2" onClick={handleLogout}>Logout</button>
           )}
         </div>
+        
       </div>
     </nav>
   );
