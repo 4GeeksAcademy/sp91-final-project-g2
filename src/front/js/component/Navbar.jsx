@@ -65,10 +65,7 @@ export const NavbarCafetaleros = () => {
         </div>
 
         {/* Botón de Carrito */}
-        <button
-          className="btn btn-outline-dark position-relative me-3"
-          onClick={() => navigate("/orderitems")}
-        >
+        <button className="btn btn-outline-dark position-relative me-3" onClick={() => navigate("/orderitems")}>
           <i className="fa fa-shopping-cart"></i>
           {store.orderitems && store.orderitems.length > 0 && (
             <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -77,7 +74,7 @@ export const NavbarCafetaleros = () => {
           )}
         </button>
 
-        {/* Iconos lado izquierdo */}
+        {/* Iconos lado derecho */}
         <div className="ms-auto d-flex align-items-center gap-3 me-2">
           {/* Favoritos */}
           <FavoritesDropdown />
