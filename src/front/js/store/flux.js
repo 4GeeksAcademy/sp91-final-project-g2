@@ -458,8 +458,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			createOrder: async () => {
 				const store = getStore();
-				const uri = `${process.env.BACKEND_URL}/api/orders`;
-
+				const uri = `${process.env.BACKEND_URL}/api/orders`
 				// Verificar si hay productos en la orden antes de enviarla
 				if (!store.orderitems || store.orderitems.length === 0) {
 					console.warn("No hay productos en la orden para procesar.");

@@ -65,6 +65,7 @@ export const NavbarCafetaleros = () => {
 
         {store.isLogged ? (
           <div className="ms-auto d-flex align-items-center gap-3" style={{ marginRight: "5px" }}>
+            {/* Dropdown de Favoritos */}
             <div className="dropdown">
               <button
                 className={`btn dropdown-toggle custom-dropdown-btn ${isDropdownOpen ? "active" : ""}`}
@@ -80,6 +81,16 @@ export const NavbarCafetaleros = () => {
                 <li><Link className="dropdown-item custom-dropdown-item" to="#">Ver favoritos</Link></li>
               </ul>
             </div>
+
+            {/* Botón para publicar producto si es vendedor */}
+            {store.userRole === "vendedor" && (
+              <button 
+                className="btn btn-success" 
+                onClick={() => navigate("/product-form")}
+              >
+                Publicar un producto
+              </button>
+            )}
           </div>
         ) : (
           <div className="d-flex gap-2">
