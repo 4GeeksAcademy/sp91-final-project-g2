@@ -28,6 +28,11 @@ export const NavbarCafetaleros = () => {
     }
   };
 
+  const handleLogout = () => {
+    actions.logout()
+    navigate ("/")
+  }
+
   return (
     <nav className="navbar navbar-expand-lg py-3" style={{ backgroundColor: "#C4A484" }}>
       <div className="container">
@@ -64,7 +69,7 @@ export const NavbarCafetaleros = () => {
           {!store.isLogged ? (<Link to="/signup" className="btn custom-btn ms-2">
               <i className="fa fa-user-plus"></i> Sign Up </Link>
           ) : (
-            <button className="btn btn-secondary ms-2" onClick={() => actions.logout()}>Logout</button>
+            <button className="btn btn-secondary ms-2" onClick={handleLogout}>Logout</button>
           )}
         </div>
       </div>

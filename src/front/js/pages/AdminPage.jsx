@@ -12,18 +12,12 @@ export const AdminPage = () => {
     useEffect(() => {
         if (!store.isLogged || store.userRole !== "is_admin") {
             alert("Acceso denegado");
-            navigate("/login");
-            return;
+            navigate("/login");            
         }else { actions.getUsers();
                 actions.getProducts();
                 actions.getComments();
         }
-    }, [store.isLogged, store.userRole, actions, navigate]);
-
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        navigate("/");
-    };
+    }, [store.isLogged, store.userRole]);
 
     const handleUserSearch = () => {
         const userFound = store.users.find(user => user.email.toLowerCase().includes(searchUser.toLowerCase()));
@@ -104,8 +98,7 @@ export const AdminPage = () => {
             <div className="d-flex gap-3">
                 <button className="btn btn-primary" onClick={() => navigate("/user-list-page")}>Listado de usuarios</button>
                 <button className="btn btn-primary" onClick={() => navigate("/product-list-page")}>Listado de productos</button>
-                <button className="btn btn-primary" onClick={() => navigate("/comment-list-page")}>Listado de Comentarios</button>
-                <button className="btn btn-danger" onClick={handleLogout}>Cerrar Sesión</button>
+                <button className="btn btn-primary" onClick={() => navigate("/comment-list-page")}>Listado de Comentarios</button>                
             </div>
         </div>
     );

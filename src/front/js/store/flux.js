@@ -66,20 +66,41 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const data = await response.json();
 				localStorage.setItem("token", data.access_token);
 				const userRole = data.results.is_admin ? "is_admin" :
-					data.results.is_vendor ? "is_vendor" :
-						data.results.is_customer ? "is_customer" : null;
-				setStore({ isLogged: true, user: data.results, userRole });
+								data.results.is_vendor ? "is_vendor" :
+								data.results.is_customer ? "is_customer" : null;
+				setStore({
+					isLogged: true,
+					user: data.results,
+					userRole,
+					token: localStorage.getItem("token")
+				});
+			},
+			logout: () => {
+				localStorage.removeItem("token");
+				setStore({
+					isLogged: false,
+					user: {},
+					users: [],
+					currentProduct: {},
+					userRole: null,
+					token: "",
+					profile: null,
+					loading: false,
+					favorites: [],
+					userComments: []
+				})
+
 			},
 			getUsers: async () => {
-				const store = getStore();
 				const uri = `${process.env.BACKEND_URL}/api/users`
 				const options = {
 					method: 'GET',
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: `Bearer ${store.token}`
+						Authorization: `Bearer ${localStorage.getItem("token")}`
 					}
 				};
+				console.log(options);
 				const response = await fetch(uri, options);
 				if (!response.ok) {
 					console.log('Error', response.status, response.statusText);
@@ -453,17 +474,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 				console.log("Comentario eliminado correctamente");
 				return true;
 			},
-			addAllFavoritesToCart: async () =>{
+			addAllFavoritesToCart: async () => {
 				const store = getStore();
-				if(store.favorites.length === 0){
+				if (store.favorites.length === 0) {
 					alert("No hay productos favoritos para añadir al carrito")
 					return;
 				}
-				const udpdateCart = [ ...store.products, ...store.favorites.map(fav => fav.product)];
-				setStore({ products: udpdateCart});
+				const udpdateCart = [...store.products, ...store.favorites.map(fav => fav.product)];
+				setStore({ products: udpdateCart });
 				alert("Todos los productos favoritos han sido incluidos al carrito")
 			},
-			clearUserComments: () => setStore({ userComments: [] })			
+			clearUserComments: () => setStore({ userComments: [] })
 		}
 	}
 };
