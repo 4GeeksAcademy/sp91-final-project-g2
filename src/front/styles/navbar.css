@@ -1,0 +1,90 @@
+/* Estilo general del navbar */
+.navbar {
+  background-color: #C4A484; /* Conserva el color */
+  width: 100vw; /* Asegura que ocupe todo el ancho */
+  padding: 20px 0; /* Aumenta el espacio vertical */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Añade un efecto elegante */
+  position: relative;
+}
+
+/* Centrar y agrandar los elementos */
+.navbar-nav {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px; /* Espaciado entre los enlaces */
+  flex-grow: 1; /* Ajusta el tamaño de los elementos */
+  margin-left: 20px;
+}
+
+.navbar-nav .nav-link {
+  font-size: 1.5rem; /* Agranda el texto */
+  color: #684b33; /* Texto blanco */
+  text-transform: uppercase; /* Texto en mayúsculas */
+  font-weight: bold;
+  transition: color 0.3s ease; /* Transición suave */
+}
+
+.navbar-nav .nav-link:hover {
+  color: #f8f9fa; /* Cambia el color al pasar el cursor */
+}
+
+/* Logo más grande y centrado */
+.navbar-brand {
+    display: flex;
+    margin-right: 20px;;
+    justify-content: center; /* Centra el logo horizontalmente */
+    align-items: center; /* Centra el logo verticalmente */
+  }
+
+/* Logo más grande y centrado */
+.navbar-brand img {
+    height: 100px; /* Aumenta el tamaño del logo */
+    transition: transform 0.3s ease; /* Efecto suave al pasar el cursor */
+}
+
+.navbar-brand img:hover {
+  transform: scale(1.1); /* Agranda el logo al pasar el cursor */
+}
+
+/* Botones del lado derecho */
+.btn {
+  font-size: 1.2rem; /* Agranda el texto de los botones */
+  padding: 10px 20px; /* Aumenta el tamaño del botón */
+  border-radius: 5px; /* Bordes redondeados */
+}
+
+.btn-outline-dark {
+  color: #fff;
+  border-color: #fff;
+}
+
+.btn-outline-dark:hover {
+  background-color: #fff;
+  color: #C4A484;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+/* Ajustes para dispositivos móviles */
+@media (max-width: 768px) {
+  .navbar-nav {
+    flex-direction: column; /* Cambia a columna en pantallas pequeñas */
+    gap: 15px;
+  }
+
+  .navbar-brand img {
+    height: 60px; /* Reduce el tamaño del logo en pantallas pequeñas */
+  }
+
+  .btn {
+    font-size: 1rem; /* Ajusta el tamaño de los botones */
+  }
+}
