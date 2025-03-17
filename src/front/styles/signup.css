@@ -42,6 +42,17 @@ body {
   align-items: center;
 }
 
+footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  background-color: rgb(191, 139, 103);
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  z-index: 10;
+}
+
 .grad {
   position: absolute;
   top: 0;

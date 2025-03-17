@@ -1,15 +1,23 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import logo from "../../img/logo-cafetaleros.png";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { Link, useNavigate } from "react-router-dom";
+import { FavoritesDropdown } from "./FavoritesDropdown.jsx";
 
 export const NavbarCafetaleros = () => {
-  const { store } = useContext(Context);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const navigate = useNavigate();
+  const { store, actions } = useContext(Context);
+  const navigate = useNavigate(); // Agregado 
+
+  // Actualiza favoritos inmediatamente luego del login
+  useEffect(() => {
+    if (store.isLogged && store.userRole === "is_customer") {
+      actions.getFavorites();
+    }
+  }, [])
+
 
   const handleScrollToFooter = (e) => {
     e.preventDefault();
@@ -18,6 +26,11 @@ export const NavbarCafetaleros = () => {
       footer.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  const handleLogout = () => {
+    actions.logout()
+    navigate("/")
+  }
 
   return (
     <nav className="navbar navbar-expand-lg py-3 w-100" style={{ backgroundColor: "#C4A484", width: "100vw" }}>
@@ -33,7 +46,6 @@ export const NavbarCafetaleros = () => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-
         <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
           <ul className="navbar-nav mx-auto gap-3">
             <li className="nav-item">
@@ -44,6 +56,8 @@ export const NavbarCafetaleros = () => {
                 <img src={logo} alt="Cafetaleros Logo" height="50" />
               </Link>
             </li>
+
+            {/* Botón de contacto que hace scroll al footer */}
             <li className="nav-item">
               <Link className="nav-link custom-link" to="#" onClick={handleScrollToFooter}>Contacto</Link>
             </li>
@@ -63,41 +77,23 @@ export const NavbarCafetaleros = () => {
           )}
         </button>
 
-        {store.isLogged ? (
-          <div className="ms-auto d-flex align-items-center gap-3" style={{ marginRight: "5px" }}>
-            {/* Dropdown de Favoritos */}
-            <div className="dropdown">
-              <button
-                className={`btn dropdown-toggle custom-dropdown-btn ${isDropdownOpen ? "active" : ""}`}
-                type="button"
-                id="cartDropdown"
-                data-bs-toggle="dropdown"
-                aria-expanded={isDropdownOpen}
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              >
-                <i className={`fa-${isDropdownOpen ? "solid" : "regular"} fa-heart heart-icon`}></i>
-              </button>
-              <ul className="dropdown-menu custom-dropdown-menu dropdown-menu-end" aria-labelledby="cartDropdown">
-                <li><Link className="dropdown-item custom-dropdown-item" to="#">Ver favoritos</Link></li>
-              </ul>
-            </div>
-
-            {/* Botón para publicar producto si es vendedor */}
-            {store.userRole === "vendedor" && (
-              <button 
-                className="btn btn-success" 
-                onClick={() => navigate("/product-form")}
-              >
-                Publicar un producto
-              </button>
-            )}
-          </div>
-        ) : (
-          <div className="d-flex gap-2">
-            <Link to="/login" className="btn custom-btn"><i className="fa fa-user"></i> Login</Link>
-            <Link to="/signup" className="btn custom-btn"><i className="fa fa-user-plus"></i> Sign Up</Link>
-          </div>
-        )}
+        {/* Iconos lado izquierdo */}
+        <div className="ms-auto d-flex align-items-center gap-3 me-2">
+          {/* Favoritos */}
+          <FavoritesDropdown />
+          {/* LLogin/Profile */}
+          <button className="btn btn-outline-dark position-relative"
+            onClick={() => navigate(store.isLogged ? "/profilepage" : "/login")}
+            title={store.isLogged ? "Ir al perfil" : "Iniciar sesión"}>
+            <i className="fa fa-user"></i> {store.isLogged ? "Profile" : "Login"}
+          </button>
+          {!store.isLogged ? (<Link to="/signup" className="btn custom-btn ms-2">
+            <i className="fa fa-user-plus"></i> Sign Up </Link>
+          ) : (
+            <button className="btn btn-secondary ms-2" onClick={handleLogout}>Logout</button>
+          )}
+        </div>
+        
       </div>
     </nav>
   );

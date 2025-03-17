@@ -15,7 +15,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 			loading: false,
 			cart: [], // 🛒 Nuevo estado para el carrito
 			orderitems: [],
-			orders: []
+			orders: [],
+			favorites: [],
+			userComments: [],
 		},
 		actions: {
 			signup: async (firstName, lastName, address, phone, email, password, role) => {
@@ -68,24 +70,41 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const data = await response.json();
 				localStorage.setItem("token", data.access_token);
 				const userRole = data.results.is_admin ? "is_admin" :
-					data.results.is_vendor ? "is_vendor" :
-						data.results.is_customer ? "is_customer" : null;
+								data.results.is_vendor ? "is_vendor" :
+								data.results.is_customer ? "is_customer" : null;
 				setStore({
 					isLogged: true,
-					orderId: data.results.order_id,
-					user: data.results, userRole
+					user: data.results,
+					userRole,
+					token: localStorage.getItem("token")
 				});
 			},
+			logout: () => {
+				localStorage.removeItem("token");
+				setStore({
+					isLogged: false,
+					user: {},
+					users: [],
+					currentProduct: {},
+					userRole: null,
+					token: "",
+					profile: null,
+					loading: false,
+					favorites: [],
+					userComments: []
+				})
+
+			},
 			getUsers: async () => {
-				const store = getStore();
 				const uri = `${process.env.BACKEND_URL}/api/users`
 				const options = {
 					method: 'GET',
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: `Bearer ${store.token}`
+						Authorization: `Bearer ${localStorage.getItem("token")}`
 					}
 				};
+				console.log(options);
 				const response = await fetch(uri, options);
 				if (!response.ok) {
 					console.log('Error', response.status, response.statusText);
@@ -530,7 +549,130 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} catch (error) {
 					console.error("Error en getOrders:", error);
 				}
+			},	
+			getFavorites: async () => {
+				const token = localStorage.getItem("token");
+				const uri = `${process.env.BACKEND_URL}/api/favorites`;
+				const options = {
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`
+					}
+				};
+				const response = await fetch(uri, options);
+				if (!response.ok) {
+					console.log("Error al obtener los favoritos:", response.status, response.statusText);
+					return;
+				}
+				const data = await response.json();
+				console.log("Datos recibidos en getFavorites:", data);
+				setStore({ favorites: data.results });
 			},
+			addFavorite: async (productId) => {
+				const token = localStorage.getItem("token");
+				if (!token) {
+					console.log("No hay token disponible");
+					return;
+				}
+				const uri = `${process.env.BACKEND_URL}/api/favorites`;
+				const options = {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`
+					},
+					body: JSON.stringify({ product_id: productId })
+				};
+				const response = await fetch(uri, options);
+				if (!response.ok) {
+					console.log("Error al agregar favorito:", response.status, response.statusText);
+					return;
+				}
+				const data = await response.json();
+				const currentFavorites = getStore().favorites;
+				setStore({ favorites: [...currentFavorites, data.results ? data.results : data] });
+				alert("Producto añadido a favoritos");
+			},
+			deleteFavorite: async (favoriteId) => {
+				const token = localStorage.getItem("token");
+				if (!token) {
+					console.log("No hay token disponible");
+					return false;
+				}
+				const uri = `${process.env.BACKEND_URL}/api/favorites/${favoriteId}`;
+				const options = {
+					method: "DELETE",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`
+					}
+				};
+				const response = await fetch(uri, options);
+				if (!response.ok) {
+					console.log("Error al eliminar favorito:", response.status, response.statusText);
+					return false;
+				}
+				const currentFavorites = getStore().favorites;
+				setStore({ favorites: currentFavorites.filter(fav => fav.favorite_id !== favoriteId) });
+				alert("Favorito eliminado");
+				return true;
+			},
+			getUserComments: async (user_id) => {
+				const token = localStorage.getItem("token")
+				if (!token) {
+					console.log("No hay token disponible");
+					return false;
+				}
+				const uri = `${process.env.BACKEND_URL}/api/users/${user_id}/comments`;
+				const options = {
+					method: 'GET',
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`
+					}
+				};
+				const response = await fetch(uri, options);
+				if (!response.ok) {
+					console.log("Error:", response.status, response.statusText);
+					return false;
+				}
+				const data = await response.json();
+				const comments = data.results ? data.results : data;
+				setStore({ userComments: comments });
+			},
+			deleteCommentAsAdmin: async (userId, commentId) => {
+				const token = localStorage.getItem("token");
+				const uri = `${process.env.BACKEND_URL}/users/${userId}/comments/${commentId}`;
+				const options = {
+					method: "DELETE",
+					headers: {
+						"Authorization": `Bearer ${token}`
+					}
+				};
+				const response = await fetch(uri, options);
+				const data = await response.json();
+				if (!response.ok) {
+					console.log("Error al eliminar comentario:", data.message);
+					return false;
+				}
+				const updatedComments = getStore().userComments.filter(comment => comment.id !== commentId);
+				setStore({ userComments: updatedComments });
+
+				console.log("Comentario eliminado correctamente");
+				return true;
+			},
+			addAllFavoritesToCart: async () => {
+				const store = getStore();
+				if (store.favorites.length === 0) {
+					alert("No hay productos favoritos para añadir al carrito")
+					return;
+				}
+				const udpdateCart = [...store.products, ...store.favorites.map(fav => fav.product)];
+				setStore({ products: udpdateCart });
+				alert("Todos los productos favoritos han sido incluidos al carrito")
+			},
+			clearUserComments: () => setStore({ userComments: [] })
 		}
 	}
 };
