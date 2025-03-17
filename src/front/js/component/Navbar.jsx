@@ -49,7 +49,7 @@ export const NavbarCafetaleros = () => {
         </button>
                 <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
           <ul className="navbar-nav">
-            <li className="nav-item">
+            <li className="nav-item cafes-especiales">
               <Link className="nav-link" to="/product-list">
                 Cafés Especiales
               </Link>

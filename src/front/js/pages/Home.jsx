@@ -5,6 +5,9 @@ import 'swiper/swiper-bundle.css';
 import { gsap } from 'gsap';
 import { Observer } from 'gsap/Observer';
 import Navbar from '../component/Navbar.jsx';
+import karoll from '../../img/karoll.jpg';
+import luis from '../../img/luis.jpg';
+import cristian from '../../img/cristian.jpg';
 
 gsap.registerPlugin(Observer);
 
@@ -102,8 +105,8 @@ const Home = () => {
           <div className="inner">
             <div className="bg home">
               <div className="scroll">
-                <p class="welcome-text">Welcome to Cafetaleros</p>
-                <p class="coffe-text">Your trusted coffee</p>
+                <p className="welcome-text">Welcome to Cafetaleros</p>
+                <p className="coffe-text">Your trusted coffee</p>
               </div>
 
               <img src="https://th.bing.com/th/id/R.86599832c83f6179e52b4aff416dbdc7?rik=xsMRDGxbiTfaXw&riu=http%3a%2f%2fassets.stickpng.com%2fimages%2f580b57fbd9996e24bc43c0ea.png&ehk=xGMBYlo6JVW7cP%2bHM67OKVHTWe8WW5o%2fdIxqNyZSh2Y%3d&risl=&pid=ImgRaw&r=0" alt="" />
@@ -144,7 +147,7 @@ const Home = () => {
               <div className="swiper">
                 <div className="swiper-wrapper">
                   <div className="swiper-slide">
-                    <img src="https://img.freepik.com/vector-premium/hombre-africano-joven-feliz-guinando-ojo-mostrando-gestos-signo-mano-bien_535862-1041.jpg" alt="Luis Borjas" />
+                    <img src= {luis} alt="Luis Borjas" />
                     <div className="title">
                       <h2>Luis Borjas</h2>
                       <p>Nuestro experimentado</p>
@@ -152,7 +155,7 @@ const Home = () => {
                   </div>
 
                   <div className="swiper-slide">
-                    <img src="https://i.pinimg.com/originals/d7/5d/6e/d75d6e7aeaf88e46be834b860cdba418.jpg" alt="Karoll Guzmán" />
+                    <img src= {karoll} alt="Karoll Guzmán" />
                     <div className="title">
                       <h2>Karoll Guzmán</h2>
                       <p>Nuestra entusiasta</p>
@@ -160,7 +163,7 @@ const Home = () => {
                   </div>
 
                   <div className="swiper-slide">
-                    <img src="https://i.pinimg.com/originals/ff/83/0f/ff830fec5e2f9896e5e0c7d5a7cb26f5.jpg" alt="Cristian Chacón" />
+                    <img src= {cristian} alt="Cristian Chacón" />
                     <div className="title">
                       <h2>Cristian Chacón</h2>
                       <p>Nuestro prometedor</p>
@@ -183,7 +186,7 @@ const Home = () => {
                 <h1>Why Choose Cafetaleros?</h1>
                 <p>
                 Cafetaleros offers a unique coffee experience with handpicked beans from top farms, blending traditional methods and modern expertise for a rich, bold flavor. We prioritize sustainability and fair trade, supporting farmers committed to quality. 
-                <p><strong>Enjoy the perfect cup to start your day! </strong></p>
+                <strong>Enjoy the perfect cup to start your day! </strong>
                 </p>
               </div>
             </div>
