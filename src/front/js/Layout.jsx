@@ -10,7 +10,7 @@ import {ProfileForm} from "./component/ProfileForm.jsx";
 import LoadingSpinner from "./component/LoadingSpinner.jsx";
 import Pagination from "./component/Pagination.jsx";
 // Custom Pages or Views
-import { Home } from "./pages/Home.jsx";
+import  Home from "./pages/Home.jsx";
 import { Login } from "./pages/Login.jsx";
 import {ProfilePage} from "./pages/ProfilePage.jsx";
 // Productos
@@ -65,7 +65,7 @@ const Layout = () => {
                         <Route element={<Pagination />} path="/pagination" />
                         {/* Rutas de órdenes */}
                         <Route path="/orders" element={<Orders />} />
-                        <Route path="/order-items/:orderId" element={<OrderItems />} />
+                        <Route path="/orderitems" element={<OrderItems />} />
                         {/* Rutas de administrador */}
                         <Route element={<AdminPage/>} path="/adminPage"/>
                         <Route element={<UserListPage/>} path="/user-list-page"/>

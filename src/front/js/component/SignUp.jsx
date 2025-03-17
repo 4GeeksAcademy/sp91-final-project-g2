@@ -22,28 +22,26 @@ const SignUp = () => {
     e.preventDefault();
     setLoading(true); // Mostrar el componente de carga
     const response = await actions.signup(firstName, lastName, address, phone, email, password, role);
-    setLoading(false); // Ocultar el componente de carga
+
     if (response.success) {
-      setMessage('Registro exitoso. Redirigiendo al formulario de perfil...');
-      setTimeout(() => {
-        navigate('/profile'); // Redirigir a ProfileForm.jsx
-      }, 2000);
+      setLoading(false); // Ocultar el componente de carga
+      navigate('/profile'); // Redirigir al perfil
     } else {
+      setLoading(false);
       setMessage('Error en el registro: ' + response.message);
     }
   };
 
   return (
     <div className="body">
+       {loading && <LoadingSpinner />}
       <div className="grad"></div>
       <div className="header">
         <div>Cafe<span>taleros</span></div>
       </div>
       <br />
       <div className="login">
-        {loading ? (
-          <LoadingSpinner /> // Mostrar el componente de carga mientras se redirige
-        ) : (
+      {!loading && (
           <form onSubmit={handleSubmit}>
             <h2 className="signup-title"> Únete, ¡más café, más opciones!</h2>
             <input

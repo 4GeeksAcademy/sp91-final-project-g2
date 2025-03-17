@@ -1,8 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Context } from "../../store/appContext";
-import OrderItems from "./OrderItems.jsx";
-
-
+import Card from "react-bootstrap/Card";
+import ListGroup from "react-bootstrap/ListGroup";
 
 const Orders = () => {
     const { store, actions } = useContext(Context);
@@ -14,7 +13,7 @@ const Orders = () => {
     return (
         <div className="container mt-4">
             <h2>Mis Órdenes</h2>
-            {store.orders.length === 0 ? (
+            {(!store.orders || store.orders.length === 0) ? (
                 <p>No tienes órdenes aún.</p>
             ) : (
                 store.orders.map(order => (
@@ -35,8 +34,10 @@ const Orders = () => {
                             </Card.Text>
                             <h5>Productos:</h5>
                             <ListGroup>
-                                {order.order_items.map(item => (
-                                    <OrderItems key={item.id} item={item} />
+                                {order.order_items.map(product => (
+                                    <ListGroup.Item key={product.id}>
+                                        {product.name} - ${product.price.toFixed(2)}
+                                    </ListGroup.Item>
                                 ))}
                             </ListGroup>
                         </Card.Body>

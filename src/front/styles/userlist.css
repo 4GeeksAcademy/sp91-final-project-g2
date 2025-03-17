@@ -1,0 +1,151 @@
+/* Contenedor principal */
+.list-group {
+  max-width: 1200px;
+  margin: 50px auto; /* Centrado horizontal y espacio superior */
+  padding: 20px;
+  background-color: #fff; 
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: "Open Sans", sans-serif;
+  color: #5f4b2d; 
+}
+
+/* Sección de usuarios */
+.user-section {
+  margin-bottom: 30px; /* Espaciado entre secciones */
+  padding: 15px;
+  border: 1px solid #ddd; /* Borde para separar secciones */
+  border-radius: 5px;
+  background-color: #f9f9f9; /* Fondo claro */
+}
+
+/* Títulos de las secciones */
+.text-center {
+  margin-top: 40px;
+  font-size: 2rem;
+  color:#faf9f7;
+}
+
+.user-section h4 {
+  margin-bottom: 15px; /* Espaciado debajo del título */
+  font-size: 1.5rem;
+  color: #333;
+}
+
+/* Lista de usuarios */
+.list-group {
+  max-width: 100%;
+  margin: 0 auto; /* Centrado horizontal */
+}
+
+/* Paginación */
+.pagination {
+  margin-top: 10px; /* Espaciado entre la lista y la paginación */
+  text-align: center; /* Centra la paginación */
+}
+
+.pagination button {
+  padding: 5px 10px;
+  margin: 0 5px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+/* Elementos de la lista */
+.list-group-item {
+  background-color: #f9f4ef; 
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.list-group-item:hover {
+  background-color: #f1e7db;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Detalles del usuario */
+.mt-2.p-2.border.rounded.bg-light {
+  background-color: #fff; 
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-top: 10px;
+  color: #5f4b2d;
+}
+
+/* Títulos y texto */
+.list-group-item span {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #8b5e3c;
+}
+
+.list-group-item p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+  color: #5f4b2d;
+}
+
+/* Contenedor del email */
+.email-container {
+  flex: 1;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #8b5e3c; 
+}
+
+/* Iconos */
+
+.icon-container {
+  display: flex;
+  gap: 10px; 
+  align-items: center; 
+}
+
+.text-primary {
+  color: #6491bb !important; 
+}
+
+.text-danger {
+  color: #b33a3a !important;
+}
+
+.text-primary:hover, .text-danger:hover {
+  opacity: 0.8;
+}
+
+/* Diseño responsivo */
+@media (max-width: 768px) {
+  .list-group {
+    padding: 15px;
+  }
+
+  .list-group-item {
+    padding: 10px;
+  }
+
+  .list-group-item span {
+    font-size: 0.9rem;
+  }
+
+  .list-group-item p {
+    font-size: 0.8rem;
+  }
+
+  .mt-2.p-2.border.rounded.bg-light {
+    padding: 10px;
+  }
+}

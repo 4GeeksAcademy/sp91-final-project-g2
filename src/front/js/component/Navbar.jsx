@@ -16,12 +16,11 @@ export const NavbarCafetaleros = () => {
     if (store.isLogged && store.userRole === "is_customer") {
       actions.getFavorites();
     }
-  }, [store.isLogged])
+  }, [])
 
 
-  // Función para hacer scroll al footer
   const handleScrollToFooter = (e) => {
-    e.preventDefault(); // Evita la navegación predeterminada
+    e.preventDefault();
     const footer = document.getElementById("footer");
     if (footer) {
       footer.scrollIntoView({ behavior: "smooth" });
@@ -30,13 +29,21 @@ export const NavbarCafetaleros = () => {
 
   const handleLogout = () => {
     actions.logout()
-    navigate ("/")
+    navigate("/")
   }
 
   return (
-    <nav className="navbar navbar-expand-lg py-3" style={{ backgroundColor: "#C4A484" }}>
-      <div className="container">
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <nav className="navbar navbar-expand-lg py-3 w-100" style={{ backgroundColor: "#C4A484", width: "100vw" }}>
+      <div className="container-fluid">
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
@@ -56,6 +63,20 @@ export const NavbarCafetaleros = () => {
             </li>
           </ul>
         </div>
+
+        {/* Botón de Carrito */}
+        <button
+          className="btn btn-outline-dark position-relative me-3"
+          onClick={() => navigate("/orderitems")}
+        >
+          <i className="fa fa-shopping-cart"></i>
+          {store.orderitems && store.orderitems.length > 0 && (
+            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {store.orderitems.length}
+            </span>
+          )}
+        </button>
+
         {/* Iconos lado izquierdo */}
         <div className="ms-auto d-flex align-items-center gap-3 me-2">
           {/* Favoritos */}
@@ -67,7 +88,7 @@ export const NavbarCafetaleros = () => {
             <i className="fa fa-user"></i> {store.isLogged ? "Profile" : "Login"}
           </button>
           {!store.isLogged ? (<Link to="/signup" className="btn custom-btn ms-2">
-              <i className="fa fa-user-plus"></i> Sign Up </Link>
+            <i className="fa fa-user-plus"></i> Sign Up </Link>
           ) : (
             <button className="btn btn-secondary ms-2" onClick={handleLogout}>Logout</button>
           )}
