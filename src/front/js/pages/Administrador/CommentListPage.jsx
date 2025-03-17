@@ -18,22 +18,32 @@ export const CommentsListPage = () => {
   const currentComments = store.comments?.slice(indexOfFirstComment, indexOfLastComment) || [];
 
   useEffect(() => {
-    if (!store.isLogged || store.userRole !== "is_admin") {
-      alert("Acceso denegado");
-      navigate("/login");
-    } else {
-      actions.getComments();
-    }
+    const loadCommentsAndUsers = async () => {
+      if (!store.isLogged || store.userRole !== "is_admin") {
+        alert("Acceso denegado");
+        navigate("/login");
+      } else {
+        await actions.getComments();
+        const userIds = [...new Set(store.comments.map(c => c.user_id))];
+        userIds.forEach(async userId => {
+          if (!store.users.some(user => user.id === userId)) {
+            await actions.getUserById(userId);
+          }
+        });
+      }
+    };
+    loadCommentsAndUsers();
   }, [store.isLogged, store.userRole, actions, navigate]);
 
-  const handleEdit = (commentId) => {
-    navigate(`//${commentId}`);
-  };
-
-  const handleDelete = async (commentId) => {
+  const handleDelete = async (userId, commentId) => {
     const confirmed = window.confirm("¿Está seguro de eliminar este comentario?");
     if (confirmed) {
-      await actions.deleteComment(commentId);
+      const success = await actions.deleteCommentAsAdmin(userId, commentId);
+      if (success) {
+        alert("Comentario eliminado correctamente");
+      } else {
+        alert("Error al eliminar comentario");
+      }
     }
   };
 

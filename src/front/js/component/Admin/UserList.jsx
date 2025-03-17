@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import React from "react";
+import { FaComments, FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import '../../../styles/userlist.css';
 import Pagination from "../../component/Pagination.jsx"; // Asegúrate de que este componente esté correctamente implementado
@@ -17,12 +17,13 @@ export const UserList = ({ users, onEdit, onDeactivate, onToggleExpand, expanded
     const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
 
     const renderUserDetails = (user) => (
-        <div className="mt-2 p-2 border rounded bg-light">
+        <div className="mt-2 p-2 border-top">
             <p><strong>Nombre: </strong>{user.first_name}</p>
             <p><strong>Apellido: </strong>{user.last_name}</p>
             <p><strong>Teléfono: </strong>{user.phone}</p>
             <p><strong>Dirección: </strong>{user.address}</p>
             <p><strong>Estado: </strong>{user.is_activ ? "Activo" : "Inactivo"}</p>
+            <button className="btn btn-sm btn-info" onClick={() => navigate(`/user/${user.id}/comments`)}><FaComments /></button>
         </div>
     );
 

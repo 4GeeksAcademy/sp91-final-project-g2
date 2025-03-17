@@ -9,70 +9,67 @@ body {
 }
 
 .login-container {
-  position: relative;
-  width: 960px; /* 20% más grande */
-  max-width: 100%;
-  height: 600px; /* 20% más grande */
-  max-height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: url('https://www.infobae.com/resizer/v2/3FI2PE4OHRBCVJGUDQEZKZU3SE.jpg?auth=02e7c04b053a0671829c80caea309dc040d75c6a7e78af7cc06cf343993515d1&smart=true&width=992&height=744&quality=85') no-repeat center center;
-  background-size: cover;
+  margin: 50px auto;
+  max-width: 900px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7); /* Mayor transparencia */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
+  position: relative; 
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.474);  
 }
 
 .login-content {
-  display: flex;
-  width: 90%;
-  color: white;
-  padding: 20px;
-  text-align: center; /* Centrar contenido */
+  display: flex;      
+  flex-wrap: wrap;    
+  width: 100%;
+  min-height: 400px;  
 }
 
-.left,
-.right {
-  flex: 1;
-  padding: 20px;
+.left {
+  flex: 1 1 50%;
+  background: url("https://www.infobae.com/resizer/v2/3FI2PE4OHRBCVJGUDQEZKZU3SE.jpg?auth=02e7c04b053a0671829c80caea309dc040d75c6a7e78af7cc06cf343993515d1&smart=true&width=992&height=744&quality=85")
+  no-repeat center center;
+  background-size: cover;
+  background-color: rgba(219, 203, 150, 0.7);
+  background-blend-mode: multiply;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #ffffff; 
 }
+
 
 .left h1 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
+  color: #ffffff;
+} 
+
+.left p {
+  margin-bottom: 2rem;
 }
 
-.social-icons .icon {
-  display: inline-block;
-  background: white;
-  color: black;
-  margin-right: 10px;
-  padding: 10px;
-  border-radius: 50%;
-  cursor: pointer;
+.right {
+  flex: 1 1 50%;
+  background-color: #DBCB96; 
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #9D5353; 
 }
 
 .right h2 {
-  color: #d4af37; /* Dorado */
+  margin-bottom: 1rem;
+  color: #582226; 
 }
 
 .right form {
+  width: 100%;
+  max-width: 300px;
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Añade separación entre los campos */
+  gap: 20px;
 }
 
 .right input {
@@ -81,4 +78,17 @@ body {
   padding: 10px;
   background: white;
   color: black;
+}
+
+.right button[type="submit"] {
+  background-color: #582226; 
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.right button[type="submit"]:hover {
+  background-color: #3d171c; 
 }

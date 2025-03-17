@@ -9,67 +9,81 @@ export const ProductDetailPage = () => {
   const navigate = useNavigate();
 
   const [productOriginal, setProductOriginal] = useState({});
-  const [productEdit, setProductEdit] = useState({ name: "", category: "", description: "", price: "", in_sell: ""});
+  const [productEdit, setProductEdit] = useState({});
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
+    let isMounted = true
     const token = store.token;
     if (!token || !store.isLogged || store.userRole !== "is_admin") {
       alert("Acceso denegado");
       navigate("/login");
     }
-  }, [store.isLogged, store.userRole, store.token, navigate]);
-
-  useEffect(() => {
     const fetchProduct = async () => {
       const data = await actions.getProductById(id);
-      const actualProduct = data && data.results ? data.results : data;
-      if (actualProduct) {
-        setProductOriginal(actualProduct);
-        setProductEdit({name: "", category: "", description: "", price: "", in_sell: ""});
-      } else {
-        alert("Producto no encontrado");
-        navigate("/product-list");
+      const actualProduct = data?.results || data;
+      if (isMounted) {
+        if (actualProduct) {
+          setProductOriginal(actualProduct);
+          setProductEdit({
+            ...actualProduct,
+            in_sell: actualProduct.in_sell ? "Producto en venta" : "Producto no está en venta",
+          });
+        } else {
+          alert("Producto no encontrado");
+          navigate("/product-list-page");
+        }
       }
     };
 
     if (id) {
       fetchProduct();
     } else {
-      navigate("/product-list");
+      navigate("/product-list-page");
     }
-  }, [id, actions, navigate]);
+
+    return () => {
+      isMounted = false;
+    };
+
+  }, [store.isLogged, store.userRole, store.token, navigate]);
 
   const toggleEditMode = () => {
-    setEditMode(prev => !prev);
+    setEditMode((prev) => !prev);
+    if (!editMode) {
+      setProductEdit({
+        ...productOriginal,
+        in_sell: productOriginal.in_sell ? "Producto en venta" : "Producto no está en venta",
+      });
+    }
   };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setProductEdit(prev => ({ ...prev, [name]: value }));
+    setProductEdit((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const updatedProduct = {
-      name: productEdit.name !== "" ? productEdit.name : productOriginal.name,
-      category: productEdit.category !== "" ? productEdit.category : productOriginal.category,
-      description: productEdit.description !== "" ? productEdit.description : productOriginal.description,
-      price: productEdit.price !== "" ? productEdit.price : productOriginal.price,
-      in_sell: productEdit.in_sell !== ""
-        ? (productEdit.in_sell.toLowerCase() === "producto en venta" ? true : false)
-        : productOriginal.in_sell
+      name: productEdit.name.trim() || productOriginal.name,
+      category: productEdit.category.trim() || productOriginal.category,
+      description: productEdit.description.trim() || productOriginal.description,
+      price: productEdit.price !== "" ? parseFloat(productEdit.price) : productOriginal.price,
+      in_sell: productEdit.in_sell === "Producto en venta"
     };
     const success = await actions.updateProduct(id, updatedProduct);
     if (success) {
-      navigate("/product-list");
+      setProductOriginal(updatedProduct)
+      setEditMode(false)
+      navigate("/product-list-page");
     }
   };
 
   const handleDeactivate = async () => {
     const success = await actions.deactivateProduct(id);
     if (success) {
-      navigate("/product-list");
+      navigate("/product-list-page");
     }
   };
 
@@ -77,7 +91,7 @@ export const ProductDetailPage = () => {
     <div className="container mt-4">
       <h2>Detalle del Producto</h2>
       {Object.keys(productOriginal).length > 0 ? (
-        <AdminProductDetail 
+        <AdminProductDetail
           product={productOriginal}
           editMode={editMode}
           toggleEditMode={toggleEditMode}
@@ -89,7 +103,7 @@ export const ProductDetailPage = () => {
       ) : (
         <p>Cargando detalles del producto...</p>
       )}
-      <button className="btn btn-secondary mt-3" onClick={() => navigate("/product-list")}>
+      <button className="btn btn-secondary mt-3" onClick={() => navigate("/product-list-page")}>
         Regresar
       </button>
     </div>

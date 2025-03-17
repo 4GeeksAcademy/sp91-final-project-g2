@@ -71,10 +71,10 @@ class Comments(db.Model):
         return {
                 "id": self.id,
                 "product_id": self.product_id,
-                "user_id": self.user_id,
                 "title": self.title,
                 "description": self.description,
-                "date": self.date.strftime('%Y-%m-%d %H:%M:%S')
+                "date": self.date.strftime('%Y-%m-%d %H:%M:%S'),
+                "user_id": self.user_id,                                
                 }
 
 

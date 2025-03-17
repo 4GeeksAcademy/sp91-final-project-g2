@@ -19,10 +19,8 @@ export const UserListPage = () => {
         if (!store.isLogged || store.userRole !== "is_admin") {
             alert("Acceso denegado");
             navigate("/login");
-        } else {
-            actions.getUsers();
         }
-    }, [store.isLogged, store.userRole, navigate]);
+    }, []);
 
     const handleEdit = (id) => {
         navigate(`/user-details/${id}`);
@@ -30,6 +28,7 @@ export const UserListPage = () => {
 
     const handleDeactivate = async (id) => {
         await actions.deactivateUser(id);
+        if (success) actions.getUsers();
     };
 
     const handleToggleExpand = (id) => {
