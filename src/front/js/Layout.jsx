@@ -21,7 +21,8 @@ import ProductDetail from "./pages/Products/ProductDetail.jsx";
 import { ProductList } from "./pages/Products/ProductList.jsx";
 // Órdenes
 import Orders from "./pages/Orders/Orders.jsx";
-import OrderItems from "./pages/Orders/OrderItems.jsx";
+import { OrderConfirmation } from "./pages/Orders/OrderConfirmation.jsx";
+import { OrderCarts } from "./pages/Orders/OrderCart.jsx";
 //Administrador
 import { AdminPage } from "./pages/AdminPage.jsx";
 import { ProductListPage } from "./pages/Administrador/ProductListPage.jsx";
@@ -29,11 +30,12 @@ import { ProductDetailPage } from "./pages/Administrador/ProductDetailPage.jsx";
 import { CommentsListPage } from "./pages/Administrador/CommentListPage.jsx";
 import { UserDetailPage } from "./pages/Administrador/UserDetailPage.jsx";
 import { UserListPage } from "./pages/Administrador/UserListPage.jsx";
-import { FavoritesPage } from "./pages/Favorite/FavoritesPage.jsx";
 import { UserCommentsPage } from "./pages/Administrador/UserCommentsPage.jsx";
-import { Error404 } from "./pages/Error404.jsx";
+//Favoritos
 import { FavoriteToCartPage } from "./pages/Favorite/FavoriteToCartPage.jsx";
+import { FavoritesPage } from "./pages/Favorite/FavoritesPage.jsx";
 import { CompleteFavoriteOrderPage } from "./pages/Favorite/CompleteFavoriteOrderPage.jsx";
+import { Error404 } from "./pages/Error404.jsx";
 
 
 const Layout = () => {
@@ -68,7 +70,9 @@ const Layout = () => {
                         <Route element={<Error404 />} path="*" />
                         {/* Rutas de órdenes */}
                         <Route path="/orders" element={<Orders />} />
-                        <Route path="/orderitems" element={<OrderItems />} />
+                        <Route element={<OrderCarts/>} path="/order-cart"/>
+                        {/* <Route path="/orderitems" element={<OrderItems />} /> */}
+                        <Route element={<OrderConfirmation/>} path="/order-confirmation"/>
                         {/* Rutas de administrador */}
                         <Route element={<AdminPage />} path="/adminPage" />
                         <Route element={<UserListPage />} path="/user-list-page" />

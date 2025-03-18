@@ -9,7 +9,6 @@ export const CompleteFavoriteOrder = ({ orders, orderItems, products }) => {
         <div>
             <h2>Mis Órdenes</h2>
             {orders.map(order => {
-                // Filtramos los orderItems de esta orden
                 const items = orderItems.filter(item => item.order_id === order.id);
 
                 return (

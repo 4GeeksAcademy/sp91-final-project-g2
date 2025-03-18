@@ -15,12 +15,12 @@ export const CompleteFavoriteOrderPage = () => {
         } else {
             actions.getOrders();
             actions.getOrderItems();
-            actions.getProducts();  // Por si no los tienes ya
+            actions.getProducts();  
         }
     }, []);
 
     return (
-        <div className="container mt-4">
+        <div className="container mt-2">
             <h1>Mis Órdenes</h1>
             <CompleteFavoriteOrder orders={store.orders} orderItems={store.orderitems} products={store.products}/>
         </div>

@@ -91,9 +91,13 @@ class Orders(db.Model):
         return {"id": self.id,
                 "customer_id": self.customer_id,
                 "status": self.status,
-                "date": self.date,
+                "date": self.date.strftime("%Y-%m-%d %H:%M:%S"),
                 "total_price": self.total_price,
-                "address":self.address}
+                "address":self.address,
+                "order_items": [
+                    item.serialize_with_product() for item in self.order_items
+                ]
+            }
 
 
 class OrderItems(db.Model):
@@ -110,7 +114,16 @@ class OrderItems(db.Model):
                 "order_id": self.order_id,
                 "product_id": self.product_id,
                 "price": self.price}
-
+    
+    def serialize_with_product(self):
+        product_data = self.product_to.serialize() if self.product_to else {}
+        return {
+            "id": self.id,
+            "order_id": self.order_id,
+            "price": self.price,
+            "product": product_data
+        }
+    
 
 class FavoriteProducts(db.Model):
     __tablename__ = 'favorite_products'   

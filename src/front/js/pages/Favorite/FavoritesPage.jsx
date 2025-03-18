@@ -12,9 +12,7 @@ export const FavoritesPage = () => {
         if (!store.isLogged || store.userRole !== "is_customer") {
             alert("Acceso denegado");
             navigate("/login");
-        } else if (store.favorites.length === 0) {
-            actions.getFavorites();
-        }
+        } 
     }, [store.isLogged, store.userRole, navigate]);
 
     const handleAddAllAndNavigate = () => {

@@ -12,10 +12,8 @@ export const FavoriteToCartPage = () => {
         if (!store.isLogged || store.userRole !== "is_customer") {
             alert("Acceso denegado");
             navigate("/login");
-        } else if (store.favorites.length === 0) {
-            actions.getFavorites();
         }
-    }, [store.isLogged, store.userRole, store.favorites.length, actions, navigate]);
+    }, [store.isLogged, store.userRole]);
 
     const handleAddToOrder = (product) => {
         if (selectedProducts.some(item => item.id === product.id)) {
@@ -35,7 +33,6 @@ export const FavoriteToCartPage = () => {
             return;
         }
 
-        // Construir orderData
         const orderData = {
             status: "pendiente",  // Guardamos la orden en estado pendiente
             address: store.user.address,
@@ -49,9 +46,7 @@ export const FavoriteToCartPage = () => {
         const success = await actions.createOrder(orderData);
         if (success) {
             alert("¡Tu orden se ha creado (pendiente) exitosamente!");
-            // Limpiamos selección
             setSelectedProducts([]);
-            // Redirigimos a ver las órdenes
             navigate("/complete-favorite-orders");
         } else {
             alert("Error al crear la orden. Intenta nuevamente.");
@@ -71,9 +66,12 @@ export const FavoriteToCartPage = () => {
                 <button className="btn btn-primary" onClick={() => navigate("/")}>
                     Añadir más productos
                 </button>
-                <button className="btn btn-success me-3" onClick={handlePayment}>
-                    Guardar Orden Pendiente (${selectedProducts.reduce((sum, p) => sum + p.price, 0).toFixed(2)})
-                </button>
+                <div>
+                    <button className="btn btn-success me-3" onClick={handlePayment}>
+                        Guardar Orden Pendiente (${selectedProducts.reduce((sum, p) => sum + p.price, 0).toFixed(2)})
+                    </button>
+
+                </div>
             </div>
         </div>
     );

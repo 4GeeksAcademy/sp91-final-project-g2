@@ -581,8 +581,8 @@ def orders():
         data = request.json
         new_order = Orders(
             customer_id=user_id,
-            status=data.get('status', 'pendiente'),  # Estado por defecto "pendiente"
-            address=data.get('address'),
+            status=data.get('status', 'Pendiente'),  # Estado por defecto "pendiente"
+            address=data.get('address', ''),
             total_price=data.get('total_price', 0.0))  # Default en caso de no recibirlo
         db.session.add(new_order)
         db.session.commit()
@@ -608,15 +608,19 @@ def update_order(order_id):
         response_body['message'] = 'No puedes modificar esta orden'
         return jsonify(response_body), 403
     data = request.json
+    if 'status' in data:
+        # Validar que el status sea uno de los permitidos
+        if data['status'] not in ["Pendiente", "Vendida"]:
+            response_body['message'] = 'Estado no válido. Usa "Pendiente" o "Vendida".'
+            return jsonify(response_body), 400
+        order.status = data['status']
     if 'address' in data:
         order.address = data['address']
-        db.session.commit()
-        response_body['message'] = 'Dirección de la orden actualizada correctamente'
-        response_body['order_id'] = order.id
-        return jsonify(response_body), 200
-    response_body['message'] = 'No se realizaron cambios en la orden'
-    return jsonify(response_body), 400
-
+    db.session.commit() ## Estaba dentro del IF por eso no actualizaba.
+    response_body['message'] = 'Dirección de la orden actualizada correctamente'
+    response_body['order_id'] = order.id
+    return jsonify(response_body), 200
+    
 
 ## OBTENER Y POSTEAR ORDERITEMS
 @api.route('/orderitems', methods=['GET', 'POST'])
@@ -655,7 +659,7 @@ def orderitems():
             # creamos la orden
             row_order = Orders(
                 customer_id=user_id,
-                status="pendiente",
+                status="Pendiente",
                 total_price=0, 
                 address=data.get('address', '')
             )
@@ -667,11 +671,10 @@ def orderitems():
         new_item = OrderItems(
             order_id=order_id,
             product_id=product.id,
-            price=product.price  # O data.get('price') si fuera editable
+            price=product.price  
         )
         db.session.add(new_item)
         db.session.commit()
-
         response_body['message'] = f'Producto {product.id} añadido a la orden {order_id}'
         response_body['results'] = new_item.serialize()
         return jsonify(response_body), 201
@@ -766,8 +769,6 @@ def pendingorders():
         response_body['message'] = 'El item de orden ha sido añadido correctamente'
         response_body['results'] = order_item.serialize()
         return response_body, 200
-
-
 
 
 @api.route('/createfirstadmin', methods=['POST'])

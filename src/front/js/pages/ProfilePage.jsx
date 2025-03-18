@@ -36,9 +36,9 @@ export const ProfilePage = () => {
     ];
 
     const customerOptions = [
-        { title: "Compras realizadas", description: "Historial de tus pedidos", onClick: () => navigate("/") },
+        { title: "Compras realizadas", description: "Historial de tus pedidos", onClick: () => navigate("/orders") },
         { title: "Comentarios", description: "Tus comentarios en productos", onClick: () => navigate("/") },
-        { title: "Carrito de compra", description: "Revisar tus artículos", onClick: () => navigate("/") },
+        { title: "Carrito de compra", description: "Revisar tus artículos", onClick: () => navigate("/order-cart") },
         { title: "Favoritos", description: "Lista de productos favoritos", onClick: () => navigate("/favorite-page") },
     ];
 
