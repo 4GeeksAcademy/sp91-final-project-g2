@@ -47,6 +47,12 @@
 
 
 /* Botones del lado derecho */
+
+.text-secondary {
+  --bs-text-opacity: 1;
+  color: rgb(71, 28, 7) !important;
+}
+
 .btn {
   font-size: 1rem;
   padding: 5px 10px;
