@@ -186,6 +186,8 @@ const Home = () => {
                 <h1>Why Choose Cafetaleros?</h1>
                 <p>
                 Cafetaleros offers a unique coffee experience with handpicked beans from top farms, blending traditional methods and modern expertise for a rich, bold flavor. We prioritize sustainability and fair trade, supporting farmers committed to quality. 
+                </p>
+                <p>
                 <strong>Enjoy the perfect cup to start your day! </strong>
                 </p>
               </div>

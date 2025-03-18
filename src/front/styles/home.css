@@ -342,10 +342,10 @@ section .bg {
   font-family: "Nunito", sans-serif;
   background-image: linear-gradient(
     45deg,
-    #996540 0%, /* Marrón oscuro */
-    #9b5c3f 30%, /* Marrón medio */
-    #d2b48c 60%, /* Marrón claro */
-    #f5deb3 100% /* Beige */
+    #996540 0%,
+    #9b5c3f 30%, 
+    #d2b48c 60%, 
+    #f5deb3 100% 
   );
 }
 
@@ -376,11 +376,12 @@ section .bg {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  background: rgba(255, 255, 255, 0.9);
+  margin-left: 60px;
+  background: rgba(238, 230, 213, 0.9);
   backdrop-filter: blur(70px);
   border-radius: 20px;
   width: min(400px, 100%);
-  padding: 10px 10px;
+  padding: 30px 60px;
   box-shadow: 0 0.5px 0 1px rgba(255, 255, 255, 0.23) inset,
     0 1px 0 0 rgba(255, 255, 255, 0.66) inset, 0 4px 16px rgba(0, 0, 0, 0.12);
 }
@@ -390,7 +391,7 @@ section .bg {
   font-weight: 800;
   line-height: 1;
   letter-spacing: 1.4;
-  color: #5f4b2d;
+  color: #4b3a21;
   text-align: center;
   margin-top: 10px;
 }
