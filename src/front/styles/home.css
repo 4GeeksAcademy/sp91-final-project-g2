@@ -233,7 +233,7 @@ section .bg {
 .mouse-move {
   position: absolute;
   max-width: 70px;
-  bottom: 110px;
+  bottom: 58px;
   left: 47%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);

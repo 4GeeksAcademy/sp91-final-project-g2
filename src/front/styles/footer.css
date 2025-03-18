@@ -1,0 +1,53 @@
+footer {
+  background-color: #C4A484;
+  width: 100vw;
+  position: relative;
+  bottom: 0;
+  padding: 20px 0;
+  font-size: 0.9rem;
+  color: #5C4033;
+}
+
+footer .social-icon {
+  font-size: 2.5rem; /* Tamaño más pequeño para los íconos */
+  color: #5C4033; /* Color marrón */
+  margin: 0 5px; /* Espaciado entre los íconos */
+  margin-left: 20px;
+  transition: color 0.3s ease; /* Efecto suave al pasar el cursor */
+}
+
+footer .social-icon:hover {
+    color: #e0bb9d; 
+  }
+
+footer .mb-2 {
+  font-size: 1.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 30px;
+  margin-left: 70px;
+  margin-top: -40px;
+  font-family: serif;
+  color:#5C4033;
+}
+
+footer .since-text {
+  font-size: 1.8rem;
+  text-align: center;
+  position: absolute;
+  top: 73px;
+  left: 49%;
+  transform: translateX(-50%);
+  font-family: serif;
+  color:#5C4033;
+}
+
+footer .m-0 {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-top: 10px;
+  font-family: serif;
+  color:#5C4033;
+}
