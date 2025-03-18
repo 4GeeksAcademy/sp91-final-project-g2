@@ -20,57 +20,14 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+ 
 }
 
 .login-content {
   display: flex;      
   flex-wrap: wrap;    
   width: 100%;
-  min-height: 400px;
-}
-
-/* Centrar el formulario y sus elementos */
-.login-form {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-/* Estilo para el checkbox y su etiqueta */
-.remember-me {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.checkbox-input {
-  margin-right: 10px;
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-}
-
-.checkbox-label {
-  font-size: 0.9rem;
-  color: #4d3019;
-}
-
-/* Botón centrado */
-.form-button {
-  background-color: #4d3019;
-  font-size: 0.9rem;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-  text-align: center;
-  width: 100%; /* Ajusta el ancho del botón */
-  transition: background-color 0.3s ease;
-}
-
-.form-button:hover {
-  background-color: #633f28;
+  min-height: 400px;  
 }
 
 .left {
@@ -91,14 +48,11 @@ body {
 .left h1 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  color: #4d3019;
+  color: #4b3419;
 } 
 
 .left p {
   margin-bottom: 2rem;
-  font-size: 0.rem;
-  color: #fcf3eb;
-
 }
 
 .right {
@@ -109,41 +63,24 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: #4d3019; 
+  color: #5c4430; 
 }
 
 .right h2 {
   margin-bottom: 1rem;
-  color: #4d3019; 
+  color: #583822; 
 }
 
-.form-input {
+.right form {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.8); /* Fondo casi transparente */
-  color: #4d3019; /* Color del texto */
-  font-size: 1rem;
-  outline: none;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Placeholder casi transparente */
-.form-input::placeholder {
-  color: rgba(77, 48, 25, 0.5);
-}
-
-/* Cambios al enfocar el campo */
-.form-input:focus {
-  background-color: #fff;
-  color: #4d3019;
-  border-color: #4d3019; 
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .right input {
-  border: 1px solid #b6936b;
+  border: 1px solid #ccc;
   border-radius: 5px;
   padding: 10px;
   background: white;
@@ -151,8 +88,7 @@ body {
 }
 
 .right button[type="submit"] {
-  background-color: #4d3019;
-  font-size: 0.9rem;
+  background-color: #664229; 
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -161,5 +97,5 @@ body {
 }
 
 .right button[type="submit"]:hover {
-  background-color: #a06f50; 
+  background-color: #634e3d; 
 }
