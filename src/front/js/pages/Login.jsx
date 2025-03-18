@@ -9,13 +9,31 @@ export const Login = () => {
                 {/* Sección Izquierda */}
                 <div className="col-12 col-md-6 left">
                     <h1>Bienvenido</h1>
-                    <p>Glad to see you again! Please login with your details.</p>                    
+                    <p>Glad to see you again! Please login with your details.</p>
                 </div>
 
                 {/* Sección Derecha */}
                 <div className="col-12 col-md-6 right">
-                    <h2>Iniciar sesión</h2>
-                    <LoginForm />
+                    <h2>Accede a tu cuenta</h2>
+                    <form className="login-form">
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            className="form-input"
+                            required
+                        />
+                        <input
+                            type="password"
+                            placeholder="Contraseña"
+                            className="form-input"
+                            required
+                        />
+                        <div className="remember-me">
+                            <input type="checkbox" id="remember" className="checkbox-input" />
+                            <label htmlFor="remember" className="checkbox-label">Recordarme</label>
+                        </div>
+                        <button type="submit" className="form-button">Iniciar sesión</button>
+                    </form>
                 </div>
             </div>
         </div>
