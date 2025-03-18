@@ -5,7 +5,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { Link, useNavigate } from "react-router-dom";
-import { FavoritesDropdown } from "./FavoritesDropdown.jsx";
+import { FavoritesDropdown } from "./Favorites/FavoritesDropdown.jsx";
 
 export const NavbarCafetaleros = () => {
   const { store, actions } = useContext(Context);
@@ -90,7 +90,7 @@ export const NavbarCafetaleros = () => {
             <button className="btn btn-secondary ms-2" onClick={handleLogout}>Logout</button>
           )}
         </div>
-        
+
       </div>
     </nav>
   );

@@ -6,19 +6,19 @@ import { BackendURL } from "./component/BackendURL.jsx";
 import Navbar from "./component/Navbar.jsx";
 import { Footer } from "./component/Footer.jsx";
 import SignUp from "./component/SignUp.jsx";
-import {ProfileForm} from "./component/ProfileForm.jsx";
+import { ProfileForm } from "./component/ProfileForm.jsx";
 import LoadingSpinner from "./component/LoadingSpinner.jsx";
 import Pagination from "./component/Pagination.jsx";
 // Custom Pages or Views
-import  Home from "./pages/Home.jsx";
+import Home from "./pages/Home.jsx";
 import { Login } from "./pages/Login.jsx";
-import {ProfilePage} from "./pages/ProfilePage.jsx";
+import { ProfilePage } from "./pages/ProfilePage.jsx";
 // Productos
-import {ProductCards} from "./pages/Products/ProductCards.jsx";
-import {ProductCard} from "./pages/Products/ProductCard.jsx";
+import { ProductCards } from "./pages/Products/ProductCards.jsx";
+import { ProductCard } from "./pages/Products/ProductCard.jsx";
 import ProductForm from "./pages/Products/ProductForm.jsx";
 import ProductDetail from "./pages/Products/ProductDetail.jsx";
-import {ProductList} from "./pages/Products/ProductList.jsx";
+import { ProductList } from "./pages/Products/ProductList.jsx";
 // Órdenes
 import Orders from "./pages/Orders/Orders.jsx";
 import OrderItems from "./pages/Orders/OrderItems.jsx";
@@ -29,9 +29,11 @@ import { ProductDetailPage } from "./pages/Administrador/ProductDetailPage.jsx";
 import { CommentsListPage } from "./pages/Administrador/CommentListPage.jsx";
 import { UserDetailPage } from "./pages/Administrador/UserDetailPage.jsx";
 import { UserListPage } from "./pages/Administrador/UserListPage.jsx";
-import { FavoritesPage } from "./pages/FavoritesPage.jsx";
+import { FavoritesPage } from "./pages/Favorite/FavoritesPage.jsx";
 import { UserCommentsPage } from "./pages/Administrador/UserCommentsPage.jsx";
 import { Error404 } from "./pages/Error404.jsx";
+import { FavoriteToCartPage } from "./pages/Favorite/FavoriteToCartPage.jsx";
+import { CompleteFavoriteOrderPage } from "./pages/Favorite/CompleteFavoriteOrderPage.jsx";
 
 
 const Layout = () => {
@@ -63,20 +65,22 @@ const Layout = () => {
                         {/* Rutas de otros componentes */}
                         <Route element={<LoadingSpinner />} path="/loading" />
                         <Route element={<Pagination />} path="/pagination" />
+                        <Route element={<Error404 />} path="*" />
                         {/* Rutas de órdenes */}
                         <Route path="/orders" element={<Orders />} />
                         <Route path="/orderitems" element={<OrderItems />} />
                         {/* Rutas de administrador */}
-                        <Route element={<AdminPage/>} path="/adminPage"/>
-                        <Route element={<UserListPage/>} path="/user-list-page"/>
-                        <Route element={<UserDetailPage/>} path="/user-details/:id"/>
-                        <Route element={<ProductListPage/>} path="/product-list-page"/>
-                        <Route element={<ProductDetailPage/>} path="/product-details-page/:id"/>
-                        <Route element={<CommentsListPage/>} path="/comment-list-page"/>
-                        <Route element={<UserCommentsPage/>} path="/user/:user_id/comments"/>
+                        <Route element={<AdminPage />} path="/adminPage" />
+                        <Route element={<UserListPage />} path="/user-list-page" />
+                        <Route element={<UserDetailPage />} path="/user-details/:id" />
+                        <Route element={<ProductListPage />} path="/product-list-page" />
+                        <Route element={<ProductDetailPage />} path="/product-details-page/:id" />
+                        <Route element={<CommentsListPage />} path="/comment-list-page" />
+                        <Route element={<UserCommentsPage />} path="/user/:user_id/comments" />
                         {/* Rutas de favoritos */}
-                        <Route element={<FavoritesPage/>} path="/favorite-page"/>                        
-                        <Route element={<Error404/>} path="*" />
+                        <Route element={<FavoritesPage />} path="/favorite-page" />
+                        <Route element={<FavoriteToCartPage />} path="/favorite-to-cart" />
+                        <Route element={<CompleteFavoriteOrderPage />} path="/complete-favorite-orders"/>
                     </Routes>
                     <Footer />
                 </ScrollToTop>

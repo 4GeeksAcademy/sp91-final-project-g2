@@ -74,11 +74,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const data = await response.json();
 				const token = data.access_token;
 				const tokenTime = new Date().getTime() + 300000;
+				const userRole = data.results.is_admin ? "is_admin" :
+								data.results.is_vendor ? "is_vendor" :
+								"is_customer"
 				localStorage.setItem("token", token);
 				localStorage.setItem("user", JSON.stringify(data.results));
-				localStorage.setItem("userRole", data.results.is_admin ? "is_admin" :
-					data.results.is_vendor ? "is_vendor" :
-						"is_customer");
+				localStorage.setItem("userRole", userRole);
 				localStorage.setItem("tokenExpiry", tokenTime);
 				setStore({
 					isLogged: true,
@@ -511,50 +512,66 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error en getOrderItems:", error);
 				}
 			},
-			createOrder: async () => {
+			createOrder: async (orderData) => {
 				const store = getStore();
-				const uri = `${process.env.BACKEND_URL}/api/orders`
-				// Verificar si hay productos en la orden antes de enviarla
-				if (!store.orderitems || store.orderitems.length === 0) {
-					console.warn("No hay productos en la orden para procesar.");
+				const actions = getActions();
+				const token = store.token;
+				if(!token){
+					console.error("No hay token, el usuario debe estar autenticado.");
 					return false;
 				}
+				try{
+					// Se crea la orden
+					const uri = `${process.env.BACKEND_URL}/api/orders`
+					const options = {
+						method: 'POST',
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`
+						},
+						body: JSON.stringify({
+							// Tomamos de orderData
+							status: orderData.status || "pendiente",
+							address: orderData.address || "",
+							total_price: orderData.total_price || 0
+						})
+					};
 
-				console.log(store.orderitems);
-
-
-				const orderData = {
-					items: store.orderitems.map(product => ({
-						product_id: product.id,
-						price: product.price
-					}))
-				};
-
-				console.log(orderData)
-
-				const options = {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${store.token}`
-					},
-					body: JSON.stringify(orderData)
-				};
-
-				try {
-					const response = await fetch(uri, options);
-
+					const response = await fetch (uri, options);
 					if (!response.ok) {
-						console.error(`Error al crear la orden: ${response.status} ${response.statusText}`);
+						console.error("Error al crear la orden:", response.statusText);
 						return false;
 					}
+					const dataOrder = await response.json(); 
+        			const newOrderId = dataOrder.order_id; // ID de la orden recién creada
 
-					const data = await response.json();
+					// 2) Crear cada OrderItem asociado
+					for (const item of orderData.items) {
+						const uriItem = `${process.env.BACKEND_URL}/api/orderitems`;
+						const optionsItem = {
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
+								Authorization: `Bearer ${token}`
+							},
+							body: JSON.stringify({
+								order_id: newOrderId,
+								product_id: item.product_id,
+								price: item.price
+							})
+						};
+						const respItem = await fetch(uriItem, optionsItem);
+						if (!respItem.ok) {
+							console.error("Error al crear el OrderItem:", respItem.statusText);
+							return false;
+						}
+					}
 
-					// Limpiar la orden solo si la creación fue exitosa
-					setStore({ orderitems: [] });
-
-					console.log("Orden creada exitosamente:", data);
+					// 3) Refrescar la lista de órdenes e items, por si los mostramos en el front
+					await actions.getOrders();
+					await actions.getOrderItems();
+			
+					console.log("Orden e items creados correctamente:", dataOrder);
 					return true;
 				} catch (error) {
 					console.error("Error en createOrder:", error);
@@ -708,7 +725,29 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ products: udpdateCart });
 				alert("Todos los productos favoritos han sido incluidos al carrito")
 			},
-			clearUserComments: () => setStore({ userComments: [] })
+			clearUserComments: () => setStore({ userComments: [] }),
+			createOrderFromFavorites: async (orderData) => {
+				const store = getStore();
+				const uri = `${process.env.BACKEND_URL}/api/orders`;
+				const options = {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${store.token}`
+					},
+					body: JSON.stringify(orderData)
+				};
+				const response = await fetch (uri, options);
+				if(!response.ok) {
+					console.error("Error al crear la orden:", response.statusText)
+					return
+				}
+				const createdOrder = await response.json();
+				setStore({
+					orders: [...store.orders, createdOrder.results],
+					favorites: []
+				});				
+			}
 		}
 	}
 };
