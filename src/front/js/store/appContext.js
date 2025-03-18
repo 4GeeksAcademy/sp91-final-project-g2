@@ -31,7 +31,15 @@ const injectContext = PassedComponent => {
 		*/
 		useEffect(() => {
             state.actions.syncTokenFromLocalStorage();
-			
+
+			const range = setInterval(() => {
+				const tokenExpiry = state.store.tokenExpiry;
+				if (tokenExpiry && new Date().getTime() > tokenExpiry){
+					state.actions.logout();
+					alert("Tu sesión ha expirado")
+				}
+			}, 60000)
+			return () => clearInterval(range);			
         }, []);
 
 		// The initial value for the context is not null anymore, but the current state of this component,

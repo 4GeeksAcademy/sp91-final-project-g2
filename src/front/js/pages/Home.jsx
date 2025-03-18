@@ -102,8 +102,8 @@ const Home = () => {
           <div className="inner">
             <div className="bg home">
               <div className="scroll">
-                <p class="welcome-text">Welcome to Cafetaleros</p>
-                <p class="coffe-text">Your trusted coffee</p>
+                <p className="welcome-text">Welcome to Cafetaleros</p>
+                <p className="coffe-text">Your trusted coffee</p>
               </div>
 
               <img src="https://th.bing.com/th/id/R.86599832c83f6179e52b4aff416dbdc7?rik=xsMRDGxbiTfaXw&riu=http%3a%2f%2fassets.stickpng.com%2fimages%2f580b57fbd9996e24bc43c0ea.png&ehk=xGMBYlo6JVW7cP%2bHM67OKVHTWe8WW5o%2fdIxqNyZSh2Y%3d&risl=&pid=ImgRaw&r=0" alt="" />
@@ -183,7 +183,7 @@ const Home = () => {
                 <h1>Why Choose Cafetaleros?</h1>
                 <p>
                 Cafetaleros offers a unique coffee experience with handpicked beans from top farms, blending traditional methods and modern expertise for a rich, bold flavor. We prioritize sustainability and fair trade, supporting farmers committed to quality. 
-                <p><strong>Enjoy the perfect cup to start your day! </strong></p>
+                <strong>Enjoy the perfect cup to start your day! </strong>
                 </p>
               </div>
             </div>

@@ -18,6 +18,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			orders: [],
 			favorites: [],
 			userComments: [],
+			tokenExpiry: null
 		},
 		actions: {
 			signup: async (firstName, lastName, address, phone, email, password, role) => {
@@ -66,18 +67,27 @@ const getState = ({ getStore, getActions, setStore }) => {
 					body: JSON.stringify(dataToSend)
 				};
 				const response = await fetch(uri, options);
-				if (!response.ok) return console.log("Error", response.status, response.statusText);
+				if (!response.ok) {
+					console.log("Error", response.status, response.statusText);
+					return false;
+				}
 				const data = await response.json();
-				localStorage.setItem("token", data.access_token);
-				const userRole = data.results.is_admin ? "is_admin" :
-								data.results.is_vendor ? "is_vendor" :
-								data.results.is_customer ? "is_customer" : null;
+				const token = data.access_token;
+				const tokenTime = new Date().getTime() + 300000;
+				localStorage.setItem("token", token);
+				localStorage.setItem("user", JSON.stringify(data.results));
+				localStorage.setItem("userRole", data.results.is_admin ? "is_admin" :
+					data.results.is_vendor ? "is_vendor" :
+						"is_customer");
+				localStorage.setItem("tokenExpiry", tokenTime);
 				setStore({
 					isLogged: true,
 					user: data.results,
 					userRole,
-					token: localStorage.getItem("token")
+					token: localStorage.getItem("token"),
+					tokenExpiry: tokenTime
 				});
+				return true;
 			},
 			logout: () => {
 				localStorage.removeItem("token");
@@ -91,7 +101,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					profile: null,
 					loading: false,
 					favorites: [],
-					userComments: []
+					userComments: [],
+					tokenExpiry: null
 				})
 
 			},
@@ -317,7 +328,32 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			syncTokenFromLocalStorage: () => {
 				const token = localStorage.getItem("token");
-				if (token) setStore({ token });
+				const user = JSON.parse(localStorage.getItem("user"))
+				const userRole = localStorage.getItem("userRole");
+				const tokenExpiry = localStorage.getItem("tokenExpiry");
+				if (token && user && userRole && tokenExpiry) {
+					if (new Date().getTime() < tokenExpiry) {
+						setStore({
+							isLogged: true,
+							user,
+							userRole,
+							token,
+							tokenExpiry
+						});
+					} else {
+						localStorage.removeItem("token");
+						localStorage.removeItem("user");
+						localStorage.removeItem("userRole");
+						localStorage.removeItem("tokenExpiry")
+						setStore({
+							isLogged: false,
+							user: {},
+							userRole: null,
+							token: "",
+							tokenExpiry: null
+						});
+					}
+				}
 			},
 			createProduct: async (productData) => {
 				try {
@@ -549,7 +585,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} catch (error) {
 					console.error("Error en getOrders:", error);
 				}
-			},	
+			},
 			getFavorites: async () => {
 				const token = localStorage.getItem("token");
 				const uri = `${process.env.BACKEND_URL}/api/favorites`;
