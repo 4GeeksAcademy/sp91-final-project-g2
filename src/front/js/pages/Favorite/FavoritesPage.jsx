@@ -13,7 +13,7 @@ export const FavoritesPage = () => {
             alert("Acceso denegado");
             navigate("/login");
         } 
-    }, [store.isLogged, store.userRole, navigate]);
+    }, []);
 
     const handleAddAllAndNavigate = () => {
         actions.addAllFavoritesToCart();

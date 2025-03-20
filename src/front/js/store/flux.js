@@ -13,7 +13,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			token: "",
 			loading: false,
 			cart: [],
-			orderitems: [],
+			orderitems: {},
 			orders: [],
 			favorites: [],
 			userComments: [],

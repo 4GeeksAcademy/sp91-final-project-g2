@@ -16,7 +16,11 @@ export const OrderCarts = () => {
     const cartItems = store.cart;
 
     useEffect(() => {
-        actions.getOrderItems();
+        if (!store.isLogged || store.userRole !== "is_customer") {            
+            navigate("/login");
+        }else{
+            actions.getOrderItems();
+        }
     }, []);
 
     const handleDelete = (productId) => {

@@ -13,7 +13,7 @@ export const FavoriteToCartPage = () => {
             alert("Acceso denegado");
             navigate("/login");
         }
-    }, [store.isLogged, store.userRole]);
+    }, []);
 
     const handleAddToOrder = (product) => {
         if (selectedProducts.some(item => item.id === product.id)) {

@@ -17,7 +17,7 @@ export const NavbarCafetaleros = () => {
       actions.getFavorites();
       actions.getOrderItems();
     }    
-  }, [store.isLogged, store.userRole])
+  }, [store.isLogged, store.userRole, store.orderitems.length])
 
 
   const handleScrollToFooter = (e) => {
