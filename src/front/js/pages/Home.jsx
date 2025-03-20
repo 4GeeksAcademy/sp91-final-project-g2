@@ -105,8 +105,8 @@ const Home = () => {
           <div className="inner">
             <div className="bg home">
               <div className="scroll">
-                <p className="welcome-text">Welcome to Cafetaleros</p>
-                <p className="coffe-text">Your trusted coffee</p>
+                <p className="welcome-text">Bienvenido a Cafetaleros</p>
+                <p className="coffe-text">Tu café de confianza</p>
               </div>
 
               <img src="https://th.bing.com/th/id/R.86599832c83f6179e52b4aff416dbdc7?rik=xsMRDGxbiTfaXw&riu=http%3a%2f%2fassets.stickpng.com%2fimages%2f580b57fbd9996e24bc43c0ea.png&ehk=xGMBYlo6JVW7cP%2bHM67OKVHTWe8WW5o%2fdIxqNyZSh2Y%3d&risl=&pid=ImgRaw&r=0" alt="" />
@@ -115,8 +115,7 @@ const Home = () => {
                   CAFETALEROS
                 </h1>
                 <p>
-                Dive into the world of great coffee, where every cup tells a story of flavor and tradition. From the freshest beans to the most careful brewing process, we celebrate the magic that only a perfect cup of coffee can offer.
-                Enjoy the experience of a unique coffee and let its aromas and textures captivate you!Join us for the best coffee, because at Cafetaleros, we know every moment is better with a cup in hand.
+                Sumérgete en el mundo del buen café, donde cada taza cuenta una historia de sabor y tradición. Desde los granos más frescos hasta el proceso de preparación más cuidadoso, celebramos la magia que solo una taza perfecta de café puede ofrecer. ¡Disfruta de la experiencia de un café único y deja que sus aromas y texturas te cautiven! Únete a nosotros para disfrutar del mejor café, porque en Cafetaleros sabemos que cada momento es mejor con una taza en mano.
                 </p>
                 <ul className="links">
                   <li>
@@ -183,12 +182,12 @@ const Home = () => {
             <div className="bg info">
               <img src="https://pngimg.com/uploads/coffee_beans/coffee_beans_PNG9283.png" alt="" />
               <div className="info-content">
-                <h1>Why Choose Cafetaleros?</h1>
+                <h1>Por qué elegir Cafetaleros?</h1>
                 <p>
-                Cafetaleros offers a unique coffee experience with handpicked beans from top farms, blending traditional methods and modern expertise for a rich, bold flavor. We prioritize sustainability and fair trade, supporting farmers committed to quality. 
+                Cafetaleros ofrece una experiencia de café única con granos seleccionados a mano de las mejores fincas, combinando métodos tradicionales y experiencia moderna para un sabor rico y audaz. Priorizamos la sostenibilidad y el comercio justo, apoyando a los agricultores comprometidos con la calidad.
                 </p>
                 <p>
-                <strong>Enjoy the perfect cup to start your day! </strong>
+                <strong>¡Disfruta de la taza perfecta para comenzar tu día!</strong>
                 </p>
               </div>
             </div>
