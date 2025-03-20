@@ -9,7 +9,19 @@
 }
 
 .welcome-text {
-  margin-bottom: -700px !important;
+  margin-bottom: -755px !important;
+  position: relative;
+  text-align: center;
+  font-size: 2rem;
+  color: #684b33;
+}
+
+.coffe-text {
+  position: relative; /* Mantiene su posición en el flujo normal */
+  margin-top: 50px; /* Añade espacio encima del texto */
+  font-size: 1.5rem;
+  color: #684b33;
+  text-align: center;
 }
 
 .navbar {
@@ -71,8 +83,8 @@ section .bg {
 
 .home > img {
   position: absolute;
-  right: 3%;
-  bottom: 26%;
+  right: 13%;
+  bottom: 35%;
   width: 100%;
   max-width: 600px;
   z-index: 5;
@@ -80,7 +92,7 @@ section .bg {
 
 .home-content {
   position: absolute;
-  left: 7%;
+  left: 15%;
   font-family: "Nunito", sans-serif;
   width: min(500px, 100%);
   color: #413a2a;
@@ -89,11 +101,11 @@ section .bg {
 
 .home-content > h1 {
   position: justify;
-  margin-bottom: 1000px;
+  margin-bottom: 1020px;
   font-family: inherit;
   font-size: 40px;
   font-weight: 700;
-  color: rgb(107, 80, 58)
+  color: rgb(107, 74, 47)
 }
 
 .home-content > p {
@@ -104,6 +116,7 @@ section .bg {
   margin-bottom: 4rem;
   margin-top: -1000px;
   text-align: justify;
+  color: rgb(114, 89, 68);
 }
 
 
@@ -169,8 +182,8 @@ section .bg {
   align-items: right;
   justify-content: center;
   gap: 10px;
-  margin-top: -55px;
-  margin-left: -25px;
+  margin-top: -35px;
+  margin-left: -430px;
 }
 
 .links li {
@@ -220,7 +233,7 @@ section .bg {
 .mouse-move {
   position: absolute;
   max-width: 70px;
-  bottom: 70px;
+  bottom: 58px;
   left: 47%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
@@ -329,10 +342,10 @@ section .bg {
   font-family: "Nunito", sans-serif;
   background-image: linear-gradient(
     45deg,
-    #996540 0%, /* Marrón oscuro */
-    #9b5c3f 30%, /* Marrón medio */
-    #d2b48c 60%, /* Marrón claro */
-    #f5deb3 100% /* Beige */
+    #996540 0%,
+    #9b5c3f 30%, 
+    #d2b48c 60%, 
+    #f5deb3 100% 
   );
 }
 
@@ -363,11 +376,12 @@ section .bg {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  background: rgba(255, 255, 255, 0.9);
+  margin-left: 60px;
+  background: rgba(238, 230, 213, 0.9);
   backdrop-filter: blur(70px);
   border-radius: 20px;
   width: min(400px, 100%);
-  padding: 10px 10px;
+  padding: 30px 60px;
   box-shadow: 0 0.5px 0 1px rgba(255, 255, 255, 0.23) inset,
     0 1px 0 0 rgba(255, 255, 255, 0.66) inset, 0 4px 16px rgba(0, 0, 0, 0.12);
 }
@@ -377,7 +391,7 @@ section .bg {
   font-weight: 800;
   line-height: 1;
   letter-spacing: 1.4;
-  color: #5f4b2d;
+  color: #4b3a21;
   text-align: center;
   margin-top: 10px;
 }
