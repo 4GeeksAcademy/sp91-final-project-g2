@@ -8,6 +8,7 @@ export const CommentsListPage = () => {
     const { store, actions } = useContext(Context);
     const navigate = useNavigate();
 
+    // Estado para la paginación
     const [currentPage, setCurrentPage] = useState(1);
     const commentsPerPage = 5;
 
@@ -27,7 +28,7 @@ export const CommentsListPage = () => {
             }
         };
         loadCommentsAndUsers();
-    }, [store.isLogged, store.userRole, actions, navigate]);
+    }, [store.isLogged, store.userRole]);
 
     const handleDelete = async (userId, commentId) => {
         const confirmed = window.confirm("¿Está seguro de eliminar este comentario?");
@@ -43,14 +44,14 @@ export const CommentsListPage = () => {
     };
 
     // Paginación calculada aquí:
-    const indexOfLastComment = currentPage * commentsPerPage;
+        const indexOfLastComment = currentPage * commentsPerPage;
     const indexOfFirstComment = indexOfLastComment - commentsPerPage;
     const currentComments = store.comments?.slice(indexOfFirstComment, indexOfLastComment) || [];
 
     return (
         <div className="container mt-4">
             <h1>Listado de Comentarios</h1>
-            <CommentList comments={currentComments} users={store.users} onDelete={handleDelete} />
+            <CommentList comments={currentComments} users={store.users || []} onDelete={handleDelete} />
 
             {/* Componente de paginación */}
             <div className="pagination-container mt-3">

@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from "react";
-import { Context } from "../store/appContext";
+import { Context } from "../../store/appContext.js";
 import { useNavigate } from "react-router-dom";
-import { FavoriteItem } from "../component/FavoriteItem.jsx";
-import "../../styles/favorites.css"
+import { FavoriteItem } from "../../component/Favorites/FavoriteItem.jsx";
+import "../../../styles/favorites.css"
 
 export const FavoritesPage = () => {
     const { store, actions } = useContext(Context);
@@ -12,17 +12,20 @@ export const FavoritesPage = () => {
         if (!store.isLogged || store.userRole !== "is_customer") {
             alert("Acceso denegado");
             navigate("/login");
-        } else if (store.favorites.length === 0) {
-            actions.getFavorites();
-        }
-    }, [store.isLogged, store.userRole, navigate]);
+        } 
+    }, []);
+
+    const handleAddAllAndNavigate = () => {
+        actions.addAllFavoritesToCart();
+        navigate("/favorite-to-cart");
+    };
 
     return (
         <div className="favorites-container">
             <h1 className="favorites-header">Mis Favoritos</h1>
             <p className="favorites-description">Guarda todos tus productos favoritos y agrúpalos en diferentes listas para tener todo organizado.</p>
             <div className="favorites-actions">
-                <button className="add-all-button" onClick={() => actions.addAllFavoritesToCart()}>Añadir todo al carrito</button>
+                <button className="add-all-button" onClick={handleAddAllAndNavigate}>Añadir todo al carrito</button>
                 <button className="back-to-shop" onClick={() => navigate("/")}>Volver a la tienda</button>
             </div>
 

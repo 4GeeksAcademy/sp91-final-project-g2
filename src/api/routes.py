@@ -581,8 +581,8 @@ def orders():
         data = request.json
         new_order = Orders(
             customer_id=user_id,
-            status=data.get('status', 'pendiente'),  # Estado por defecto "pendiente"
-            address=data.get('address'),
+            status=data.get('status', 'Pendiente'),  # Estado por defecto "pendiente"
+            address=data.get('address', ''),
             total_price=data.get('total_price', 0.0))  # Default en caso de no recibirlo
         db.session.add(new_order)
         db.session.commit()
@@ -608,15 +608,19 @@ def update_order(order_id):
         response_body['message'] = 'No puedes modificar esta orden'
         return jsonify(response_body), 403
     data = request.json
+    if 'status' in data:
+        # Validar que el status sea uno de los permitidos
+        if data['status'] not in ["Pendiente", "Vendida"]:
+            response_body['message'] = 'Estado no válido. Usa "Pendiente" o "Vendida".'
+            return jsonify(response_body), 400
+        order.status = data['status']
     if 'address' in data:
         order.address = data['address']
-        db.session.commit()
-        response_body['message'] = 'Dirección de la orden actualizada correctamente'
-        response_body['order_id'] = order.id
-        return jsonify(response_body), 200
-    response_body['message'] = 'No se realizaron cambios en la orden'
-    return jsonify(response_body), 400
-
+    db.session.commit() ## Estaba dentro del IF por eso no actualizaba.
+    response_body['message'] = 'Dirección de la orden actualizada correctamente'
+    response_body['order_id'] = order.id
+    return jsonify(response_body), 200
+    
 
 ## OBTENER Y POSTEAR ORDERITEMS
 @api.route('/orderitems', methods=['GET', 'POST'])
@@ -639,32 +643,40 @@ def orderitems():
         if not product:
             response_body['message'] = 'El producto especificado no existe'
             return jsonify(response_body), 404
-        product_id = product.serialize()['id']
-        price = product.serialize()['price']
-        # verificamos si el order_id tiene un numero o viene nulo. Si es nulo tiene que crear una order. Si tiene un numero tengo que vverificar que laa orden exista
-        order_id = data.get('order_id', None)
+        
+        order_id = data.get('order_id')  # Si viene, se asocia a esa orden
+        user_id = additional_claims['user_id']
+        
         if order_id: 
             # determinamos si la orden existe
-            row_order = db.session.execute(db.select(Orders).where(Orders.id == order_id, Orders.customer_id == additional_claims['user_id'])).scalar()
+            row_order = db.session.execute(
+                db.select(Orders).where(Orders.id == order_id, Orders.customer_id == user_id)
+            ).scalar()
             if not row_order:
-                response_body['message'] = 'No autorizado'
+                response_body['message'] = 'No autorizado o la orden no existe'
                 return response_body, 404
         else: 
             # creamos la orden
-            row_order = Orders(customer_id = additional_claims['user_id'], 
-                               status= "pendiente",
-                               total_price= 0,
-                               address= data.get('address', ''))
+            row_order = Orders(
+                customer_id=user_id,
+                status="Pendiente",
+                total_price=0, 
+                address=data.get('address', '')
+            )
             db.session.add(row_order)
             db.session.commit()
-            order_id = row_order.serialize()['id']
-        row = OrderItems(order_id=order_id,
-                         product_id=product_id,
-                         price=price)
-        db.session.add(row)
+            order_id = row_order.id
+
+        # Crear el OrderItem
+        new_item = OrderItems(
+            order_id=order_id,
+            product_id=product.id,
+            price=product.price  
+        )
+        db.session.add(new_item)
         db.session.commit()
-        response_body['message'] = f'El producto {product_id} de la orden {order_id} ha sido añadido correctamente'
-        response_body['results'] = row.serialize()
+        response_body['message'] = f'Producto {product.id} añadido a la orden {order_id}'
+        response_body['results'] = new_item.serialize()
         return jsonify(response_body), 201
     
 
@@ -697,9 +709,9 @@ def orderitem(id):
         if not product:
             response_body['message'] = 'El producto especificado no existe'
             return jsonify(response_body), 404
-        row.order_id = data['order_id']
-        row.product_id = data['product_id']
-        row.price = data['price']
+        row.order_id = order.id
+        row.product_id = product.id
+        row.price = data.get('price', row.price)
         db.session.commit()
         response_body['message'] = 'Item de orden actualizado correctamente'
         response_body['results'] = row.serialize()
@@ -716,45 +728,47 @@ def orderitem(id):
 def pendingorders():
     response_body = {}
     additional_claims = get_jwt() 
-    user_id = additional_claims.get('user_id')
-    print(user_id)
-    row = db.session.execute(db.select(Orders).where(Users.id == user_id, Orders.status == 'pendiente')).scalar()
-    if not row : 
-        row = Orders(
+    user_id = additional_claims.get('user_id')    
+    pending_order = db.session.execute(db.select(Orders).where(Orders.customer_id == user_id, Orders.status == 'pendiente')).scalar()
+    if not pending_order:
+        pending_order = Orders(
             customer_id=user_id,
-            status= 'pendiente',  # Estado por defecto "pendiente"
-            address= "",
-            total_price= 0)
-        db.session.add(row)
+            status='pendiente',
+            address="",
+            total_price=0
+        )
+        db.session.add(pending_order)
         db.session.commit()
-    order = row.serialize()
+    order_serialized = pending_order.serialize()
     if request.method == 'GET':
-        print(order)
-        rows = db.session.execute(db.select(OrderItems).where(OrderItems.order_id == order.id)).scalars()
-        if not rows : 
-            response_body['message'] = 'order sin articulos'   
+        rows = db.session.execute(
+            db.select(OrderItems).where(OrderItems.order_id == order_serialized['id'])).scalars()
+        order_items_list = [item.serialize() for item in rows]
+        if not order_items_list:
+            response_body['message'] = 'Orden sin artículos'
             response_body['results'] = []
-            return jsonify(response_body), 200  
-        response_body['message'] = 'Listado de todos los items de orden'
-        print(rows)
-        response_body['results'] = [row.serialize() for row in rows]
+            return jsonify(response_body), 200
+        response_body['message'] = 'Items de la orden pendiente'
+        response_body['results'] = order_items_list
         return jsonify(response_body), 200
     if request.method == 'POST':
         data = request.json
-        row = db.session.execute(db.select(Products).where(Products.id == data.get('product_id'))).scalar()
-        ## verificar que el producto exista
-        product = row.serialize()
+        product_row = db.session.execute(db.select(Products).where(Products.id == data.get('product_id'))).scalar()
+        if not product_row:
+            response_body['message'] = 'El producto especificado no existe'
+            return jsonify(response_body), 404
+        product_serialized = product_row.serialize()
+        # Creamos el OrderItem
         order_item = OrderItems(
-            order_id= order.get('id'),
-            product_id= product.get('id'),
-            price= product.get('price')) 
+            order_id=order_serialized['id'],
+            product_id=product_serialized['id'],
+            price=product_serialized['price']
+        )
         db.session.add(order_item)
         db.session.commit()
         response_body['message'] = 'El item de orden ha sido añadido correctamente'
         response_body['results'] = order_item.serialize()
         return response_body, 200
-
-
 
 
 @api.route('/createfirstadmin', methods=['POST'])

@@ -5,8 +5,8 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { Link, useNavigate } from "react-router-dom";
-import { FavoritesDropdown } from "./FavoritesDropdown.jsx";
 import "../../styles/navbar.css";
+import { FavoritesDropdown } from "./Favorites/FavoritesDropdown.jsx";
 
 export const NavbarCafetaleros = () => {
   const { store, actions } = useContext(Context);
@@ -16,8 +16,9 @@ export const NavbarCafetaleros = () => {
   useEffect(() => {
     if (store.isLogged && store.userRole === "is_customer") {
       actions.getFavorites();
-    }
-  }, [])
+      actions.getOrderItems();
+    }    
+  }, [store.isLogged, store.userRole, store.orderitems.length])
 
 
   const handleScrollToFooter = (e) => {
@@ -68,7 +69,7 @@ export const NavbarCafetaleros = () => {
         </div>
 
         {/* Botón de Carrito */}
-        <button className="btn btn-outline-dark position-relative me-3" onClick={() => navigate("/orderitems")}>
+        <button className="btn btn-outline-dark position-relative me-3" onClick={() => navigate("/order-cart")}>
           <i className="fa fa-shopping-cart"></i>
           {store.orderitems && store.orderitems.length > 0 && (
             <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -80,8 +81,8 @@ export const NavbarCafetaleros = () => {
         {/* Iconos lado derecho */}
         <div className="ms-auto d-flex align-items-center gap-3 me-2">
           {/* Favoritos */}
-          <FavoritesDropdown />
-          {/* LLogin/Profile */}
+          <FavoritesDropdown/>
+          {/* Login/Profile */}
           <button className="btn btn-outline-dark position-relative"
             onClick={() => navigate(store.isLogged ? "/profilepage" : "/login")}
             title={store.isLogged ? "Ir al perfil" : "Iniciar sesión"}>
@@ -93,7 +94,7 @@ export const NavbarCafetaleros = () => {
             <button className="btn btn-secondary ms-2" onClick={handleLogout}>Logout</button>
           )}
         </div>
-        
+
       </div>
     </nav>
   );

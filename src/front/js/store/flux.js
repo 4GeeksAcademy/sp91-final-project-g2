@@ -11,13 +11,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 			currentProduct: {},
 			userRole: null,
 			token: "",
-			profile: null,
 			loading: false,
-			cart: [], // 🛒 Nuevo estado para el carrito
-			orderitems: [],
+			cart: [],
+			orderitems: {},
 			orders: [],
 			favorites: [],
 			userComments: [],
+			tokenExpiry: null
 		},
 		actions: {
 			signup: async (firstName, lastName, address, phone, email, password, role) => {
@@ -66,21 +66,35 @@ const getState = ({ getStore, getActions, setStore }) => {
 					body: JSON.stringify(dataToSend)
 				};
 				const response = await fetch(uri, options);
-				if (!response.ok) return console.log("Error", response.status, response.statusText);
+				if (!response.ok) {
+					console.log("Error", response.status, response.statusText);
+					return false;
+				}
 				const data = await response.json();
-				localStorage.setItem("token", data.access_token);
+				const token = data.access_token;
+				const tokenTime = new Date().getTime() + 300000;
 				const userRole = data.results.is_admin ? "is_admin" :
-								data.results.is_vendor ? "is_vendor" :
-								data.results.is_customer ? "is_customer" : null;
+					data.results.is_vendor ? "is_vendor" :
+						"is_customer"
+				localStorage.setItem("token", token);
+				localStorage.setItem("user", JSON.stringify(data.results));
+				localStorage.setItem("userRole", userRole);
+				localStorage.setItem("tokenExpiry", tokenTime);
 				setStore({
 					isLogged: true,
 					user: data.results,
 					userRole,
-					token: localStorage.getItem("token")
+					token,
+					tokenExpiry: tokenTime
 				});
+
+				return true;
 			},
 			logout: () => {
 				localStorage.removeItem("token");
+				localStorage.removeItem("user");
+				localStorage.removeItem("userRole");
+				localStorage.removeItem("tokenExpiry");
 				setStore({
 					isLogged: false,
 					user: {},
@@ -88,10 +102,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 					currentProduct: {},
 					userRole: null,
 					token: "",
-					profile: null,
 					loading: false,
 					favorites: [],
-					userComments: []
+					userComments: [],
+					tokenExpiry: null,
+					cart: [],
+					orderitems: [],
+					orders: [],
 				})
 
 			},
@@ -166,7 +183,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					method: "PUT",
 					headers: {
 						"Content-Type": "application/json",
-						Autorization: `Bearer ${store.token}`
+						Authorization: `Bearer ${store.token}`
 					},
 					body: JSON.stringify({ is_active: false })
 				};
@@ -317,7 +334,32 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			syncTokenFromLocalStorage: () => {
 				const token = localStorage.getItem("token");
-				if (token) setStore({ token });
+				const user = JSON.parse(localStorage.getItem("user"))
+				const userRole = localStorage.getItem("userRole");
+				const tokenExpiry = localStorage.getItem("tokenExpiry");
+				if (token && user && userRole && tokenExpiry) {
+					if (new Date().getTime() < tokenExpiry) {
+						setStore({
+							isLogged: true,
+							user,
+							userRole,
+							token,
+							tokenExpiry
+						});
+					} else {
+						localStorage.removeItem("token");
+						localStorage.removeItem("user");
+						localStorage.removeItem("userRole");
+						localStorage.removeItem("tokenExpiry")
+						setStore({
+							isLogged: false,
+							user: {},
+							userRole: null,
+							token: "",
+							tokenExpiry: null
+						});
+					}
+				}
 			},
 			createProduct: async (productData) => {
 				try {
@@ -343,183 +385,114 @@ const getState = ({ getStore, getActions, setStore }) => {
 					alert("No se pudo crear el producto");
 				}
 			},
-			getProfile: async () => {
-				try {
-					const response = await fetch(`${process.env.BACKEND_URL}/api/profile`, {
-						method: 'GET',
-						headers: {
-							'Content-Type': 'application/json',
-							Authorization: `Bearer ${localStorage.getItem('access_token')}`
-						}
-					});
-					if (!response.ok) throw new Error('Error al obtener el perfil');
-					const data = await response.json();
-					setStore({ profile: data });
-					return data;
-				} catch (error) {
-					console.error('Error al obtener el perfil', error);
-					return null;
-				}
-			},
 			addToCart: async (product) => {
 				const store = getStore();
 				const token = store.token;
-
 				if (!token) {
 					console.error("No hay token, el usuario debe estar autenticado.");
 					return;
 				}
-
+				const alreadyInCart = store.cart.find(item => item.id === product.id);
+				if (alreadyInCart) {
+					alert("Este producto ya está en el carrito");
+					return;
+				}
+				setStore({ cart: [...store.cart, product] });
+				console.log("Producto agregado al carrito local", product);
+			},
+			removeFromCart: async (productId) => {
+				const store = getStore();
+				const updatedCart = store.cart.filter(item => item.id !== productId);
+				setStore({ cart: updatedCart });
+				console.log("Producto eliminado del carrito local, id:", productId);
+			},
+			checkoutCart: async () => {
+				const store = getStore();
+				const token = store.token;
+				if (!token) {
+					console.error("No hay token, no se puede proceder al checkout.");
+					return false;
+				}
+				if (store.cart.length === 0) {
+					alert("No hay productos en el carrito.");
+					return false;
+				}
+				let total = 0;
+				store.cart.forEach(p => {
+					total += p.price; // si tu items no tienen quantity, asume price
+				});
+				const orderData = {
+					status: "pendiente",
+					address: store.user.address || "",
+					total_price: total
+				};
+				const createOrderResp = await getActions().createOrder(orderData);
+				if (!createOrderResp) {
+					alert("Error creando la orden");
+					return false;
+				}
+				setStore({ cart: [] });
+				alert("Compra completada");
+				return true;
+			},
+			clearCart: () => {
+				setStore({ cart: [] });
+				alert("El carrito ha sido vaciado.");
+			},
+			getOrderItems: async () => {
+				const store = getStore();
+				const token = store.token;
+				if (!token) {
+					console.log("No hay token, no se puede obtener orderitems");
+					return;
+				}
 				try {
-					const dataToSend = {
-						product_id: product.id,
-						order_id: store.orderId,
-						address: store.user.address
+					const uri = `${process.env.BACKEND_URL}/api/orderitems`;
+					const options = {
+						method: 'GET',
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`
+						}
+					};
+					const resp = await fetch(uri, options);
+					if (!resp.ok) {
+						console.log("Error", resp.status, resp.statusText);
+						return;
 					}
-					const uri = process.env.BACKEND_URL + `/api/orderitems`
+					const data = await resp.json();
+					setStore({ orderitems: data.results });
+				} catch (error) {
+					console.error("Error en getOrderItems:", error);
+				}
+			},
+			createOrder: async (orderData) => {
+				const store = getStore();
+				const token = store.token;
+				if (!token) {
+					console.error("No hay token disponible");
+					return false;
+				}
+				try {
+					const uri = `${process.env.BACKEND_URL}/api/orders`;
 					const options = {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
 							Authorization: `Bearer ${token}`
 						},
-						body: JSON.stringify(dataToSend)
-					}
-					console.log(dataToSend);
-					console.log(uri);
-					console.log(options);
-
-
-					const response = await fetch(uri, options)
-					if (!response.ok) {
-						console.error("Error al añadir producto a la orden:", response.status, response.statusText);
-						return;
-					}
-
-					const addedItem = await response.json();
-					console.log("Producto añadido correctamente a la orden:", addedItem);
-
-					// Actualizar el estado del carrito en el frontend
-					setStore({ cart: [...store.cart, { ...product, quantity: 1 }] });
-					// setStore({ products: [...store.products, product] });
-				} catch (error) {
-					console.error("Error en addToCart:", error);
-				}
-			},
-			removeOrderItem: async (itemId) => {
-				const store = getStore();
-				const uri = `${process.env.BACKEND_URL}/api/orderitems/${itemId}`;
-
-				const options = {
-					method: 'DELETE',
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${store.token}`
-					}
-				};
-
-				try {
-					const response = await fetch(uri, options);
-					if (!response.ok) {
-						console.log('Error al eliminar', response.status, response.statusText);
-						return;
-					}
-
-					// Actualizar la orden eliminando el producto
-					setStore({
-						orderitems: store.orderitems.filter(item => item.id !== itemId)
-					});
-
-				} catch (error) {
-					console.error("Error en removeOrderItem:", error);
-				}
-			},
-			getOrderItems: async () => {
-				const store = getStore();
-				const uri = `${process.env.BACKEND_URL}/api/orderitems`;
-				const options = {
-					method: 'GET',
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${store.token}`
-					}
-				};
-
-				try {
-					const response = await fetch(uri, options);
-					if (!response.ok) {
-						console.log('Error', response.status, response.statusText);
-						return;
-					}
-
-					const data = await response.json();
-
-					// Mapear los orderitems para añadir la información completa del producto
-					const orderItemsWithProductInfo = data.results.map(orderItem => {
-						const product = Array.isArray(store.products)
-							? store.products.find(p => p.id === orderItem.product_id)
-							: null;
-
-						return {
-							...orderItem,
-							name: product ? product.name : "Producto desconocido",
-							price: product ? product.price : 0,
-							image: product ? product.image : "https://via.placeholder.com/100"
-						};
-					});
-
-
-					setStore({ orderitems: orderItemsWithProductInfo });
-
-				} catch (error) {
-					console.error("Error en getOrderItems:", error);
-				}
-			},
-			createOrder: async () => {
-				const store = getStore();
-				const uri = `${process.env.BACKEND_URL}/api/orders`
-				// Verificar si hay productos en la orden antes de enviarla
-				if (!store.orderitems || store.orderitems.length === 0) {
-					console.warn("No hay productos en la orden para procesar.");
-					return false;
-				}
-
-				console.log(store.orderitems);
-
-
-				const orderData = {
-					items: store.orderitems.map(product => ({
-						product_id: product.id,
-						price: product.price
-					}))
-				};
-
-				console.log(orderData)
-
-				const options = {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${store.token}`
-					},
-					body: JSON.stringify(orderData)
-				};
-
-				try {
-					const response = await fetch(uri, options);
-
-					if (!response.ok) {
-						console.error(`Error al crear la orden: ${response.status} ${response.statusText}`);
+						body: JSON.stringify(orderData)
+					};
+					const resp = await fetch(uri, options);
+					if (!resp.ok) {
+						console.error("Error al crear la orden:", resp.statusText);
 						return false;
 					}
+					const data = await resp.json();
+					console.log("Orden creada (pendiente):", data);
 
-					const data = await response.json();
-
-					// Limpiar la orden solo si la creación fue exitosa
-					setStore({ orderitems: [] });
-
-					console.log("Orden creada exitosamente:", data);
-					return true;
+					await getActions().getOrders();
+					return true;  // podrías retornar data.order_id para saber el id
 				} catch (error) {
 					console.error("Error en createOrder:", error);
 					return false;
@@ -527,29 +500,89 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			getOrders: async () => {
 				const store = getStore();
-				const uri = `${process.env.BACKEND_URL}/api/orders`;
-				const options = {
-					method: 'GET',
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${store.token}`
-					}
-				};
-
+				const token = store.token;
+				if (!token) {
+					console.log("No hay token, no se puede obtener órdenes");
+					return;
+				}
 				try {
-					const response = await fetch(uri, options);
-					if (!response.ok) {
-						console.log('Error', response.status, response.statusText);
+					const uri = `${process.env.BACKEND_URL}/api/orders`;
+					const options = {
+						method: "GET",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`
+						}
+					};
+					const resp = await fetch(uri, options);
+					if (!resp.ok) {
+						console.error("Error la orden:", resp.status, resp.statusText);
 						return;
 					}
-
-					const data = await response.json();
-
-					setStore({ orders: data.results }); // Guardamos las órdenes en el estado global
+					const data = await resp.json();
+					setStore({ orders: data.results || [] });
+					console.log("Órdenes obtenidas:", data.results);
 				} catch (error) {
-					console.error("Error en getOrders:", error);
+					console.error("Error:", error);
 				}
-			},	
+			},
+			updateOrder: async (orderId, dataToUpdate) => {
+				const store = getStore();
+				if (!store.token) {
+					console.error("No token");
+					return false;
+				}
+				try {
+					const uri = `${process.env.BACKEND_URL}/api/orders/${orderId}`;
+					const options = {
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${store.token}`
+						},
+						body: JSON.stringify(dataToUpdate)
+					};
+					const resp = await fetch(uri, options);
+					if (!resp.ok) {
+						console.error("Error en updateOrder:", resp.statusText);
+						return false;
+					}
+					console.log("Orden actualizada (ej. a 'vendido').");
+					await getActions().getOrders();
+					return true;
+				} catch (error) {
+					console.error("updateOrder error:", error);
+					return false;
+				}
+			},
+			createOrderItem: async (itemData) => {
+				const store = getStore();
+				const token = store.token;
+				if (!token) {
+					console.error("No token");
+					return false;
+				}
+				try {
+					const resp = await fetch(`${process.env.BACKEND_URL}/api/orderitems`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`
+						},
+						body: JSON.stringify(itemData)
+					});
+					if (!resp.ok) {
+						console.error("Error en createOrderItem:", resp.statusText);
+						return false;
+					}
+					// refrescamos las órdenes
+					await getActions().getOrders();
+					return true;
+				} catch (error) {
+					console.error("createOrderItem error:", error);
+					return false;
+				}
+			},
 			getFavorites: async () => {
 				const token = localStorage.getItem("token");
 				const uri = `${process.env.BACKEND_URL}/api/favorites`;
@@ -672,7 +705,29 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ products: udpdateCart });
 				alert("Todos los productos favoritos han sido incluidos al carrito")
 			},
-			clearUserComments: () => setStore({ userComments: [] })
+			clearUserComments: () => setStore({ userComments: [] }),
+			createOrderFromFavorites: async (orderData) => {
+				const store = getStore();
+				const uri = `${process.env.BACKEND_URL}/api/orders`;
+				const options = {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${store.token}`
+					},
+					body: JSON.stringify(orderData)
+				};
+				const response = await fetch(uri, options);
+				if (!response.ok) {
+					console.error("Error al crear la orden:", response.statusText)
+					return
+				}
+				const createdOrder = await response.json();
+				setStore({
+					orders: [...store.orders, createdOrder.results],
+					favorites: []
+				});
+			}
 		}
 	}
 };

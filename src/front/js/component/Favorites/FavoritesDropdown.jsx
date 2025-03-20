@@ -1,19 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Context } from "../store/appContext";
+import { Context } from "../../store/appContext";
 import { useNavigate } from "react-router-dom";
 import { FaHeart, FaShoppingCart, FaTrash } from "react-icons/fa";
-import "../../styles/favorites.css"
+import "../../../styles/favorites.css"
 
 export const FavoritesDropdown = () => {
     const { store, actions } = useContext(Context);
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false)
-
-    useEffect(() => {
-        if (store.isLogged && store.userRole === "is_customer") {
-          actions.getFavorites();
-        }
-      }, [store.isLogged, store.userRole]);
 
     const handleDelete = async (favoriteId) => {
         const success = await actions.deleteFavorite(favoriteId);
@@ -23,8 +17,9 @@ export const FavoritesDropdown = () => {
     };
 
     const handleAddAllToCart = async () => {
-        navigate("/")
-        alert("¿Desea comprar los productos?");
+        actions.addAllFavoritesToCart();
+        setIsOpen(false);
+        navigate("/favorite-to-cart");
     };
 
     const handleViewAll = async () => {
