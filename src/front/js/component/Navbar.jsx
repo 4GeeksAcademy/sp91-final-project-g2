@@ -5,8 +5,8 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { Link, useNavigate } from "react-router-dom";
-import { FavoritesDropdown } from "./FavoritesDropdown.jsx";
 import "../../styles/navbar.css";
+import { FavoritesDropdown } from "./Favorites/FavoritesDropdown.jsx";
 
 export const NavbarCafetaleros = () => {
   const { store, actions } = useContext(Context);
@@ -81,7 +81,7 @@ export const NavbarCafetaleros = () => {
         {/* Iconos lado derecho */}
         <div className="ms-auto d-flex align-items-center gap-3 me-2">
           {/* Favoritos */}
-          <FavoritesDropdown />
+          <FavoritesDropdown/>
           {/* Login/Profile */}
           <button className="btn btn-outline-dark position-relative"
             onClick={() => navigate(store.isLogged ? "/profilepage" : "/login")}
