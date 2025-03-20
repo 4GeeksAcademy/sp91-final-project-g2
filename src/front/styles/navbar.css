@@ -1,0 +1,183 @@
+/* Estilo general del navbar */
+.navbar {
+  background-color: #C4A484; 
+  width: 100vw;
+  padding: 20px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+/* Centrar y agrandar los elementos */
+.navbar-nav {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 30px;
+  flex-grow: 1;
+  margin-right: 265px;
+}
+
+.navbar-nav .nav-link {
+  font-size: 1.5rem;
+  color: #684b33;
+  text-transform: uppercase;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #fce1c4; /* Cambia el color al pasar el cursor */
+}
+
+/* Logo más grande y centrado */
+.navbar-brand {
+    display: flex;
+    margin-left: 0px;;
+    justify-content: center; 
+    align-items: center; 
+  }
+
+/* Logo más grande y centrado */
+.navbar-brand img {
+    height: 100px;
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand img:hover {
+  transform: scale(1.1);
+}
+
+
+/* Botones del lado derecho */
+
+.text-secondary {
+  --bs-text-opacity: 1;
+  color: rgb(71, 28, 7) !important;
+}
+
+.btn {
+  font-size: 1rem;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+.btn-outline-dark {
+  color: #fff;
+  border-color: #fff;
+}
+
+.btn-outline-dark:hover {
+  background-color: #977350;
+  color: #fff;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+/* Ajustes responsivos para diferentes tamaños de pantalla */
+
+/* Pantallas grandes (ordenadores XL) */
+@media (min-width: 1200px) {
+  .navbar-nav {
+    gap: 40px; /* Más espacio entre los elementos */
+  }
+
+  .navbar-brand img {
+    height: 120px; /* Logo más grande */
+  }
+
+  .btn {
+    font-size: 1.2rem; /* Botones más grandes */
+  }
+}
+
+.btn {
+  font-size: 1rem;
+}
+}
+
+/* Pantallas pequeñas (tabletas y móviles grandes) */
+@media (min-width: 768px) and (max-width: 991px) {
+.navbar-nav {
+  flex-direction: row; /* Mantiene los elementos en fila */
+  gap: 20px;
+  margin-right: 0;
+}
+
+.navbar-brand img {
+  height: 80px;
+}
+
+.btn {
+  font-size: 0.9rem;
+  padding: 4px 8px;
+}
+}
+
+/* Pantallas muy pequeñas (móviles medianos y pequeños) */
+@media (max-width: 767px) {
+  .navbar-nav {
+    flex-direction: column; /* Cambia a columna */
+    align-items: center;
+    gap: 15px;
+    margin-right: 0;
+  }
+
+  .navbar-brand img {
+    height: 60px; /* Reduce el tamaño del logo */
+  }
+
+  .btn {
+    font-size: 0.8rem; /* Botones más pequeños */
+    padding: 3px 6px;
+  }
+}
+
+/* Pantallas extra pequeñas (móviles S) */
+@media (max-width: 480px) {
+  .navbar-nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .navbar-brand img {
+    height: 50px; /* Logo más pequeño */
+  }
+
+  .btn {
+    font-size: 0.7rem;
+    padding: 2px 5px;
+  }
+}
+
+/* Pantallas medianas (ordenadores L y portátiles) */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .navbar-nav {
+    gap: 30px;
+  }
+
+  .navbar-brand img {
+    height: 100px;
+  }
+}
+  
+/* Ajustes para dispositivos móviles */
+@media (max-width: 768px) {
+  .navbar-nav {
+    flex-direction: column; /* Cambia a columna en pantallas pequeñas */
+    gap: 15px;
+  }
+
+  .navbar-brand img {
+    height: 60px; /* Reduce el tamaño del logo en pantallas pequeñas */
+  }
+
+  .btn {
+    font-size: 1rem; /* Ajusta el tamaño de los botones */
+  }
+}

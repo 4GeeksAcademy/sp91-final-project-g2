@@ -9,11 +9,18 @@ body {
 }
 
 .login-container {
+  position: relative;
+  top: 236px;
   margin: 50px auto;
   max-width: 900px;
   border-radius: 10px;
   position: relative; 
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.474);  
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.474); 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+ 
 }
 
 .login-content {
@@ -41,7 +48,7 @@ body {
 .left h1 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  color: #ffffff;
+  color: #4b3419;
 } 
 
 .left p {
@@ -56,12 +63,12 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: #9D5353; 
+  color: #5c4430; 
 }
 
 .right h2 {
   margin-bottom: 1rem;
-  color: #582226; 
+  color: #583822; 
 }
 
 .right form {
@@ -81,7 +88,7 @@ body {
 }
 
 .right button[type="submit"] {
-  background-color: #582226; 
+  background-color: #664229; 
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -90,5 +97,5 @@ body {
 }
 
 .right button[type="submit"]:hover {
-  background-color: #3d171c; 
+  background-color: #634e3d; 
 }

@@ -1,11 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
-import logo from "../../img/logo-cafetaleros.png";
+import logo from "../../img/logo-cafetaleros-transparente.png";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { Link, useNavigate } from "react-router-dom";
 import { FavoritesDropdown } from "./FavoritesDropdown.jsx";
+import "../../styles/navbar.css";
 
 export const NavbarCafetaleros = () => {
   const { store, actions } = useContext(Context);
@@ -46,20 +47,22 @@ export const NavbarCafetaleros = () => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
-          <ul className="navbar-nav mx-auto gap-3">
-            <li className="nav-item">
-              <Link className="nav-link custom-link" to="/product-list">Cafés Especiales</Link>
-            </li>
-            <li className="nav-item d-none d-lg-block">
-              <Link className="navbar-brand mx-3" to="/">
-                <img src={logo} alt="Cafetaleros Logo" height="50" />
+                <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
+          <ul className="navbar-nav">
+            <li className="nav-item cafes-especiales">
+              <Link className="nav-link" to="/product-list">
+                Cafés Especiales
               </Link>
             </li>
-
-            {/* Botón de contacto que hace scroll al footer */}
             <li className="nav-item">
-              <Link className="nav-link custom-link" to="#" onClick={handleScrollToFooter}>Contacto</Link>
+              <Link className="navbar-brand" to="/">
+                <img src={logo} alt="Cafetaleros Logo" />
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="#" onClick={handleScrollToFooter}>
+                Contacto
+              </Link>
             </li>
           </ul>
         </div>
